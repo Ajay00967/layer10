@@ -1,0 +1,271 @@
+{
+  "query": "What is the status of the Kubernetes migration?",
+  "context_pack": {
+    "query": "What is the status of the Kubernetes migration?",
+    "retrieved_at": "2026-03-08T18:12:34.052297Z",
+    "claims": [
+      {
+        "claim_id": "cfebbad3-8abf-4b6c-9aa3-5ac381b9d7f6",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Novexcore uses Kubernetes",
+        "value": "Kubernetes",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "66db125b-d16e-420c-b322-b8e9f98e4cbd",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+          "ab086b5f-142d-49e7-bb52-4a9403977b4a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "9c926003-2f44-4c49-82fe-168ba759ebf6",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Infrav2 uses Kubernetes",
+        "value": "Kubernetes",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "66db125b-d16e-420c-b322-b8e9f98e4cbd",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+          "ab086b5f-142d-49e7-bb52-4a9403977b4a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "c024bda2-6f0c-4d28-8143-27b4ed4c468d",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I003 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-18T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "39b6aa55-a929-4e2f-b2b3-717b2ac83717"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "0e45c947-b492-46b1-b5e3-4fbc1ef51928",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I006 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-24T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "208bf6c5-6d52-42e6-8445-49723243eec4"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "7bb92b88-a22a-4fda-ad28-50f9041521fb",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I003 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-18T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "6fcd9a24-910f-4e0a-8bcf-5c34e9a7e4ec"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "1c05ccc5-cfd9-43f0-9743-974a63035b6a",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I006 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-24T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "15733a7f-b6c5-4f07-8684-b8ec7eef7f41"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "205d49c7-8b72-4364-8478-753db3917efc",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I003 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-18T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "a21176a0-66cd-4673-8011-879b19da9c53"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "8a0c5cf5-3ff3-40b0-9f28-478e918ff412",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I006 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-24T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "da11f059-5031-4ff0-a4ca-9faa19deff4a"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      }
+    ],
+    "evidence_snippets": [
+      {
+        "evidence_id": "2ff25d00-246e-4d58-9f4c-9a34ffe435f3",
+        "source_id": "I005",
+        "source_type": "issue",
+        "timestamp": "2024-01-20T09:00:00Z",
+        "excerpt": "Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.",
+        "relevance_score": 0.4985,
+        "citation": "[ISSUE I005 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "221a3365-ef71-49d2-abc1-6b90faf3d25a",
+        "source_id": "I005",
+        "source_type": "issue",
+        "timestamp": "2024-01-20T09:00:00Z",
+        "excerpt": "Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.",
+        "relevance_score": 0.4985,
+        "citation": "[ISSUE I005 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "5fa804ff-3774-48be-9a17-3be5ea30ec8b",
+        "source_id": "I005",
+        "source_type": "issue",
+        "timestamp": "2024-01-20T09:00:00Z",
+        "excerpt": "Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.",
+        "relevance_score": 0.4985,
+        "citation": "[ISSUE I005 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "126c7689-adb9-4190-9ee9-7a9cfbd49650",
+        "source_id": "EMAIL-T005-01",
+        "source_type": "email",
+        "timestamp": "2024-01-25T13:48:00Z",
+        "excerpt": "Kafka is the clear choice for high-throughput. We're talking millions of events/day. RabbitMQ would struggle.",
+        "relevance_score": 0.4483,
+        "citation": "[EMAIL EMAIL-T005-01 @ 2024-01-25]"
+      },
+      {
+        "evidence_id": "a7d92a90-2c05-4fc9-809d-0ca5a62307be",
+        "source_id": "EMAIL-T005-01",
+        "source_type": "email",
+        "timestamp": "2024-01-25T13:48:00Z",
+        "excerpt": "Kafka is the clear choice for high-throughput. We're talking millions of events/day. RabbitMQ would struggle.",
+        "relevance_score": 0.4483,
+        "citation": "[EMAIL EMAIL-T005-01 @ 2024-01-25]"
+      },
+      {
+        "evidence_id": "2848f855-6ff6-422a-a6f5-b22cd4363e0b",
+        "source_id": "EMAIL-T005-01",
+        "source_type": "email",
+        "timestamp": "2024-01-25T13:48:00Z",
+        "excerpt": "Kafka is the clear choice for high-throughput. We're talking millions of events/day. RabbitMQ would struggle.",
+        "relevance_score": 0.4483,
+        "citation": "[EMAIL EMAIL-T005-01 @ 2024-01-25]"
+      },
+      {
+        "evidence_id": "ca013343-0520-4742-8805-8dd7f87b4141",
+        "source_id": "EMAIL-T003-01",
+        "source_type": "email",
+        "timestamp": "2024-01-20T16:12:00Z",
+        "excerpt": "Engineering capacity looks tight. NovexCore v2 and Kubernetes migration in same quarter is risky. Can we push InfraV2 to Q2?",
+        "relevance_score": 0.3688,
+        "citation": "[EMAIL EMAIL-T003-01 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "36cd9651-41c9-4191-8d4b-6f60accffa38",
+        "source_id": "EMAIL-T003-01",
+        "source_type": "email",
+        "timestamp": "2024-01-20T16:12:00Z",
+        "excerpt": "Engineering capacity looks tight. NovexCore v2 and Kubernetes migration in same quarter is risky. Can we push InfraV2 to Q2?",
+        "relevance_score": 0.3688,
+        "citation": "[EMAIL EMAIL-T003-01 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "66db125b-d16e-420c-b322-b8e9f98e4cbd",
+        "source_id": "EMAIL-T003-01",
+        "source_type": "email",
+        "timestamp": "2024-01-20T16:12:00Z",
+        "excerpt": "Engineering capacity looks tight. NovexCore v2 and Kubernetes migration in same quarter is risky. Can we push InfraV2 to Q2?",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T003-01 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+        "source_id": "EMAIL-T010-00",
+        "source_type": "email",
+        "timestamp": "2024-02-19T09:00:00Z",
+        "excerpt": "Notes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway (yes, we switched from Postgres)\n- New hire joins April 1\n- Q2 focus: InfraV2 Kubernetes migration",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T010-00 @ 2024-02-19]"
+      }
+    ],
+    "entities": [
+      {
+        "entity_id": "PERS-P009",
+        "entity_type": "person",
+        "canonical_name": "Iris Johansson",
+        "aliases": [
+          "iris.johansson@novex.com",
+          "ijohansson@novex.com",
+          "Iris J."
+        ]
+      },
+      {
+        "entity_id": "TECH-REDIS",
+        "entity_type": "technology",
+        "canonical_name": "Redis",
+        "aliases": [
+          "Redis"
+        ]
+      },
+      {
+        "entity_id": "TECH-KUBERNETES",
+        "entity_type": "technology",
+        "canonical_name": "Kubernetes",
+        "aliases": [
+          "Kubernetes"
+        ]
+      }
+    ],
+    "conflicts_detected": [],
+    "answer_hint": "Novexcore uses Kubernetes | Infrav2 uses Kubernetes | Issue I003 authored by PERS-P009"
+  }
+}

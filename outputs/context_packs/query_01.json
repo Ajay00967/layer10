@@ -1,0 +1,264 @@
+{
+  "query": "What database was chosen for NovexCore v2?",
+  "context_pack": {
+    "query": "What database was chosen for NovexCore v2?",
+    "retrieved_at": "2026-03-08T18:12:34.052297Z",
+    "claims": [
+      {
+        "claim_id": "ef480192-fd50-4293-8d69-5125f7adc8c0",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Novexcore uses PostgreSQL",
+        "value": "PostgreSQL",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-15T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "73541493-4dc1-4eaf-98a0-829177bc19ac",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+          "8659a450-61df-495a-829f-0dc09561437a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "cfebbad3-8abf-4b6c-9aa3-5ac381b9d7f6",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Novexcore uses Kubernetes",
+        "value": "Kubernetes",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "66db125b-d16e-420c-b322-b8e9f98e4cbd",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+          "ab086b5f-142d-49e7-bb52-4a9403977b4a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "9c926003-2f44-4c49-82fe-168ba759ebf6",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Infrav2 uses Kubernetes",
+        "value": "Kubernetes",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "66db125b-d16e-420c-b322-b8e9f98e4cbd",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+          "ab086b5f-142d-49e7-bb52-4a9403977b4a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "0a2c03a4-9d3f-4e9b-b0c3-4e5e15da5873",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Novexcore uses MySQL",
+        "value": "MySQL",
+        "confidence": 0.95,
+        "is_current": true,
+        "valid_from": "2024-02-19T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "c0389bc6-bfc9-4e80-af6e-510014096265",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "9320594e-cc9d-4acc-b012-08cc3536ff7e",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Infrav2 uses PostgreSQL",
+        "value": "PostgreSQL",
+        "confidence": 0.85,
+        "is_current": true,
+        "valid_from": "2024-02-19T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "419d24e6-3757-4ac2-92f1-17e2dd550726",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Infrav2 uses MySQL",
+        "value": "MySQL",
+        "confidence": 0.85,
+        "is_current": true,
+        "valid_from": "2024-02-19T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "d16c0c01-8913-4bf0-9635-c80e6700798f",
+        "claim_type": "HAS_STATUS",
+        "predicate": "Issue I001 status: closed",
+        "value": "closed",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "6441438d-edfe-4740-91c0-fbc0928fb92c"
+        ],
+        "tags": [
+          "issue",
+          "status"
+        ]
+      },
+      {
+        "claim_id": "fb829628-a352-443c-a4a6-54d1e5dc4e52",
+        "claim_type": "ASSIGNED_TO",
+        "predicate": "Issue I001 assigned to PERS-P006",
+        "value": "PERS-P006",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-15T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "6441438d-edfe-4740-91c0-fbc0928fb92c"
+        ],
+        "tags": [
+          "issue",
+          "assignment"
+        ]
+      }
+    ],
+    "evidence_snippets": [
+      {
+        "evidence_id": "d37630d1-75d5-46a7-a914-55badbb2f5c9",
+        "source_id": "EMAIL-T001-00",
+        "source_type": "email",
+        "timestamp": "2024-01-15T09:00:00Z",
+        "excerpt": "Team, we need to decide on the database for NovexCore v2. I'm leaning toward PostgreSQL for its JSON support and strong ACID guarantees. Thoughts?",
+        "relevance_score": 0.5032,
+        "citation": "[EMAIL EMAIL-T001-00 @ 2024-01-15]"
+      },
+      {
+        "evidence_id": "c526df60-0c28-4b51-88b0-1579766320a4",
+        "source_id": "EMAIL-T001-00",
+        "source_type": "email",
+        "timestamp": "2024-01-15T09:00:00Z",
+        "excerpt": "Team, we need to decide on the database for NovexCore v2. I'm leaning toward PostgreSQL for its JSON support and strong ACID guarantees. Thoughts?",
+        "relevance_score": 0.5032,
+        "citation": "[EMAIL EMAIL-T001-00 @ 2024-01-15]"
+      },
+      {
+        "evidence_id": "73541493-4dc1-4eaf-98a0-829177bc19ac",
+        "source_id": "EMAIL-T001-00",
+        "source_type": "email",
+        "timestamp": "2024-01-15T09:00:00Z",
+        "excerpt": "Team, we need to decide on the database for NovexCore v2. I'm leaning toward PostgreSQL for its JSON support and strong ACID guarantees. Thoughts?",
+        "relevance_score": 0.5032,
+        "citation": "[EMAIL EMAIL-T001-00 @ 2024-01-15]"
+      },
+      {
+        "evidence_id": "a98162fa-6fab-45bd-92fa-ba4cca8d3fe7",
+        "source_id": "EMAIL-T003-03",
+        "source_type": "email",
+        "timestamp": "2024-01-20T23:24:00Z",
+        "excerpt": "Updated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration.",
+        "relevance_score": 0.4169,
+        "citation": "[EMAIL EMAIL-T003-03 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "1942df2b-b2b6-4807-8454-d823a81d6d45",
+        "source_id": "EMAIL-T003-03",
+        "source_type": "email",
+        "timestamp": "2024-01-20T23:24:00Z",
+        "excerpt": "Updated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration.",
+        "relevance_score": 0.4169,
+        "citation": "[EMAIL EMAIL-T003-03 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "a675b908-908d-4673-8c66-0b808d163cc4",
+        "source_id": "EMAIL-T003-03",
+        "source_type": "email",
+        "timestamp": "2024-01-20T23:24:00Z",
+        "excerpt": "Updated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration.",
+        "relevance_score": 0.4169,
+        "citation": "[EMAIL EMAIL-T003-03 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "82a9b97b-b05c-4937-8552-88406dfc3147",
+        "source_id": "EMAIL-T001-04",
+        "source_type": "email",
+        "timestamp": "2024-01-16T13:48:00Z",
+        "excerpt": "Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.",
+        "relevance_score": 0.3932,
+        "citation": "[EMAIL EMAIL-T001-04 @ 2024-01-16]"
+      },
+      {
+        "evidence_id": "5677beec-0799-4d61-aa4f-ac74893ce3ce",
+        "source_id": "EMAIL-T001-04",
+        "source_type": "email",
+        "timestamp": "2024-01-16T13:48:00Z",
+        "excerpt": "Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.",
+        "relevance_score": 0.3932,
+        "citation": "[EMAIL EMAIL-T001-04 @ 2024-01-16]"
+      },
+      {
+        "evidence_id": "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+        "source_id": "EMAIL-T010-00",
+        "source_type": "email",
+        "timestamp": "2024-02-19T09:00:00Z",
+        "excerpt": "Notes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway (yes, we switched from Postgres)\n- New hire joins April 1\n- Q2 focus: InfraV2 Kubernetes migration",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T010-00 @ 2024-02-19]"
+      },
+      {
+        "evidence_id": "66db125b-d16e-420c-b322-b8e9f98e4cbd",
+        "source_id": "EMAIL-T003-01",
+        "source_type": "email",
+        "timestamp": "2024-01-20T16:12:00Z",
+        "excerpt": "Engineering capacity looks tight. NovexCore v2 and Kubernetes migration in same quarter is risky. Can we push InfraV2 to Q2?",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T003-01 @ 2024-01-20]"
+      }
+    ],
+    "entities": [
+      {
+        "entity_id": "PROJ-NOVEXCORE",
+        "entity_type": "project",
+        "canonical_name": "NovexCore",
+        "aliases": [
+          "NovexCore"
+        ]
+      },
+      {
+        "entity_id": "PROJ-INFRAV2",
+        "entity_type": "project",
+        "canonical_name": "InfraV2",
+        "aliases": [
+          "InfraV2"
+        ]
+      }
+    ],
+    "conflicts_detected": [],
+    "answer_hint": "Novexcore uses PostgreSQL | Novexcore uses Kubernetes | Infrav2 uses Kubernetes"
+  }
+}

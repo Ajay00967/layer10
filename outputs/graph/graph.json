@@ -1,0 +1,980 @@
+{
+  "nodes": [
+    {
+      "id": "PERS-P001",
+      "type": "person",
+      "label": "Alice Hartmann"
+    },
+    {
+      "id": "PERS-P002",
+      "type": "person",
+      "label": "Bob Delgado"
+    },
+    {
+      "id": "PERS-P003",
+      "type": "person",
+      "label": "Carol Finch"
+    },
+    {
+      "id": "PERS-P004",
+      "type": "person",
+      "label": "David Osei"
+    },
+    {
+      "id": "PERS-P005",
+      "type": "person",
+      "label": "Eva Lindstr\u00f6m"
+    },
+    {
+      "id": "PERS-P006",
+      "type": "person",
+      "label": "Frank Nguyen"
+    },
+    {
+      "id": "PERS-P007",
+      "type": "person",
+      "label": "Grace Kim"
+    },
+    {
+      "id": "PERS-P008",
+      "type": "person",
+      "label": "Hector Romero"
+    },
+    {
+      "id": "PERS-P009",
+      "type": "person",
+      "label": "Iris Johansson"
+    },
+    {
+      "id": "PERS-P010",
+      "type": "person",
+      "label": "James Park"
+    },
+    {
+      "id": "PROJ-NOVEXCORE",
+      "type": "project",
+      "label": "NovexCore"
+    },
+    {
+      "id": "PROJ-DATAPIPELINE",
+      "type": "project",
+      "label": "DataPipeline"
+    },
+    {
+      "id": "PROJ-AUTHSERVICE",
+      "type": "project",
+      "label": "AuthService"
+    },
+    {
+      "id": "PROJ-REPORTINGENGINE",
+      "type": "project",
+      "label": "ReportingEngine"
+    },
+    {
+      "id": "PROJ-INFRAV2",
+      "type": "project",
+      "label": "InfraV2"
+    },
+    {
+      "id": "TECH-POSTGRESQL",
+      "type": "technology",
+      "label": "PostgreSQL"
+    },
+    {
+      "id": "TECH-MYSQL",
+      "type": "technology",
+      "label": "MySQL"
+    },
+    {
+      "id": "TECH-REDIS",
+      "type": "technology",
+      "label": "Redis"
+    },
+    {
+      "id": "TECH-KAFKA",
+      "type": "technology",
+      "label": "Kafka"
+    },
+    {
+      "id": "TECH-KUBERNETES",
+      "type": "technology",
+      "label": "Kubernetes"
+    },
+    {
+      "id": "TECH-PYTHON",
+      "type": "technology",
+      "label": "Python"
+    },
+    {
+      "id": "TECH-RABBITMQ",
+      "type": "technology",
+      "label": "RabbitMQ"
+    },
+    {
+      "id": "TECH-PAGERDUTY",
+      "type": "technology",
+      "label": "PagerDuty"
+    },
+    {
+      "id": "ISSUE-I007",
+      "type": "issue",
+      "label": "Issue I007 status: open"
+    },
+    {
+      "id": "ISSUE-I006",
+      "type": "issue",
+      "label": "Issue I006 status: open"
+    },
+    {
+      "id": "ISSUE-I001",
+      "type": "issue",
+      "label": "Issue I001 status: open"
+    },
+    {
+      "id": "ISSUE-I003",
+      "type": "issue",
+      "label": "Issue I003 status: open"
+    },
+    {
+      "id": "ISSUE-I005",
+      "type": "issue",
+      "label": "Issue I005 status: open"
+    },
+    {
+      "id": "ISSUE-I008",
+      "type": "issue",
+      "label": "Issue I008 status: open"
+    },
+    {
+      "id": "ISSUE-I004",
+      "type": "issue",
+      "label": "Issue I004 status: open"
+    },
+    {
+      "id": "ISSUE-I002",
+      "type": "issue",
+      "label": "Issue I002 status: open"
+    }
+  ],
+  "edges": [
+    {
+      "id": "59e2d441-7e3e-445e-bc14-32482fd677f9",
+      "source": "DEC-82a9b97b",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Decision made: we go with PostgreSQL for NovexCore v2. David",
+      "confidence": 0.9,
+      "is_current": false
+    },
+    {
+      "id": "e7069528-cfd0-4fc3-8923-339eea6fc6d9",
+      "source": "DEC-c3ac0b38",
+      "target": "PERS-P007",
+      "claim_type": "DECISION_REVERSED",
+      "label": "Heads up: the cloud vendor deal gives us managed MySQL at 40",
+      "confidence": 0.95,
+      "is_current": true
+    },
+    {
+      "id": "98a3b5fc-c4e9-4b50-b2a2-64ea66539787",
+      "source": "DEC-2e817958",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_REVERSED",
+      "label": "After cost review, we are switching to MySQL. I know this re",
+      "confidence": 0.95,
+      "is_current": true
+    },
+    {
+      "id": "1b29309c-11a1-44ac-b1b7-0234adfbabef",
+      "source": "DEC-85d79ac7",
+      "target": "PERS-P002",
+      "claim_type": "DECISION_MADE",
+      "label": "Decision: Kafka for event streaming in DataPipeline. James t",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "40039ea2-45b1-4deb-a0d1-5c567d14a82a",
+      "source": "DEC-157e3179",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Approved. Let's aim to have someone onboarded by Q2.",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "d0d6beb3-bb42-4735-bfa1-04999e2dff86",
+      "source": "DEC-8798e889",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Approved. Hector please set up PagerDuty.",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "fb829628-a352-443c-a4a6-54d1e5dc4e52",
+      "source": "ISSUE-I001",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I001 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "41de7895-f113-41d5-a1b9-ed599a89197f",
+      "source": "ISSUE-I001",
+      "target": "PERS-P003",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I001 authored by PERS-P003",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "0f7bde80-ad29-4832-90d4-d62c987afa4f",
+      "source": "ISSUE-I001",
+      "target": "PROJ-NOVEXCORE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Implement JWT authentication",
+      "confidence": 0.95,
+      "is_current": false
+    },
+    {
+      "id": "e534ae94-0368-4790-ba4e-a6f02c809329",
+      "source": "ISSUE-I002",
+      "target": "PERS-P002",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I002 assigned to PERS-P002",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "811e3a93-fb98-4808-9892-9c9ff46b95ba",
+      "source": "ISSUE-I002",
+      "target": "PERS-P001",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I002 authored by PERS-P001",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "46be3ca4-09d6-418a-aebe-011eecf5d76e",
+      "source": "ISSUE-I003",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I003 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "c024bda2-6f0c-4d28-8143-27b4ed4c468d",
+      "source": "ISSUE-I003",
+      "target": "PERS-P009",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I003 authored by PERS-P009",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "3fed4932-df8f-4b62-b934-9159171d77f6",
+      "source": "ISSUE-I003",
+      "target": "PROJ-AUTHSERVICE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Security: tokens never expire",
+      "confidence": 0.95,
+      "is_current": false
+    },
+    {
+      "id": "1170b717-6b65-4c5e-a393-d9f385390d1c",
+      "source": "ISSUE-I004",
+      "target": "PERS-P010",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I004 assigned to PERS-P010",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "aa66ad08-613b-442a-b5f3-b18c1182159d",
+      "source": "ISSUE-I004",
+      "target": "PERS-P002",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I004 authored by PERS-P002",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "25e4ccd6-e530-4d2a-9ac5-3bd99584aa6e",
+      "source": "ISSUE-I004",
+      "target": "PROJ-DATAPIPELINE",
+      "claim_type": "PERFORMANCE_METRIC",
+      "label": "Performance metric in I004: 850k msg/sec",
+      "confidence": 0.8,
+      "is_current": true
+    },
+    {
+      "id": "f3d23be0-0eea-42d4-bd68-4c20134e5b35",
+      "source": "ISSUE-I005",
+      "target": "PERS-P008",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I005 assigned to PERS-P008",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "841bb7d6-bd4d-49ca-be01-075b7a5c8e55",
+      "source": "ISSUE-I005",
+      "target": "PERS-P007",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I005 authored by PERS-P007",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "e80ed2e5-4c38-49b1-8604-7bbbeee9d68b",
+      "source": "ISSUE-I006",
+      "target": "PERS-P010",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I006 assigned to PERS-P010",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "0e45c947-b492-46b1-b5e3-4fbc1ef51928",
+      "source": "ISSUE-I006",
+      "target": "PERS-P009",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I006 authored by PERS-P009",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "0abd63be-71f0-4076-b566-533be4898211",
+      "source": "ISSUE-I006",
+      "target": "PROJ-REPORTINGENGINE",
+      "claim_type": "PERFORMANCE_METRIC",
+      "label": "Performance metric in I006: 200ms",
+      "confidence": 0.8,
+      "is_current": true
+    },
+    {
+      "id": "e8e5e2e2-fc66-4b06-8aa2-b3451d21e34d",
+      "source": "ISSUE-I007",
+      "target": "PERS-P005",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I007 assigned to PERS-P005",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "4b8b8662-9067-4c01-8758-2bf4fab957a6",
+      "source": "ISSUE-I007",
+      "target": "PERS-P004",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I007 authored by PERS-P004",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "b1479d0e-2853-44c0-91f7-22d2e93f28b2",
+      "source": "ISSUE-I008",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I008 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "88fd0ab3-ad42-4432-a666-ff95ae52df0e",
+      "source": "ISSUE-I008",
+      "target": "PERS-P003",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I008 authored by PERS-P003",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "9b9af9cd-b279-4179-857f-8b08638c1db5",
+      "source": "ISSUE-I008",
+      "target": "PROJ-AUTHSERVICE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Add refresh token support",
+      "confidence": 0.95,
+      "is_current": false
+    },
+    {
+      "id": "ef538f24-76d2-4bb9-8aac-7d7f5f341962",
+      "source": "DEC-5677beec",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Decision made: we go with PostgreSQL for NovexCore v2. David",
+      "confidence": 0.9,
+      "is_current": false
+    },
+    {
+      "id": "9983549b-561a-4508-aa3f-6306ca65daad",
+      "source": "DEC-87cf5d4d",
+      "target": "PERS-P007",
+      "claim_type": "DECISION_REVERSED",
+      "label": "Heads up: the cloud vendor deal gives us managed MySQL at 40",
+      "confidence": 0.95,
+      "is_current": true
+    },
+    {
+      "id": "616b372a-2677-4d80-90de-2689fd29102e",
+      "source": "DEC-b42c9c8c",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_REVERSED",
+      "label": "After cost review, we are switching to MySQL. I know this re",
+      "confidence": 0.95,
+      "is_current": true
+    },
+    {
+      "id": "c5cdd840-7e7c-4342-bddb-d15d24d8f2a5",
+      "source": "DEC-fb5d28ba",
+      "target": "PERS-P002",
+      "claim_type": "DECISION_MADE",
+      "label": "Decision: Kafka for event streaming in DataPipeline. James t",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "3164255a-809a-4fc1-80d1-fa33005b083c",
+      "source": "DEC-c5a24a30",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Approved. Let's aim to have someone onboarded by Q2.",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "2286ee8b-b141-421e-8913-bdf063b57915",
+      "source": "DEC-e228e7e1",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Approved. Hector please set up PagerDuty.",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "c3790309-6e0b-41c6-a53b-02602a601e94",
+      "source": "ISSUE-I001",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I001 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "ad6aa960-49ac-464a-9571-50238fc3a4e0",
+      "source": "ISSUE-I001",
+      "target": "PERS-P003",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I001 authored by PERS-P003",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "f03eb5a9-5407-4ce8-99fe-a994f69c8664",
+      "source": "ISSUE-I001",
+      "target": "PROJ-NOVEXCORE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Implement JWT authentication",
+      "confidence": 0.95,
+      "is_current": false
+    },
+    {
+      "id": "d44fca86-a34e-4549-a37f-30d4b52445e4",
+      "source": "ISSUE-I002",
+      "target": "PERS-P002",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I002 assigned to PERS-P002",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "e3e8f2eb-3240-41c5-bb7c-66e7c33e4acb",
+      "source": "ISSUE-I002",
+      "target": "PERS-P001",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I002 authored by PERS-P001",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "84451fa2-a48c-4900-8ae2-302156348f18",
+      "source": "ISSUE-I003",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I003 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "7bb92b88-a22a-4fda-ad28-50f9041521fb",
+      "source": "ISSUE-I003",
+      "target": "PERS-P009",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I003 authored by PERS-P009",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "c6638c5a-4254-44bc-acf1-64500ff8a0a5",
+      "source": "ISSUE-I003",
+      "target": "PROJ-AUTHSERVICE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Security: tokens never expire",
+      "confidence": 0.95,
+      "is_current": false
+    },
+    {
+      "id": "a911224d-8e81-4e10-928d-ad7339900d3f",
+      "source": "ISSUE-I004",
+      "target": "PERS-P010",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I004 assigned to PERS-P010",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "48b88e70-c201-4753-9a0b-f6d9e8a6f106",
+      "source": "ISSUE-I004",
+      "target": "PERS-P002",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I004 authored by PERS-P002",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "79ff0ed5-808e-4410-8f82-595043aa81e5",
+      "source": "ISSUE-I004",
+      "target": "PROJ-DATAPIPELINE",
+      "claim_type": "PERFORMANCE_METRIC",
+      "label": "Performance metric in I004: 850k msg/sec",
+      "confidence": 0.8,
+      "is_current": true
+    },
+    {
+      "id": "f0a6546f-0dea-49eb-a8a1-dbce6adc105c",
+      "source": "ISSUE-I005",
+      "target": "PERS-P008",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I005 assigned to PERS-P008",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "148ca6a9-8fd0-4552-892c-b95830c71a92",
+      "source": "ISSUE-I005",
+      "target": "PERS-P007",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I005 authored by PERS-P007",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "44996bac-a7f9-48c3-a2d4-a33776d7d9a0",
+      "source": "ISSUE-I006",
+      "target": "PERS-P010",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I006 assigned to PERS-P010",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "1c05ccc5-cfd9-43f0-9743-974a63035b6a",
+      "source": "ISSUE-I006",
+      "target": "PERS-P009",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I006 authored by PERS-P009",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "4a279ad2-6b0f-478f-9e4c-63124376969a",
+      "source": "ISSUE-I006",
+      "target": "PROJ-REPORTINGENGINE",
+      "claim_type": "PERFORMANCE_METRIC",
+      "label": "Performance metric in I006: 200ms",
+      "confidence": 0.8,
+      "is_current": true
+    },
+    {
+      "id": "049e9a0b-5fa4-49df-aa69-066e245e8e8d",
+      "source": "ISSUE-I007",
+      "target": "PERS-P005",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I007 assigned to PERS-P005",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "0c60bfb9-ce00-4316-ae4e-b89b65eef7d6",
+      "source": "ISSUE-I007",
+      "target": "PERS-P004",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I007 authored by PERS-P004",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "29bbfe58-8a75-42fd-af63-6815370d17cb",
+      "source": "ISSUE-I008",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I008 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "aad2fdb5-203d-4ec8-b237-0825f9c2b32b",
+      "source": "ISSUE-I008",
+      "target": "PERS-P003",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I008 authored by PERS-P003",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "d4cccd6c-482e-4cb6-bfbc-f88087878474",
+      "source": "ISSUE-I008",
+      "target": "PROJ-AUTHSERVICE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Add refresh token support",
+      "confidence": 0.95,
+      "is_current": false
+    },
+    {
+      "id": "ef480192-fd50-4293-8d69-5125f7adc8c0",
+      "source": "PROJ-NOVEXCORE",
+      "target": "TECH-POSTGRESQL",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Novexcore uses PostgreSQL",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "ec866b0e-0311-45ca-8f20-a9ab633bae0d",
+      "source": "PROJ-DATAPIPELINE",
+      "target": "TECH-POSTGRESQL",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Datapipeline uses PostgreSQL",
+      "confidence": 0.85,
+      "is_current": true
+    },
+    {
+      "id": "0d8eb534-ca22-45b1-af1c-d460f028623f",
+      "source": "PROJ-DATAPIPELINE",
+      "target": "TECH-MYSQL",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Datapipeline uses MySQL",
+      "confidence": 0.85,
+      "is_current": true
+    },
+    {
+      "id": "99a9cefc-9792-4c7e-84b9-2679c60052cf",
+      "source": "DEC-8659a450",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Decision made: we go with PostgreSQL for NovexCore v2. David",
+      "confidence": 0.9,
+      "is_current": false
+    },
+    {
+      "id": "61b97644-6fa1-4309-9b7c-afa0b0f9caf9",
+      "source": "DEC-8880b997",
+      "target": "PERS-P007",
+      "claim_type": "DECISION_REVERSED",
+      "label": "Heads up: the cloud vendor deal gives us managed MySQL at 40",
+      "confidence": 0.95,
+      "is_current": true
+    },
+    {
+      "id": "7354b745-f740-4dd8-b908-e5ee78ed86d9",
+      "source": "DEC-895532bd",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_REVERSED",
+      "label": "After cost review, we are switching to MySQL. I know this re",
+      "confidence": 0.95,
+      "is_current": true
+    },
+    {
+      "id": "cfebbad3-8abf-4b6c-9aa3-5ac381b9d7f6",
+      "source": "PROJ-NOVEXCORE",
+      "target": "TECH-KUBERNETES",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Novexcore uses Kubernetes",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "d690b5da-0ca3-41d0-857b-03eb7b8b05c3",
+      "source": "PROJ-REPORTINGENGINE",
+      "target": "TECH-KUBERNETES",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Reportingengine uses Kubernetes",
+      "confidence": 0.85,
+      "is_current": true
+    },
+    {
+      "id": "9c926003-2f44-4c49-82fe-168ba759ebf6",
+      "source": "PROJ-INFRAV2",
+      "target": "TECH-KUBERNETES",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Infrav2 uses Kubernetes",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "5ec0382e-b683-4776-b73f-4738fccc11ff",
+      "source": "PROJ-DATAPIPELINE",
+      "target": "TECH-KAFKA",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Datapipeline uses Kafka",
+      "confidence": 0.85,
+      "is_current": true
+    },
+    {
+      "id": "1fe58bd0-6fad-41fa-9e68-39e98c9019ba",
+      "source": "DEC-2cb0b913",
+      "target": "PERS-P002",
+      "claim_type": "DECISION_MADE",
+      "label": "Decision: Kafka for event streaming in DataPipeline. James t",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "ce9f63a3-9b1e-4f30-affc-89d55c505041",
+      "source": "DEC-0c926968",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Approved. Let's aim to have someone onboarded by Q2.",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "ec679d68-bbe0-4270-9d51-2462c0a57f10",
+      "source": "DEC-19005c41",
+      "target": "PERS-P001",
+      "claim_type": "DECISION_MADE",
+      "label": "Approved. Hector please set up PagerDuty.",
+      "confidence": 0.9,
+      "is_current": true
+    },
+    {
+      "id": "9320594e-cc9d-4acc-b012-08cc3536ff7e",
+      "source": "PROJ-INFRAV2",
+      "target": "TECH-POSTGRESQL",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Infrav2 uses PostgreSQL",
+      "confidence": 0.85,
+      "is_current": true
+    },
+    {
+      "id": "0a2c03a4-9d3f-4e9b-b0c3-4e5e15da5873",
+      "source": "PROJ-NOVEXCORE",
+      "target": "TECH-MYSQL",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Novexcore uses MySQL",
+      "confidence": 0.95,
+      "is_current": true
+    },
+    {
+      "id": "419d24e6-3757-4ac2-92f1-17e2dd550726",
+      "source": "PROJ-INFRAV2",
+      "target": "TECH-MYSQL",
+      "claim_type": "USES_TECHNOLOGY",
+      "label": "Infrav2 uses MySQL",
+      "confidence": 0.85,
+      "is_current": true
+    },
+    {
+      "id": "3fe4c1c0-e3ca-445d-b44e-178b04f98aee",
+      "source": "ISSUE-I001",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I001 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "73b404b2-54c2-4b6e-b089-d4bd69ff11b3",
+      "source": "ISSUE-I001",
+      "target": "PERS-P003",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I001 authored by PERS-P003",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "8229462f-f45e-4a8c-b98d-7f5e53083f87",
+      "source": "ISSUE-I001",
+      "target": "PROJ-NOVEXCORE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Implement JWT authentication",
+      "confidence": 0.95,
+      "is_current": false
+    },
+    {
+      "id": "e3c926ac-0856-4e34-b8a6-8cba5cf51086",
+      "source": "ISSUE-I002",
+      "target": "PERS-P002",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I002 assigned to PERS-P002",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "786e3aa3-ba8c-4df6-a559-ac78be1b8ea5",
+      "source": "ISSUE-I002",
+      "target": "PERS-P001",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I002 authored by PERS-P001",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "40a2b904-2377-42f2-aec3-b82d2fd7e0eb",
+      "source": "ISSUE-I003",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I003 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "205d49c7-8b72-4364-8478-753db3917efc",
+      "source": "ISSUE-I003",
+      "target": "PERS-P009",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I003 authored by PERS-P009",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "5d23ddfd-df30-4405-90fe-60bd08157bbb",
+      "source": "ISSUE-I003",
+      "target": "PROJ-AUTHSERVICE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Security: tokens never expire",
+      "confidence": 0.95,
+      "is_current": false
+    },
+    {
+      "id": "dcdc5303-285e-41a1-a80b-4aef4c4e23fa",
+      "source": "ISSUE-I004",
+      "target": "PERS-P010",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I004 assigned to PERS-P010",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "6be38fad-71c1-476d-93bb-10c7ece7d8e4",
+      "source": "ISSUE-I004",
+      "target": "PERS-P002",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I004 authored by PERS-P002",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "9d7d791f-d095-41a5-bc33-fc238497faa3",
+      "source": "ISSUE-I004",
+      "target": "PROJ-DATAPIPELINE",
+      "claim_type": "PERFORMANCE_METRIC",
+      "label": "Performance metric in I004: 850k msg/sec",
+      "confidence": 0.8,
+      "is_current": true
+    },
+    {
+      "id": "46c9ae2d-3a5f-425f-bd2a-0c5c397b9612",
+      "source": "ISSUE-I005",
+      "target": "PERS-P008",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I005 assigned to PERS-P008",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "aa3863a4-807f-4d66-885c-6fb0f707c1e3",
+      "source": "ISSUE-I005",
+      "target": "PERS-P007",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I005 authored by PERS-P007",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "e5578488-d353-4f35-8b4b-5c64d8f8c0af",
+      "source": "ISSUE-I006",
+      "target": "PERS-P010",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I006 assigned to PERS-P010",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "8a0c5cf5-3ff3-40b0-9f28-478e918ff412",
+      "source": "ISSUE-I006",
+      "target": "PERS-P009",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I006 authored by PERS-P009",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "ff8cc76c-39c2-4ae0-a21e-092932f4fb07",
+      "source": "ISSUE-I006",
+      "target": "PROJ-REPORTINGENGINE",
+      "claim_type": "PERFORMANCE_METRIC",
+      "label": "Performance metric in I006: 200ms",
+      "confidence": 0.8,
+      "is_current": true
+    },
+    {
+      "id": "d29e8745-d521-48c8-a204-57ba09453ff1",
+      "source": "ISSUE-I007",
+      "target": "PERS-P005",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I007 assigned to PERS-P005",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "4e0f0fd1-cc6d-461a-85f4-e5cd8272885c",
+      "source": "ISSUE-I007",
+      "target": "PERS-P004",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I007 authored by PERS-P004",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "d5887b76-0e02-4be1-a7a0-97551fbbff4b",
+      "source": "ISSUE-I008",
+      "target": "PERS-P006",
+      "claim_type": "ASSIGNED_TO",
+      "label": "Issue I008 assigned to PERS-P006",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "b71ee416-2331-4afc-aaa3-7f5638bae106",
+      "source": "ISSUE-I008",
+      "target": "PERS-P003",
+      "claim_type": "AUTHORED_BY",
+      "label": "Issue I008 authored by PERS-P003",
+      "confidence": 1.0,
+      "is_current": true
+    },
+    {
+      "id": "72ea0625-bd98-4331-baaa-561270565d10",
+      "source": "ISSUE-I008",
+      "target": "PROJ-AUTHSERVICE",
+      "claim_type": "INCIDENT_OCCURRED",
+      "label": "Security/incident: Add refresh token support",
+      "confidence": 0.95,
+      "is_current": false
+    }
+  ]
+}

@@ -1,0 +1,251 @@
+{
+  "query": "What happened with Python version upgrades?",
+  "context_pack": {
+    "query": "What happened with Python version upgrades?",
+    "retrieved_at": "2026-03-08T18:12:34.052297Z",
+    "claims": [
+      {
+        "claim_id": "ef480192-fd50-4293-8d69-5125f7adc8c0",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Novexcore uses PostgreSQL",
+        "value": "PostgreSQL",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-15T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "73541493-4dc1-4eaf-98a0-829177bc19ac",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+          "8659a450-61df-495a-829f-0dc09561437a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "06f4d4d7-d073-4baf-b21f-56efdb212e2d",
+        "claim_type": "HAS_STATUS",
+        "predicate": "Issue I007 status: closed",
+        "value": "closed",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-14T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "30d84ab4-97d5-4a00-9006-7a205a062c3a"
+        ],
+        "tags": [
+          "issue",
+          "status"
+        ]
+      },
+      {
+        "claim_id": "e8e5e2e2-fc66-4b06-8aa2-b3451d21e34d",
+        "claim_type": "ASSIGNED_TO",
+        "predicate": "Issue I007 assigned to PERS-P005",
+        "value": "PERS-P005",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "30d84ab4-97d5-4a00-9006-7a205a062c3a"
+        ],
+        "tags": [
+          "issue",
+          "assignment"
+        ]
+      },
+      {
+        "claim_id": "4b8b8662-9067-4c01-8758-2bf4fab957a6",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I007 authored by PERS-P004",
+        "value": "PERS-P004",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "30d84ab4-97d5-4a00-9006-7a205a062c3a"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "ae88c942-081e-4eb0-a5a1-bbd5318f5625",
+        "claim_type": "HAS_STATUS",
+        "predicate": "Issue I007 status: closed",
+        "value": "closed",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-14T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "47105ba8-61d7-4c89-b4a2-ac438089edfb"
+        ],
+        "tags": [
+          "issue",
+          "status"
+        ]
+      },
+      {
+        "claim_id": "049e9a0b-5fa4-49df-aa69-066e245e8e8d",
+        "claim_type": "ASSIGNED_TO",
+        "predicate": "Issue I007 assigned to PERS-P005",
+        "value": "PERS-P005",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "47105ba8-61d7-4c89-b4a2-ac438089edfb"
+        ],
+        "tags": [
+          "issue",
+          "assignment"
+        ]
+      },
+      {
+        "claim_id": "0c60bfb9-ce00-4316-ae4e-b89b65eef7d6",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I007 authored by PERS-P004",
+        "value": "PERS-P004",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "47105ba8-61d7-4c89-b4a2-ac438089edfb"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "53f6b875-0d41-4023-ab4a-87382c8543d9",
+        "claim_type": "HAS_STATUS",
+        "predicate": "Issue I007 status: closed",
+        "value": "closed",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-14T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "0ea2f84f-8bdf-43c6-a892-e49d7af9d297"
+        ],
+        "tags": [
+          "issue",
+          "status"
+        ]
+      }
+    ],
+    "evidence_snippets": [
+      {
+        "evidence_id": "b247a09f-ff64-4a57-8ba4-d2de2ac7a516",
+        "source_id": "EMAIL-T009-04",
+        "source_type": "email",
+        "timestamp": "2024-02-14T09:00:00Z",
+        "excerpt": "All services now on Python 3.12. legacy-stats replaced with statslib. Upgrade complete.",
+        "relevance_score": 0.4338,
+        "citation": "[EMAIL EMAIL-T009-04 @ 2024-02-14]"
+      },
+      {
+        "evidence_id": "a6401fd5-0069-4b12-966f-4267fba8e768",
+        "source_id": "EMAIL-T009-04",
+        "source_type": "email",
+        "timestamp": "2024-02-14T09:00:00Z",
+        "excerpt": "All services now on Python 3.12. legacy-stats replaced with statslib. Upgrade complete.",
+        "relevance_score": 0.4338,
+        "citation": "[EMAIL EMAIL-T009-04 @ 2024-02-14]"
+      },
+      {
+        "evidence_id": "e39dcb1a-3bde-4ac4-bfbf-3cd8e509f719",
+        "source_id": "EMAIL-T009-04",
+        "source_type": "email",
+        "timestamp": "2024-02-14T09:00:00Z",
+        "excerpt": "All services now on Python 3.12. legacy-stats replaced with statslib. Upgrade complete.",
+        "relevance_score": 0.4338,
+        "citation": "[EMAIL EMAIL-T009-04 @ 2024-02-14]"
+      },
+      {
+        "evidence_id": "10fab7e4-32b5-408e-b2a2-cca1619df458",
+        "source_id": "I007-CMT-634597f97262c704",
+        "source_type": "issue_comment",
+        "timestamp": "2024-02-07T09:00:00Z",
+        "excerpt": "Replacing legacy-stats with statslib. ETA 1 week.",
+        "relevance_score": 0.4187,
+        "citation": "[ISSUE_COMMENT I007-CMT-634597f97262c704 @ 2024-02-07]"
+      },
+      {
+        "evidence_id": "ff4ef245-d426-4600-b51d-4d855a28719b",
+        "source_id": "I007-CMT-634597f97262c704",
+        "source_type": "issue_comment",
+        "timestamp": "2024-02-07T09:00:00Z",
+        "excerpt": "Replacing legacy-stats with statslib. ETA 1 week.",
+        "relevance_score": 0.4187,
+        "citation": "[ISSUE_COMMENT I007-CMT-634597f97262c704 @ 2024-02-07]"
+      },
+      {
+        "evidence_id": "e8486598-f4a4-484b-996f-2aacbbc84288",
+        "source_id": "I007-CMT-634597f97262c704",
+        "source_type": "issue_comment",
+        "timestamp": "2024-02-07T09:00:00Z",
+        "excerpt": "Replacing legacy-stats with statslib. ETA 1 week.",
+        "relevance_score": 0.4187,
+        "citation": "[ISSUE_COMMENT I007-CMT-634597f97262c704 @ 2024-02-07]"
+      },
+      {
+        "evidence_id": "5bd63edd-0d5e-4241-8b56-77870ff46f17",
+        "source_id": "I001-CMT-2318ba6e4f6c07b9",
+        "source_type": "issue_comment",
+        "timestamp": "2024-01-17T09:00:00Z",
+        "excerpt": "Working on this. Using python-jose library.",
+        "relevance_score": 0.3869,
+        "citation": "[ISSUE_COMMENT I001-CMT-2318ba6e4f6c07b9 @ 2024-01-17]"
+      },
+      {
+        "evidence_id": "bb734463-0cdf-4174-9670-d6a3f3fb4d4b",
+        "source_id": "I001-CMT-2318ba6e4f6c07b9",
+        "source_type": "issue_comment",
+        "timestamp": "2024-01-17T09:00:00Z",
+        "excerpt": "Working on this. Using python-jose library.",
+        "relevance_score": 0.3869,
+        "citation": "[ISSUE_COMMENT I001-CMT-2318ba6e4f6c07b9 @ 2024-01-17]"
+      },
+      {
+        "evidence_id": "73541493-4dc1-4eaf-98a0-829177bc19ac",
+        "source_id": "EMAIL-T001-00",
+        "source_type": "email",
+        "timestamp": "2024-01-15T09:00:00Z",
+        "excerpt": "Team, we need to decide on the database for NovexCore v2. I'm leaning toward PostgreSQL for its JSON support and strong ACID guarantees. Thoughts?",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T001-00 @ 2024-01-15]"
+      },
+      {
+        "evidence_id": "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+        "source_id": "EMAIL-T010-00",
+        "source_type": "email",
+        "timestamp": "2024-02-19T09:00:00Z",
+        "excerpt": "Notes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway (yes, we switched from Postgres)\n- New hire joins April 1\n- Q2 focus: InfraV2 Kubernetes migration",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T010-00 @ 2024-02-19]"
+      }
+    ],
+    "entities": [
+      {
+        "entity_id": "TECH-PYTHON",
+        "entity_type": "technology",
+        "canonical_name": "Python",
+        "aliases": [
+          "Python"
+        ]
+      }
+    ],
+    "conflicts_detected": [],
+    "answer_hint": "Novexcore uses PostgreSQL | Issue I007 status: closed | Issue I007 assigned to PERS-P005"
+  }
+}

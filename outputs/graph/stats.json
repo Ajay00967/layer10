@@ -1,0 +1,12 @@
+{
+  "entities": 23,
+  "claims_total": 166,
+  "claims_current": 103,
+  "evidence": 225,
+  "artifacts": 76,
+  "artifacts_redacted": 1,
+  "artifacts_deduplicated": 0,
+  "decision_reversals": 6,
+  "graph_nodes": 49,
+  "graph_edges": 49
+}

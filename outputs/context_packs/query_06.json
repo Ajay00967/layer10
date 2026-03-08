@@ -1,0 +1,247 @@
+{
+  "query": "Who owns the DataPipeline project?",
+  "context_pack": {
+    "query": "Who owns the DataPipeline project?",
+    "retrieved_at": "2026-03-08T18:12:34.052297Z",
+    "claims": [
+      {
+        "claim_id": "5ec0382e-b683-4776-b73f-4738fccc11ff",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Datapipeline uses Kafka",
+        "value": "Kafka",
+        "confidence": 0.85,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "2cb0b913-7752-4089-8009-81b08a4a1e78"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "25e4ccd6-e530-4d2a-9ac5-3bd99584aa6e",
+        "claim_type": "PERFORMANCE_METRIC",
+        "predicate": "Performance metric in I004: 850k msg/sec",
+        "value": "850k msg/sec",
+        "confidence": 0.8,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "f582ac82-113a-48f1-af13-70cbd8519263"
+        ],
+        "tags": [
+          "performance",
+          "metric"
+        ]
+      },
+      {
+        "claim_id": "79ff0ed5-808e-4410-8f82-595043aa81e5",
+        "claim_type": "PERFORMANCE_METRIC",
+        "predicate": "Performance metric in I004: 850k msg/sec",
+        "value": "850k msg/sec",
+        "confidence": 0.8,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "d99a9ad9-78c6-489d-bc40-381dfa67fdeb"
+        ],
+        "tags": [
+          "performance",
+          "metric"
+        ]
+      },
+      {
+        "claim_id": "9d7d791f-d095-41a5-bc33-fc238497faa3",
+        "claim_type": "PERFORMANCE_METRIC",
+        "predicate": "Performance metric in I004: 850k msg/sec",
+        "value": "850k msg/sec",
+        "confidence": 0.8,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "bd8cdd8d-2ce0-45ca-aade-004ab3b923b4"
+        ],
+        "tags": [
+          "performance",
+          "metric"
+        ]
+      },
+      {
+        "claim_id": "ec866b0e-0311-45ca-8f20-a9ab633bae0d",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Datapipeline uses PostgreSQL",
+        "value": "PostgreSQL",
+        "confidence": 0.85,
+        "is_current": true,
+        "valid_from": "2024-01-15T16:12:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "12fdc94a-e4c6-4c4a-814d-933311caf424"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "0d8eb534-ca22-45b1-af1c-d460f028623f",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Datapipeline uses MySQL",
+        "value": "MySQL",
+        "confidence": 0.85,
+        "is_current": true,
+        "valid_from": "2024-01-15T16:12:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "12fdc94a-e4c6-4c4a-814d-933311caf424"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "1b29309c-11a1-44ac-b1b7-0234adfbabef",
+        "claim_type": "DECISION_MADE",
+        "predicate": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "value": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "confidence": 0.9,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "85d79ac7-cbfc-49c4-9ab9-3ff3acca181e"
+        ],
+        "tags": [
+          "decision"
+        ]
+      },
+      {
+        "claim_id": "c5cdd840-7e7c-4342-bddb-d15d24d8f2a5",
+        "claim_type": "DECISION_MADE",
+        "predicate": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "value": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "confidence": 0.9,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "fb5d28ba-85fa-4545-a32f-e1d8fd881855"
+        ],
+        "tags": [
+          "decision"
+        ]
+      }
+    ],
+    "evidence_snippets": [
+      {
+        "evidence_id": "85d79ac7-cbfc-49c4-9ab9-3ff3acca181e",
+        "source_id": "EMAIL-T005-03",
+        "source_type": "email",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "relevance_score": 0.2665,
+        "citation": "[EMAIL EMAIL-T005-03 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "fb5d28ba-85fa-4545-a32f-e1d8fd881855",
+        "source_id": "EMAIL-T005-03",
+        "source_type": "email",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "relevance_score": 0.2665,
+        "citation": "[EMAIL EMAIL-T005-03 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "2cb0b913-7752-4089-8009-81b08a4a1e78",
+        "source_id": "EMAIL-T005-03",
+        "source_type": "email",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "relevance_score": 0.2665,
+        "citation": "[EMAIL EMAIL-T005-03 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "1d5f9701-4a00-4f01-9232-4d988a3b6976",
+        "source_id": "EMAIL-T009-03",
+        "source_type": "email",
+        "timestamp": "2024-02-06T21:00:00Z",
+        "excerpt": "I'll handle the legacy-stats replacement \u2014 ETA 1 week.",
+        "relevance_score": 0.2399,
+        "citation": "[EMAIL EMAIL-T009-03 @ 2024-02-06]"
+      },
+      {
+        "evidence_id": "c26256d8-97c0-4f10-a1d5-4a73d2ee90de",
+        "source_id": "EMAIL-T009-03",
+        "source_type": "email",
+        "timestamp": "2024-02-06T21:00:00Z",
+        "excerpt": "I'll handle the legacy-stats replacement \u2014 ETA 1 week.",
+        "relevance_score": 0.2399,
+        "citation": "[EMAIL EMAIL-T009-03 @ 2024-02-06]"
+      },
+      {
+        "evidence_id": "3a261f37-cdf9-4640-ad69-774c96ba7daf",
+        "source_id": "EMAIL-T009-03",
+        "source_type": "email",
+        "timestamp": "2024-02-06T21:00:00Z",
+        "excerpt": "I'll handle the legacy-stats replacement \u2014 ETA 1 week.",
+        "relevance_score": 0.2399,
+        "citation": "[EMAIL EMAIL-T009-03 @ 2024-02-06]"
+      },
+      {
+        "evidence_id": "f582ac82-113a-48f1-af13-70cbd8519263",
+        "source_id": "I004",
+        "source_type": "issue",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Implement Kafka producer/consumer for DataPipeline analytics events. Target: 1M msg/sec throughput.",
+        "relevance_score": 0.2255,
+        "citation": "[ISSUE I004 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "d99a9ad9-78c6-489d-bc40-381dfa67fdeb",
+        "source_id": "I004",
+        "source_type": "issue",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Implement Kafka producer/consumer for DataPipeline analytics events. Target: 1M msg/sec throughput.",
+        "relevance_score": 0.2255,
+        "citation": "[ISSUE I004 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "bd8cdd8d-2ce0-45ca-aade-004ab3b923b4",
+        "source_id": "I004",
+        "source_type": "issue",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Implement Kafka producer/consumer for DataPipeline analytics events. Target: 1M msg/sec throughput.",
+        "relevance_score": 0.0,
+        "citation": "[ISSUE I004 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "12fdc94a-e4c6-4c4a-814d-933311caf424",
+        "source_id": "EMAIL-T001-01",
+        "source_type": "email",
+        "timestamp": "2024-01-15T16:12:00Z",
+        "excerpt": "Agree on Postgres. We've used it in DataPipeline and it's been rock solid. MySQL is an option but Postgres has better window functions.",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T001-01 @ 2024-01-15]"
+      }
+    ],
+    "entities": [
+      {
+        "entity_id": "PROJ-DATAPIPELINE",
+        "entity_type": "project",
+        "canonical_name": "DataPipeline",
+        "aliases": [
+          "DataPipeline"
+        ]
+      }
+    ],
+    "conflicts_detected": [],
+    "answer_hint": "Datapipeline uses Kafka | Performance metric in I004: 850k msg/sec | Performance metric in I004: 850k msg/sec"
+  }
+}

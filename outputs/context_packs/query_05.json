@@ -1,0 +1,246 @@
+{
+  "query": "What performance metrics were reported for Kafka?",
+  "context_pack": {
+    "query": "What performance metrics were reported for Kafka?",
+    "retrieved_at": "2026-03-08T18:12:34.052297Z",
+    "claims": [
+      {
+        "claim_id": "5ec0382e-b683-4776-b73f-4738fccc11ff",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Datapipeline uses Kafka",
+        "value": "Kafka",
+        "confidence": 0.85,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "2cb0b913-7752-4089-8009-81b08a4a1e78"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "1b29309c-11a1-44ac-b1b7-0234adfbabef",
+        "claim_type": "DECISION_MADE",
+        "predicate": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "value": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "confidence": 0.9,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "85d79ac7-cbfc-49c4-9ab9-3ff3acca181e"
+        ],
+        "tags": [
+          "decision"
+        ]
+      },
+      {
+        "claim_id": "c5cdd840-7e7c-4342-bddb-d15d24d8f2a5",
+        "claim_type": "DECISION_MADE",
+        "predicate": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "value": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "confidence": 0.9,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "fb5d28ba-85fa-4545-a32f-e1d8fd881855"
+        ],
+        "tags": [
+          "decision"
+        ]
+      },
+      {
+        "claim_id": "1fe58bd0-6fad-41fa-9e68-39e98c9019ba",
+        "claim_type": "DECISION_MADE",
+        "predicate": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "value": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "confidence": 0.9,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "2cb0b913-7752-4089-8009-81b08a4a1e78"
+        ],
+        "tags": [
+          "decision"
+        ]
+      },
+      {
+        "claim_id": "31a20022-d755-49e6-9c55-ccaa4c970bd4",
+        "claim_type": "HAS_STATUS",
+        "predicate": "Issue I004 status: closed",
+        "value": "closed",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "f582ac82-113a-48f1-af13-70cbd8519263"
+        ],
+        "tags": [
+          "issue",
+          "status"
+        ]
+      },
+      {
+        "claim_id": "1170b717-6b65-4c5e-a393-d9f385390d1c",
+        "claim_type": "ASSIGNED_TO",
+        "predicate": "Issue I004 assigned to PERS-P010",
+        "value": "PERS-P010",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "f582ac82-113a-48f1-af13-70cbd8519263"
+        ],
+        "tags": [
+          "issue",
+          "assignment"
+        ]
+      },
+      {
+        "claim_id": "aa66ad08-613b-442a-b5f3-b18c1182159d",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I004 authored by PERS-P002",
+        "value": "PERS-P002",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-26T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "f582ac82-113a-48f1-af13-70cbd8519263"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "f42afc12-42cc-42a1-b496-3d580d3e6599",
+        "claim_type": "HAS_STATUS",
+        "predicate": "Issue I004 status: closed",
+        "value": "closed",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-06T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "d99a9ad9-78c6-489d-bc40-381dfa67fdeb"
+        ],
+        "tags": [
+          "issue",
+          "status"
+        ]
+      }
+    ],
+    "evidence_snippets": [
+      {
+        "evidence_id": "a0b5729c-c471-4612-b489-fa72cc53fcc7",
+        "source_id": "EMAIL-T012-03",
+        "source_type": "email",
+        "timestamp": "2024-02-24T21:00:00Z",
+        "excerpt": "Confirmed. Performance restored. Post-mortem due Friday.",
+        "relevance_score": 0.5178,
+        "citation": "[EMAIL EMAIL-T012-03 @ 2024-02-24]"
+      },
+      {
+        "evidence_id": "0bbf3e13-3120-46af-bd1c-c7338fad1f49",
+        "source_id": "EMAIL-T012-03",
+        "source_type": "email",
+        "timestamp": "2024-02-24T21:00:00Z",
+        "excerpt": "Confirmed. Performance restored. Post-mortem due Friday.",
+        "relevance_score": 0.5178,
+        "citation": "[EMAIL EMAIL-T012-03 @ 2024-02-24]"
+      },
+      {
+        "evidence_id": "f2ed44cb-92ca-4b2b-9eec-d6c2241a8e2e",
+        "source_id": "EMAIL-T012-03",
+        "source_type": "email",
+        "timestamp": "2024-02-24T21:00:00Z",
+        "excerpt": "Confirmed. Performance restored. Post-mortem due Friday.",
+        "relevance_score": 0.5178,
+        "citation": "[EMAIL EMAIL-T012-03 @ 2024-02-24]"
+      },
+      {
+        "evidence_id": "7ff13162-edaf-4941-994b-798855baaf8a",
+        "source_id": "I004-CMT-fb01a024ab8016b7",
+        "source_type": "issue_comment",
+        "timestamp": "2024-01-27T09:00:00Z",
+        "excerpt": "Setting up Kafka cluster on K8s.",
+        "relevance_score": 0.3953,
+        "citation": "[ISSUE_COMMENT I004-CMT-fb01a024ab8016b7 @ 2024-01-27]"
+      },
+      {
+        "evidence_id": "bbb9bdd0-3520-4bac-8b55-0e9bba2f1cb8",
+        "source_id": "I004-CMT-fb01a024ab8016b7",
+        "source_type": "issue_comment",
+        "timestamp": "2024-01-27T09:00:00Z",
+        "excerpt": "Setting up Kafka cluster on K8s.",
+        "relevance_score": 0.3953,
+        "citation": "[ISSUE_COMMENT I004-CMT-fb01a024ab8016b7 @ 2024-01-27]"
+      },
+      {
+        "evidence_id": "e5487907-f5d3-4138-bcf0-8d1cbe4f68b6",
+        "source_id": "I004-CMT-fb01a024ab8016b7",
+        "source_type": "issue_comment",
+        "timestamp": "2024-01-27T09:00:00Z",
+        "excerpt": "Setting up Kafka cluster on K8s.",
+        "relevance_score": 0.3953,
+        "citation": "[ISSUE_COMMENT I004-CMT-fb01a024ab8016b7 @ 2024-01-27]"
+      },
+      {
+        "evidence_id": "85d79ac7-cbfc-49c4-9ab9-3ff3acca181e",
+        "source_id": "EMAIL-T005-03",
+        "source_type": "email",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "relevance_score": 0.3749,
+        "citation": "[EMAIL EMAIL-T005-03 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "fb5d28ba-85fa-4545-a32f-e1d8fd881855",
+        "source_id": "EMAIL-T005-03",
+        "source_type": "email",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "relevance_score": 0.3749,
+        "citation": "[EMAIL EMAIL-T005-03 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "2cb0b913-7752-4089-8009-81b08a4a1e78",
+        "source_id": "EMAIL-T005-03",
+        "source_type": "email",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T005-03 @ 2024-01-26]"
+      },
+      {
+        "evidence_id": "f582ac82-113a-48f1-af13-70cbd8519263",
+        "source_id": "I004",
+        "source_type": "issue",
+        "timestamp": "2024-01-26T09:00:00Z",
+        "excerpt": "Implement Kafka producer/consumer for DataPipeline analytics events. Target: 1M msg/sec throughput.",
+        "relevance_score": 0.0,
+        "citation": "[ISSUE I004 @ 2024-01-26]"
+      }
+    ],
+    "entities": [
+      {
+        "entity_id": "TECH-KAFKA",
+        "entity_type": "technology",
+        "canonical_name": "Kafka",
+        "aliases": [
+          "Kafka"
+        ]
+      }
+    ],
+    "conflicts_detected": [],
+    "answer_hint": "Datapipeline uses Kafka | Decision: Kafka for event streaming in DataPipeline. James to lead implementation. | Decision: Kafka for event streaming in DataPipeline. James to lead implementation."
+  }
+}

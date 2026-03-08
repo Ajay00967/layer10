@@ -1,0 +1,1628 @@
+{
+  "meta": {
+    "corpus_name": "Novex Engineering Communications (Synthetic)",
+    "description": "Synthetic corpus modelling the structure and challenges of the Enron Email Dataset (CMU/Kaggle) combined with GitHub Issues. Mirrors: identity aliasing, email quoting/forwarding, decision reversals, state transitions, redacted messages, and cross-posts. To use the real Enron corpus, replace this generator with the loader in src/enron_loader.py (documented separately).",
+    "people": [
+      {
+        "id": "P001",
+        "name": "Alice Hartmann",
+        "aliases": [
+          "alice.hartmann@novex.com",
+          "ahartmann@novex.com",
+          "A. Hartmann"
+        ],
+        "role": "VP Engineering"
+      },
+      {
+        "id": "P002",
+        "name": "Bob Delgado",
+        "aliases": [
+          "bob.delgado@novex.com",
+          "bdelgado@novex.com",
+          "Bobby D"
+        ],
+        "role": "Senior Engineer"
+      },
+      {
+        "id": "P003",
+        "name": "Carol Finch",
+        "aliases": [
+          "carol.finch@novex.com",
+          "c.finch@novex.com",
+          "Carol F."
+        ],
+        "role": "Product Manager"
+      },
+      {
+        "id": "P004",
+        "name": "David Osei",
+        "aliases": [
+          "david.osei@novex.com",
+          "dosei@novex.com",
+          "Dave Osei"
+        ],
+        "role": "Engineer"
+      },
+      {
+        "id": "P005",
+        "name": "Eva Lindstr\u00f6m",
+        "aliases": [
+          "eva.lindstrom@novex.com",
+          "elindstrom@novex.com",
+          "Eva L."
+        ],
+        "role": "Data Engineer"
+      },
+      {
+        "id": "P006",
+        "name": "Frank Nguyen",
+        "aliases": [
+          "frank.nguyen@novex.com",
+          "fnguyen@novex.com",
+          "Frank N."
+        ],
+        "role": "Engineer"
+      },
+      {
+        "id": "P007",
+        "name": "Grace Kim",
+        "aliases": [
+          "grace.kim@novex.com",
+          "gkim@novex.com",
+          "G. Kim"
+        ],
+        "role": "Engineering Manager"
+      },
+      {
+        "id": "P008",
+        "name": "Hector Romero",
+        "aliases": [
+          "hector.romero@novex.com",
+          "hromero@novex.com",
+          "Hector R."
+        ],
+        "role": "DevOps"
+      },
+      {
+        "id": "P009",
+        "name": "Iris Johansson",
+        "aliases": [
+          "iris.johansson@novex.com",
+          "ijohansson@novex.com",
+          "Iris J."
+        ],
+        "role": "QA Engineer"
+      },
+      {
+        "id": "P010",
+        "name": "James Park",
+        "aliases": [
+          "james.park@novex.com",
+          "jpark@novex.com",
+          "Jim Park"
+        ],
+        "role": "Backend Engineer"
+      }
+    ],
+    "projects": [
+      "NovexCore",
+      "DataPipeline",
+      "AuthService",
+      "ReportingEngine",
+      "InfraV2"
+    ],
+    "components": [
+      "API",
+      "Database",
+      "Frontend",
+      "CI/CD",
+      "Security",
+      "Analytics"
+    ],
+    "generated_at": "2026-03-08T18:12:34.053394Z",
+    "email_count": 43,
+    "issue_count": 8
+  },
+  "emails": [
+    {
+      "id": "EMAIL-T001-00",
+      "type": "email",
+      "thread_id": "T001",
+      "subject": "Database selection for NovexCore v2",
+      "from": "alice.hartmann@novex.com",
+      "from_person_id": "P001",
+      "to": [
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-15T09:00:00Z",
+      "body": "Team, we need to decide on the database for NovexCore v2. I'm leaning toward PostgreSQL for its JSON support and strong ACID guarantees. Thoughts?",
+      "reply_to": null,
+      "hash": "47c22df9633e2727",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 146
+    },
+    {
+      "id": "EMAIL-T001-01",
+      "type": "email",
+      "thread_id": "T001",
+      "subject": "Database selection for NovexCore v2",
+      "from": "bdelgado@novex.com",
+      "from_person_id": "P002",
+      "to": [
+        "alice.hartmann@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-15T16:12:00Z",
+      "body": "Agree on Postgres. We've used it in DataPipeline and it's been rock solid. MySQL is an option but Postgres has better window functions.",
+      "reply_to": "EMAIL-T001-00",
+      "hash": "ebc0879a8c159bee",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 135
+    },
+    {
+      "id": "EMAIL-T001-02",
+      "type": "email",
+      "thread_id": "T001",
+      "subject": "Database selection for NovexCore v2",
+      "from": "Dave Osei",
+      "from_person_id": "P004",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-15T21:00:00Z",
+      "body": "I've benchmarked both. PostgreSQL wins on complex queries by ~30%. My recommendation: PostgreSQL.",
+      "reply_to": "EMAIL-T001-00",
+      "hash": "5d5682a730e07220",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 97
+    },
+    {
+      "id": "EMAIL-T001-03",
+      "type": "email",
+      "thread_id": "T001",
+      "subject": "Database selection for NovexCore v2",
+      "from": "c.finch@novex.com",
+      "from_person_id": "P003",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-16T09:00:00Z",
+      "body": "From a product angle, either works. I'll defer to engineering here.",
+      "reply_to": "EMAIL-T001-01",
+      "hash": "03011b8f87b6e968",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 67
+    },
+    {
+      "id": "EMAIL-T001-04",
+      "type": "email",
+      "thread_id": "T001",
+      "subject": "Database selection for NovexCore v2",
+      "from": "A. Hartmann",
+      "from_person_id": "P001",
+      "to": [
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-16T13:48:00Z",
+      "body": "Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.",
+      "reply_to": "EMAIL-T001-02",
+      "hash": "4f967361481c8a23",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 84
+    },
+    {
+      "id": "EMAIL-T001-05",
+      "type": "email",
+      "thread_id": "T001",
+      "subject": "Database selection for NovexCore v2",
+      "from": "gkim@novex.com",
+      "from_person_id": "P007",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-23T09:00:00Z",
+      "body": "Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.",
+      "reply_to": "EMAIL-T001-04",
+      "hash": "e9650fd80d101f0a",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 101
+    },
+    {
+      "id": "EMAIL-T001-06",
+      "type": "email",
+      "thread_id": "T001",
+      "subject": "Database selection for NovexCore v2",
+      "from": "A. Hartmann",
+      "from_person_id": "P001",
+      "to": [
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-23T13:48:00Z",
+      "body": "After cost review, we are switching to MySQL. I know this reverses our earlier decision \u2014 documenting the reason: vendor discount + ops simplicity.",
+      "reply_to": "EMAIL-T001-05",
+      "hash": "a15586e16596df16",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 147
+    },
+    {
+      "id": "EMAIL-T001-07",
+      "type": "email",
+      "thread_id": "T001",
+      "subject": "Database selection for NovexCore v2",
+      "from": "bob.delgado@novex.com",
+      "from_person_id": "P002",
+      "to": [
+        "alice.hartmann@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-23T16:12:00Z",
+      "body": "Understood. Will update migration scripts. Not ideal but makes sense economically.",
+      "reply_to": "EMAIL-T001-06",
+      "hash": "93ccd9b132963076",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 82
+    },
+    {
+      "id": "EMAIL-T002-00",
+      "type": "email",
+      "thread_id": "T002",
+      "subject": "Auth token expiry \u2014 security incident",
+      "from": "iris.johansson@novex.com",
+      "from_person_id": "P009",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-18T09:00:00Z",
+      "body": "Found a bug: auth tokens never expire in AuthService. This is a security vulnerability. Assigning to Frank.",
+      "reply_to": null,
+      "hash": "ad47470cd13ca4aa",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 107
+    },
+    {
+      "id": "EMAIL-T002-01",
+      "type": "email",
+      "thread_id": "T002",
+      "subject": "Auth token expiry \u2014 security incident",
+      "from": "fnguyen@novex.com",
+      "from_person_id": "P006",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-18T13:48:00Z",
+      "body": "Confirmed. Tokens issued before 2024-01-10 have no exp claim. Working on a fix now.",
+      "reply_to": "EMAIL-T002-00",
+      "hash": "6d3edfe534606598",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 83
+    },
+    {
+      "id": "EMAIL-T002-02",
+      "type": "email",
+      "thread_id": "T002",
+      "subject": "Auth token expiry \u2014 security incident",
+      "from": "Hector R.",
+      "from_person_id": "P008",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-18T18:36:00Z",
+      "body": "I can force-rotate all tokens in prod as a hotfix. Risk: users get logged out. Worth it?",
+      "reply_to": "EMAIL-T002-01",
+      "hash": "dce202ef551b7ead",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 88
+    },
+    {
+      "id": "EMAIL-T002-03",
+      "type": "email",
+      "thread_id": "T002",
+      "subject": "Auth token expiry \u2014 security incident",
+      "from": "alice.hartmann@novex.com",
+      "from_person_id": "P001",
+      "to": [
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-18T21:00:00Z",
+      "body": "Yes, force rotate. User disruption acceptable given security risk. Hector please proceed.",
+      "reply_to": "EMAIL-T002-02",
+      "hash": "0ecb302807d6a435",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 89
+    },
+    {
+      "id": "EMAIL-T002-04",
+      "type": "email",
+      "thread_id": "T002",
+      "subject": "Auth token expiry \u2014 security incident",
+      "from": "hromero@novex.com",
+      "from_person_id": "P008",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-18T23:24:00Z",
+      "body": "Token rotation complete. 2,847 sessions invalidated. Monitoring for issues.",
+      "reply_to": "EMAIL-T002-03",
+      "hash": "5693b467e07cad00",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 75
+    },
+    {
+      "id": "EMAIL-T002-05",
+      "type": "email",
+      "thread_id": "T002",
+      "subject": "Auth token expiry \u2014 security incident",
+      "from": "frank.nguyen@novex.com",
+      "from_person_id": "P006",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-19T09:00:00Z",
+      "body": "Fix deployed: tokens now have 24h expiry. Added regression test. Closing.",
+      "reply_to": "EMAIL-T002-04",
+      "hash": "4512ec09d3df4033",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 73
+    },
+    {
+      "id": "EMAIL-T003-00",
+      "type": "email",
+      "thread_id": "T003",
+      "subject": "Q1 roadmap sync",
+      "from": "Carol F.",
+      "from_person_id": "P003",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-20T09:00:00Z",
+      "body": "Sharing Q1 roadmap draft. Key items: (1) NovexCore v2 launch, (2) ReportingEngine beta, (3) InfraV2 Kubernetes migration. Please review by Friday.",
+      "reply_to": null,
+      "hash": "334ae09ab94873f5",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 146
+    },
+    {
+      "id": "EMAIL-T003-01",
+      "type": "email",
+      "thread_id": "T003",
+      "subject": "Q1 roadmap sync",
+      "from": "grace.kim@novex.com",
+      "from_person_id": "P007",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-20T16:12:00Z",
+      "body": "Engineering capacity looks tight. NovexCore v2 and Kubernetes migration in same quarter is risky. Can we push InfraV2 to Q2?",
+      "reply_to": "EMAIL-T003-00",
+      "hash": "ac68ad0924431e9b",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 124
+    },
+    {
+      "id": "EMAIL-T003-02",
+      "type": "email",
+      "thread_id": "T003",
+      "subject": "Q1 roadmap sync",
+      "from": "ahartmann@novex.com",
+      "from_person_id": "P001",
+      "to": [
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-20T21:00:00Z",
+      "body": "Agreed with Grace. InfraV2 moves to Q2. NovexCore v2 stays Q1. Carol, update the roadmap.",
+      "reply_to": "EMAIL-T003-01",
+      "hash": "3540b60eb4f3ddc5",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 89
+    },
+    {
+      "id": "EMAIL-T003-03",
+      "type": "email",
+      "thread_id": "T003",
+      "subject": "Q1 roadmap sync",
+      "from": "Carol F.",
+      "from_person_id": "P003",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-20T23:24:00Z",
+      "body": "Updated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration.",
+      "reply_to": "EMAIL-T003-02",
+      "hash": "94246f3b4121dd92",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 72
+    },
+    {
+      "id": "EMAIL-T004-00",
+      "type": "email",
+      "thread_id": "T004",
+      "subject": "Re: Re: Q1 roadmap sync",
+      "from": "eva.lindstrom@novex.com",
+      "from_person_id": "P005",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com"
+      ],
+      "timestamp": "2024-01-21T09:00:00Z",
+      "body": "Forwarding Carol's roadmap update for the data team. Key: NovexCore v2 in Q1 means we need DataPipeline connectors ready by March 1.\n\n--- Forwarded ---\nUpdated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration.",
+      "reply_to": null,
+      "hash": "578b0049ae053a4d",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 224
+    },
+    {
+      "id": "EMAIL-T005-00",
+      "type": "email",
+      "thread_id": "T005",
+      "subject": "Kafka vs RabbitMQ for event streaming",
+      "from": "bdelgado@novex.com",
+      "from_person_id": "P002",
+      "to": [
+        "alice.hartmann@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-25T09:00:00Z",
+      "body": "We need an event streaming solution for the analytics pipeline. Evaluating Kafka and RabbitMQ.",
+      "reply_to": null,
+      "hash": "e0eef2796d1a3d13",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 94
+    },
+    {
+      "id": "EMAIL-T005-01",
+      "type": "email",
+      "thread_id": "T005",
+      "subject": "Kafka vs RabbitMQ for event streaming",
+      "from": "Eva L.",
+      "from_person_id": "P005",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com"
+      ],
+      "timestamp": "2024-01-25T13:48:00Z",
+      "body": "Kafka is the clear choice for high-throughput. We're talking millions of events/day. RabbitMQ would struggle.",
+      "reply_to": "EMAIL-T005-00",
+      "hash": "c2005e1433fd6f42",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 109
+    },
+    {
+      "id": "EMAIL-T005-02",
+      "type": "email",
+      "thread_id": "T005",
+      "subject": "Kafka vs RabbitMQ for event streaming",
+      "from": "james.park@novex.com",
+      "from_person_id": "P010",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-25T18:36:00Z",
+      "body": "Agreed on Kafka. I've set up a POC. Throughput: 850k msg/sec. Latency p99: 12ms. Very promising.",
+      "reply_to": "EMAIL-T005-01",
+      "hash": "8b01b92da88f0bd4",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 96
+    },
+    {
+      "id": "EMAIL-T005-03",
+      "type": "email",
+      "thread_id": "T005",
+      "subject": "Kafka vs RabbitMQ for event streaming",
+      "from": "Bobby D",
+      "from_person_id": "P002",
+      "to": [
+        "alice.hartmann@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-26T09:00:00Z",
+      "body": "Decision: Kafka for event streaming in DataPipeline. James to lead implementation.",
+      "reply_to": "EMAIL-T005-02",
+      "hash": "0039ae794f58965e",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 82
+    },
+    {
+      "id": "EMAIL-T006-00",
+      "type": "email",
+      "thread_id": "T006",
+      "subject": "Hiring: Senior Backend Engineer",
+      "from": "G. Kim",
+      "from_person_id": "P007",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-29T09:00:00Z",
+      "body": "Opening a Senior Backend Engineer role. Requirements: Go or Python, distributed systems experience, Kafka a plus. JD attached.",
+      "reply_to": null,
+      "hash": "c57ce11be402a69b",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 126
+    },
+    {
+      "id": "EMAIL-T006-01",
+      "type": "email",
+      "thread_id": "T006",
+      "subject": "Hiring: Senior Backend Engineer",
+      "from": "alice.hartmann@novex.com",
+      "from_person_id": "P001",
+      "to": [
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-29T11:24:00Z",
+      "body": "Approved. Let's aim to have someone onboarded by Q2.",
+      "reply_to": "EMAIL-T006-00",
+      "hash": "cc8873be3dd1d2a6",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 52
+    },
+    {
+      "id": "EMAIL-T006-02",
+      "type": "email",
+      "thread_id": "T006",
+      "subject": "Hiring: Senior Backend Engineer",
+      "from": "G. Kim",
+      "from_person_id": "P007",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-05T09:00:00Z",
+      "body": "Update: 3 strong candidates. Moving to final interviews.",
+      "reply_to": "EMAIL-T006-01",
+      "hash": "102678174ea803cc",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 56
+    },
+    {
+      "id": "EMAIL-T006-03",
+      "type": "email",
+      "thread_id": "T006",
+      "subject": "Hiring: Senior Backend Engineer",
+      "from": "gkim@novex.com",
+      "from_person_id": "P007",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-12T09:00:00Z",
+      "body": "Offer extended to Candidate A. Joining April 1.",
+      "reply_to": "EMAIL-T006-02",
+      "hash": "5fe5bfb1221fadc6",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 47
+    },
+    {
+      "id": "EMAIL-T007-00",
+      "type": "email",
+      "thread_id": "T007",
+      "subject": "On-call rotation changes",
+      "from": "hector.romero@novex.com",
+      "from_person_id": "P008",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-30T09:00:00Z",
+      "body": "Proposing new on-call rotation: 1-week shifts, 4-person pool. Current 2-person rotation is burning people out.",
+      "reply_to": null,
+      "hash": "f68635c581db9740",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 110
+    },
+    {
+      "id": "EMAIL-T007-01",
+      "type": "email",
+      "thread_id": "T007",
+      "subject": "On-call rotation changes",
+      "from": "gkim@novex.com",
+      "from_person_id": "P007",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-30T13:48:00Z",
+      "body": "Fully support this. Let's implement immediately.",
+      "reply_to": "EMAIL-T007-00",
+      "hash": "78c87d2d4a0af5c7",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 48
+    },
+    {
+      "id": "EMAIL-T007-02",
+      "type": "email",
+      "thread_id": "T007",
+      "subject": "On-call rotation changes",
+      "from": "A. Hartmann",
+      "from_person_id": "P001",
+      "to": [
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-30T16:12:00Z",
+      "body": "Approved. Hector please set up PagerDuty.",
+      "reply_to": "EMAIL-T007-01",
+      "hash": "910843a7d81e325a",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 41
+    },
+    {
+      "id": "EMAIL-T007-03",
+      "type": "email",
+      "thread_id": "T007",
+      "subject": "On-call rotation changes",
+      "from": "hector.romero@novex.com",
+      "from_person_id": "P008",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-01-30T21:00:00Z",
+      "body": "PagerDuty rotation configured. New schedule starts Monday.",
+      "reply_to": "EMAIL-T007-02",
+      "hash": "0a20c2b991892a98",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 58
+    },
+    {
+      "id": "EMAIL-T008-00",
+      "type": "email",
+      "thread_id": "T008",
+      "subject": "REDACTED: Salary discussion",
+      "from": "A. Hartmann",
+      "from_person_id": "P001",
+      "to": [
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-04T09:00:00Z",
+      "body": "[REDACTED \u2014 personal compensation data removed]",
+      "reply_to": null,
+      "hash": "ca9059662872ba0b",
+      "redacted": true,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 47
+    },
+    {
+      "id": "EMAIL-T009-00",
+      "type": "email",
+      "thread_id": "T009",
+      "subject": "Python version upgrade to 3.12",
+      "from": "dosei@novex.com",
+      "from_person_id": "P004",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-06T09:00:00Z",
+      "body": "Proposing upgrade from Python 3.10 to 3.12 across all services. ~15% performance improvement on benchmarks.",
+      "reply_to": null,
+      "hash": "5d677e80e92a370a",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 107
+    },
+    {
+      "id": "EMAIL-T009-01",
+      "type": "email",
+      "thread_id": "T009",
+      "subject": "Python version upgrade to 3.12",
+      "from": "Frank N.",
+      "from_person_id": "P006",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-06T11:24:00Z",
+      "body": "Tested on AuthService \u2014 no breaking changes. +18% on crypto operations.",
+      "reply_to": "EMAIL-T009-00",
+      "hash": "a04bea497ae0387b",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 71
+    },
+    {
+      "id": "EMAIL-T009-02",
+      "type": "email",
+      "thread_id": "T009",
+      "subject": "Python version upgrade to 3.12",
+      "from": "james.park@novex.com",
+      "from_person_id": "P010",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-06T16:12:00Z",
+      "body": "ReportingEngine has one dependency (legacy-stats 1.2) not 3.12 compatible. Need to replace it first.",
+      "reply_to": "EMAIL-T009-01",
+      "hash": "553f7d702705ec7f",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 100
+    },
+    {
+      "id": "EMAIL-T009-03",
+      "type": "email",
+      "thread_id": "T009",
+      "subject": "Python version upgrade to 3.12",
+      "from": "elindstrom@novex.com",
+      "from_person_id": "P005",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com"
+      ],
+      "timestamp": "2024-02-06T21:00:00Z",
+      "body": "I'll handle the legacy-stats replacement \u2014 ETA 1 week.",
+      "reply_to": "EMAIL-T009-02",
+      "hash": "ad243e940a5ea47d",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 54
+    },
+    {
+      "id": "EMAIL-T009-04",
+      "type": "email",
+      "thread_id": "T009",
+      "subject": "Python version upgrade to 3.12",
+      "from": "dosei@novex.com",
+      "from_person_id": "P004",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-14T09:00:00Z",
+      "body": "All services now on Python 3.12. legacy-stats replaced with statslib. Upgrade complete.",
+      "reply_to": "EMAIL-T009-03",
+      "hash": "9023a0ad0d0a4995",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 87
+    },
+    {
+      "id": "EMAIL-T010-00",
+      "type": "email",
+      "thread_id": "T010",
+      "subject": "Cross-post: All-hands notes Jan 30",
+      "from": "Carol F.",
+      "from_person_id": "P003",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-19T09:00:00Z",
+      "body": "Notes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway (yes, we switched from Postgres)\n- New hire joins April 1\n- Q2 focus: InfraV2 Kubernetes migration",
+      "reply_to": null,
+      "hash": "896c3260d0a5582a",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 190
+    },
+    {
+      "id": "EMAIL-T011-00",
+      "type": "email",
+      "thread_id": "T011",
+      "subject": "Re: All-hands notes Jan 30",
+      "from": "G. Kim",
+      "from_person_id": "P007",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-19T11:24:00Z",
+      "body": "Forwarding to the engineering team.\n\nKey engineering items:\n- NovexCore v2 Feb 28 deadline\n- MySQL migration underway\n- New hire April 1\n\n--- Original ---\nNotes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway\n- New hire joins April 1",
+      "reply_to": null,
+      "hash": "aa7724f4aad18690",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 271
+    },
+    {
+      "id": "EMAIL-T012-00",
+      "type": "email",
+      "thread_id": "T012",
+      "subject": "ReportingEngine performance regression",
+      "from": "ijohansson@novex.com",
+      "from_person_id": "P009",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-24T09:00:00Z",
+      "body": "Detected 3x slowdown in ReportingEngine after last deploy. P99 latency went from 200ms to 650ms.",
+      "reply_to": null,
+      "hash": "41e05d63176c7201",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 96
+    },
+    {
+      "id": "EMAIL-T012-01",
+      "type": "email",
+      "thread_id": "T012",
+      "subject": "ReportingEngine performance regression",
+      "from": "Jim Park",
+      "from_person_id": "P010",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-24T13:48:00Z",
+      "body": "Bisected to commit a3f9d. The new analytics aggregation query is doing a full table scan. Missing index.",
+      "reply_to": "EMAIL-T012-00",
+      "hash": "043b52bd46178b2a",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 104
+    },
+    {
+      "id": "EMAIL-T012-02",
+      "type": "email",
+      "thread_id": "T012",
+      "subject": "ReportingEngine performance regression",
+      "from": "james.park@novex.com",
+      "from_person_id": "P010",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-24T18:36:00Z",
+      "body": "Fix deployed: added composite index on (tenant_id, created_at). P99 back to 185ms.",
+      "reply_to": "EMAIL-T012-01",
+      "hash": "42c5a33bbcf96266",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 82
+    },
+    {
+      "id": "EMAIL-T012-03",
+      "type": "email",
+      "thread_id": "T012",
+      "subject": "ReportingEngine performance regression",
+      "from": "ijohansson@novex.com",
+      "from_person_id": "P009",
+      "to": [
+        "alice.hartmann@novex.com",
+        "bob.delgado@novex.com",
+        "carol.finch@novex.com",
+        "david.osei@novex.com",
+        "eva.lindstrom@novex.com"
+      ],
+      "timestamp": "2024-02-24T21:00:00Z",
+      "body": "Confirmed. Performance restored. Post-mortem due Friday.",
+      "reply_to": "EMAIL-T012-02",
+      "hash": "db8796c6c40532c2",
+      "redacted": false,
+      "source": "synthetic_novex_corpus_v1",
+      "offset_start": 0,
+      "offset_end": 56
+    }
+  ],
+  "issues": [
+    {
+      "id": "I001",
+      "type": "issue",
+      "project": "NovexCore",
+      "title": "Implement JWT authentication",
+      "description": "Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.",
+      "status": "closed",
+      "assignee": "P006",
+      "author": "P003",
+      "created_at": "2024-01-15T09:00:00Z",
+      "updated_at": "2024-01-20T09:00:00Z",
+      "labels": [
+        "security",
+        "auth"
+      ],
+      "events": [
+        {
+          "event_id": "I001-EVT-open",
+          "event_type": "status_change",
+          "status": "open",
+          "timestamp": "2024-01-15T09:00:00Z",
+          "actor": "P003"
+        },
+        {
+          "event_id": "I001-EVT-in_progress",
+          "event_type": "status_change",
+          "status": "in_progress",
+          "timestamp": "2024-01-16T09:00:00Z",
+          "actor": "P003"
+        },
+        {
+          "event_id": "I001-EVT-closed",
+          "event_type": "status_change",
+          "status": "closed",
+          "timestamp": "2024-01-20T09:00:00Z",
+          "actor": "P003"
+        }
+      ],
+      "comments": [
+        {
+          "comment_id": "I001-CMT-2318ba6e4f6c07b9",
+          "author": "P006",
+          "timestamp": "2024-01-17T09:00:00Z",
+          "body": "Working on this. Using python-jose library.",
+          "hash": "2318ba6e4f6c07b9"
+        },
+        {
+          "comment_id": "I001-CMT-77da4bb3eb1f4ac8",
+          "author": "P006",
+          "timestamp": "2024-01-19T21:00:00Z",
+          "body": "PR raised: #42. Includes unit tests and integration tests.",
+          "hash": "77da4bb3eb1f4ac8"
+        },
+        {
+          "comment_id": "I001-CMT-b030f9e471790ad7",
+          "author": "P009",
+          "timestamp": "2024-01-20T09:00:00Z",
+          "body": "Reviewed and approved. Tests pass. Closing.",
+          "hash": "b030f9e471790ad7"
+        }
+      ],
+      "hash": "ed3a67fe6df483b0",
+      "source": "synthetic_novex_corpus_v1"
+    },
+    {
+      "id": "I002",
+      "type": "issue",
+      "project": "NovexCore",
+      "title": "Database migration: PostgreSQL \u2192 MySQL",
+      "description": "Migrate NovexCore v2 from PostgreSQL to MySQL following cost-driven decision reversal. See email thread T001.",
+      "status": "closed",
+      "assignee": "P002",
+      "author": "P001",
+      "created_at": "2024-01-23T09:00:00Z",
+      "updated_at": "2024-02-09T09:00:00Z",
+      "labels": [
+        "database",
+        "migration"
+      ],
+      "events": [
+        {
+          "event_id": "I002-EVT-open",
+          "event_type": "status_change",
+          "status": "open",
+          "timestamp": "2024-01-23T09:00:00Z",
+          "actor": "P001"
+        },
+        {
+          "event_id": "I002-EVT-in_progress",
+          "event_type": "status_change",
+          "status": "in_progress",
+          "timestamp": "2024-01-24T09:00:00Z",
+          "actor": "P001"
+        },
+        {
+          "event_id": "I002-EVT-closed",
+          "event_type": "status_change",
+          "status": "closed",
+          "timestamp": "2024-02-09T09:00:00Z",
+          "actor": "P001"
+        }
+      ],
+      "comments": [
+        {
+          "comment_id": "I002-CMT-2422c8de40f1fca0",
+          "author": "P002",
+          "timestamp": "2024-01-24T09:00:00Z",
+          "body": "Starting migration. Using Alembic for schema migrations.",
+          "hash": "2422c8de40f1fca0"
+        },
+        {
+          "comment_id": "I002-CMT-7720d01a79496a44",
+          "author": "P004",
+          "timestamp": "2024-01-27T09:00:00Z",
+          "body": "Compatibility issue: PostgreSQL JSONB \u2192 MySQL JSON. Need to audit all JSONB queries.",
+          "hash": "7720d01a79496a44"
+        },
+        {
+          "comment_id": "I002-CMT-201c1e6ff216b412",
+          "author": "P002",
+          "timestamp": "2024-02-04T09:00:00Z",
+          "body": "All queries updated. Running full regression suite.",
+          "hash": "201c1e6ff216b412"
+        },
+        {
+          "comment_id": "I002-CMT-f359b91eaceef62c",
+          "author": "P002",
+          "timestamp": "2024-02-09T09:00:00Z",
+          "body": "Migration complete. All tests pass. Closing.",
+          "hash": "f359b91eaceef62c"
+        }
+      ],
+      "hash": "a449ac63c36352cd",
+      "source": "synthetic_novex_corpus_v1"
+    },
+    {
+      "id": "I003",
+      "type": "issue",
+      "project": "AuthService",
+      "title": "Security: tokens never expire",
+      "description": "CRITICAL: Auth tokens missing exp claim. All tokens issued before 2024-01-10 are permanent. Immediate fix required.",
+      "status": "closed",
+      "assignee": "P006",
+      "author": "P009",
+      "created_at": "2024-01-18T09:00:00Z",
+      "updated_at": "2024-01-19T09:00:00Z",
+      "labels": [
+        "security",
+        "critical",
+        "bug"
+      ],
+      "events": [
+        {
+          "event_id": "I003-EVT-open",
+          "event_type": "status_change",
+          "status": "open",
+          "timestamp": "2024-01-18T09:00:00Z",
+          "actor": "P009"
+        },
+        {
+          "event_id": "I003-EVT-in_progress",
+          "event_type": "status_change",
+          "status": "in_progress",
+          "timestamp": "2024-01-18T13:48:00Z",
+          "actor": "P009"
+        },
+        {
+          "event_id": "I003-EVT-closed",
+          "event_type": "status_change",
+          "status": "closed",
+          "timestamp": "2024-01-19T09:00:00Z",
+          "actor": "P009"
+        }
+      ],
+      "comments": [
+        {
+          "comment_id": "I003-CMT-eed00dd53ce592a9",
+          "author": "P008",
+          "timestamp": "2024-01-18T18:36:00Z",
+          "body": "Rotating all tokens in prod as emergency hotfix.",
+          "hash": "eed00dd53ce592a9"
+        },
+        {
+          "comment_id": "I003-CMT-f7c7588ef90aac4b",
+          "author": "P006",
+          "timestamp": "2024-01-19T09:00:00Z",
+          "body": "Permanent fix deployed. 24h expiry enforced.",
+          "hash": "f7c7588ef90aac4b"
+        }
+      ],
+      "hash": "104b039a116187c6",
+      "source": "synthetic_novex_corpus_v1"
+    },
+    {
+      "id": "I004",
+      "type": "issue",
+      "project": "DataPipeline",
+      "title": "Integrate Kafka for event streaming",
+      "description": "Implement Kafka producer/consumer for DataPipeline analytics events. Target: 1M msg/sec throughput.",
+      "status": "closed",
+      "assignee": "P010",
+      "author": "P002",
+      "created_at": "2024-01-26T09:00:00Z",
+      "updated_at": "2024-02-06T09:00:00Z",
+      "labels": [
+        "kafka",
+        "streaming",
+        "performance"
+      ],
+      "events": [
+        {
+          "event_id": "I004-EVT-open",
+          "event_type": "status_change",
+          "status": "open",
+          "timestamp": "2024-01-26T09:00:00Z",
+          "actor": "P002"
+        },
+        {
+          "event_id": "I004-EVT-in_progress",
+          "event_type": "status_change",
+          "status": "in_progress",
+          "timestamp": "2024-01-27T09:00:00Z",
+          "actor": "P002"
+        },
+        {
+          "event_id": "I004-EVT-in_review",
+          "event_type": "status_change",
+          "status": "in_review",
+          "timestamp": "2024-02-02T09:00:00Z",
+          "actor": "P002"
+        },
+        {
+          "event_id": "I004-EVT-closed",
+          "event_type": "status_change",
+          "status": "closed",
+          "timestamp": "2024-02-06T09:00:00Z",
+          "actor": "P002"
+        }
+      ],
+      "comments": [
+        {
+          "comment_id": "I004-CMT-fb01a024ab8016b7",
+          "author": "P010",
+          "timestamp": "2024-01-27T09:00:00Z",
+          "body": "Setting up Kafka cluster on K8s.",
+          "hash": "fb01a024ab8016b7"
+        },
+        {
+          "comment_id": "I004-CMT-390da3585ac84f62",
+          "author": "P010",
+          "timestamp": "2024-02-02T09:00:00Z",
+          "body": "POC complete. 850k msg/sec achieved. Raising PR.",
+          "hash": "390da3585ac84f62"
+        },
+        {
+          "comment_id": "I004-CMT-75f141e3f92b9185",
+          "author": "P005",
+          "timestamp": "2024-02-04T09:00:00Z",
+          "body": "Reviewed. Schema registry integration needed before merge.",
+          "hash": "75f141e3f92b9185"
+        },
+        {
+          "comment_id": "I004-CMT-f85b3bbfa599b9fe",
+          "author": "P010",
+          "timestamp": "2024-02-06T09:00:00Z",
+          "body": "Schema registry integrated. Merging.",
+          "hash": "f85b3bbfa599b9fe"
+        }
+      ],
+      "hash": "605be91805198357",
+      "source": "synthetic_novex_corpus_v1"
+    },
+    {
+      "id": "I005",
+      "type": "issue",
+      "project": "InfraV2",
+      "title": "Kubernetes migration planning",
+      "description": "Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.",
+      "status": "deferred",
+      "assignee": "P008",
+      "author": "P007",
+      "created_at": "2024-01-20T09:00:00Z",
+      "updated_at": "2024-01-21T09:00:00Z",
+      "labels": [
+        "infrastructure",
+        "kubernetes",
+        "deferred"
+      ],
+      "events": [
+        {
+          "event_id": "I005-EVT-open",
+          "event_type": "status_change",
+          "status": "open",
+          "timestamp": "2024-01-20T09:00:00Z",
+          "actor": "P007"
+        },
+        {
+          "event_id": "I005-EVT-deferred",
+          "event_type": "status_change",
+          "status": "deferred",
+          "timestamp": "2024-01-21T09:00:00Z",
+          "actor": "P007"
+        }
+      ],
+      "comments": [
+        {
+          "comment_id": "I005-CMT-e238221edf091f9d",
+          "author": "P008",
+          "timestamp": "2024-01-20T21:00:00Z",
+          "body": "Created migration runbook. Estimating 6-week effort.",
+          "hash": "e238221edf091f9d"
+        },
+        {
+          "comment_id": "I005-CMT-7f9d1dc199f95821",
+          "author": "P007",
+          "timestamp": "2024-01-21T09:00:00Z",
+          "body": "Deferring to Q2 per Alice's decision in roadmap sync.",
+          "hash": "7f9d1dc199f95821"
+        }
+      ],
+      "hash": "abe40f6f7d22919b",
+      "source": "synthetic_novex_corpus_v1"
+    },
+    {
+      "id": "I006",
+      "type": "issue",
+      "project": "ReportingEngine",
+      "title": "Performance regression: 3x latency spike",
+      "description": "P99 latency spiked from 200ms to 650ms after deploy on day 40.",
+      "status": "closed",
+      "assignee": "P010",
+      "author": "P009",
+      "created_at": "2024-02-24T09:00:00Z",
+      "updated_at": "2024-02-24T21:00:00Z",
+      "labels": [
+        "performance",
+        "bug",
+        "database"
+      ],
+      "events": [
+        {
+          "event_id": "I006-EVT-open",
+          "event_type": "status_change",
+          "status": "open",
+          "timestamp": "2024-02-24T09:00:00Z",
+          "actor": "P009"
+        },
+        {
+          "event_id": "I006-EVT-in_progress",
+          "event_type": "status_change",
+          "status": "in_progress",
+          "timestamp": "2024-02-24T13:48:00Z",
+          "actor": "P009"
+        },
+        {
+          "event_id": "I006-EVT-closed",
+          "event_type": "status_change",
+          "status": "closed",
+          "timestamp": "2024-02-24T21:00:00Z",
+          "actor": "P009"
+        }
+      ],
+      "comments": [
+        {
+          "comment_id": "I006-CMT-53ad0a2d6f4d8752",
+          "author": "P010",
+          "timestamp": "2024-02-24T13:48:00Z",
+          "body": "Root cause: missing index on (tenant_id, created_at).",
+          "hash": "53ad0a2d6f4d8752"
+        },
+        {
+          "comment_id": "I006-CMT-6d5713d25f67e913",
+          "author": "P010",
+          "timestamp": "2024-02-24T18:36:00Z",
+          "body": "Fix deployed. P99 at 185ms \u2014 better than before.",
+          "hash": "6d5713d25f67e913"
+        },
+        {
+          "comment_id": "I006-CMT-41ae84198d656223",
+          "author": "P009",
+          "timestamp": "2024-02-24T21:00:00Z",
+          "body": "Confirmed resolved.",
+          "hash": "41ae84198d656223"
+        }
+      ],
+      "hash": "d71d747f32458130",
+      "source": "synthetic_novex_corpus_v1"
+    },
+    {
+      "id": "I007",
+      "type": "issue",
+      "project": "NovexCore",
+      "title": "Python 3.12 upgrade",
+      "description": "Upgrade all NovexCore services from Python 3.10 to 3.12. Blocker: replace legacy-stats 1.2.",
+      "status": "closed",
+      "assignee": "P005",
+      "author": "P004",
+      "created_at": "2024-02-06T09:00:00Z",
+      "updated_at": "2024-02-14T09:00:00Z",
+      "labels": [
+        "python",
+        "upgrade",
+        "performance"
+      ],
+      "events": [
+        {
+          "event_id": "I007-EVT-open",
+          "event_type": "status_change",
+          "status": "open",
+          "timestamp": "2024-02-06T09:00:00Z",
+          "actor": "P004"
+        },
+        {
+          "event_id": "I007-EVT-in_progress",
+          "event_type": "status_change",
+          "status": "in_progress",
+          "timestamp": "2024-02-06T21:00:00Z",
+          "actor": "P004"
+        },
+        {
+          "event_id": "I007-EVT-closed",
+          "event_type": "status_change",
+          "status": "closed",
+          "timestamp": "2024-02-14T09:00:00Z",
+          "actor": "P004"
+        }
+      ],
+      "comments": [
+        {
+          "comment_id": "I007-CMT-634597f97262c704",
+          "author": "P005",
+          "timestamp": "2024-02-07T09:00:00Z",
+          "body": "Replacing legacy-stats with statslib. ETA 1 week.",
+          "hash": "634597f97262c704"
+        },
+        {
+          "comment_id": "I007-CMT-a8cfa60872a96d50",
+          "author": "P005",
+          "timestamp": "2024-02-12T09:00:00Z",
+          "body": "statslib integrated. All tests pass on 3.12.",
+          "hash": "a8cfa60872a96d50"
+        },
+        {
+          "comment_id": "I007-CMT-1769a3eb9c31c2b1",
+          "author": "P004",
+          "timestamp": "2024-02-14T09:00:00Z",
+          "body": "All services upgraded. Closing.",
+          "hash": "1769a3eb9c31c2b1"
+        }
+      ],
+      "hash": "e853e8f22c394d99",
+      "source": "synthetic_novex_corpus_v1"
+    },
+    {
+      "id": "I008",
+      "type": "issue",
+      "project": "AuthService",
+      "title": "Add refresh token support",
+      "description": "Implement refresh token flow. Access tokens: 24h. Refresh tokens: 30 days, single-use.",
+      "status": "closed",
+      "assignee": "P006",
+      "author": "P003",
+      "created_at": "2024-01-21T09:00:00Z",
+      "updated_at": "2024-01-27T09:00:00Z",
+      "labels": [
+        "auth",
+        "security"
+      ],
+      "events": [
+        {
+          "event_id": "I008-EVT-open",
+          "event_type": "status_change",
+          "status": "open",
+          "timestamp": "2024-01-21T09:00:00Z",
+          "actor": "P003"
+        },
+        {
+          "event_id": "I008-EVT-in_progress",
+          "event_type": "status_change",
+          "status": "in_progress",
+          "timestamp": "2024-01-22T09:00:00Z",
+          "actor": "P003"
+        },
+        {
+          "event_id": "I008-EVT-in_review",
+          "event_type": "status_change",
+          "status": "in_review",
+          "timestamp": "2024-01-25T09:00:00Z",
+          "actor": "P003"
+        },
+        {
+          "event_id": "I008-EVT-closed",
+          "event_type": "status_change",
+          "status": "closed",
+          "timestamp": "2024-01-27T09:00:00Z",
+          "actor": "P003"
+        }
+      ],
+      "comments": [
+        {
+          "comment_id": "I008-CMT-46d0dac1464edc05",
+          "author": "P006",
+          "timestamp": "2024-01-22T09:00:00Z",
+          "body": "Implementing. Using Redis for refresh token storage.",
+          "hash": "46d0dac1464edc05"
+        },
+        {
+          "comment_id": "I008-CMT-87524366422bac37",
+          "author": "P010",
+          "timestamp": "2024-01-26T09:00:00Z",
+          "body": "Code review done. One security concern: refresh tokens should be rotated on use.",
+          "hash": "87524366422bac37"
+        },
+        {
+          "comment_id": "I008-CMT-f888056b8e665c68",
+          "author": "P006",
+          "timestamp": "2024-01-26T21:00:00Z",
+          "body": "Addressed rotation. Updated.",
+          "hash": "f888056b8e665c68"
+        },
+        {
+          "comment_id": "I008-CMT-fe0cfe7c4ff03ec2",
+          "author": "P009",
+          "timestamp": "2024-01-27T09:00:00Z",
+          "body": "Approved and merged.",
+          "hash": "fe0cfe7c4ff03ec2"
+        }
+      ],
+      "hash": "3e8c5e0cfa6c0e20",
+      "source": "synthetic_novex_corpus_v1"
+    }
+  ]
+}

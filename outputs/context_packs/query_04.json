@@ -1,0 +1,272 @@
+{
+  "query": "What decisions were reversed or changed?",
+  "context_pack": {
+    "query": "What decisions were reversed or changed?",
+    "retrieved_at": "2026-03-08T18:12:34.052297Z",
+    "claims": [
+      {
+        "claim_id": "f3d23be0-0eea-42d4-bd68-4c20134e5b35",
+        "claim_type": "ASSIGNED_TO",
+        "predicate": "Issue I005 assigned to PERS-P008",
+        "value": "PERS-P008",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "2ff25d00-246e-4d58-9f4c-9a34ffe435f3"
+        ],
+        "tags": [
+          "issue",
+          "assignment"
+        ]
+      },
+      {
+        "claim_id": "f0a6546f-0dea-49eb-a8a1-dbce6adc105c",
+        "claim_type": "ASSIGNED_TO",
+        "predicate": "Issue I005 assigned to PERS-P008",
+        "value": "PERS-P008",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "221a3365-ef71-49d2-abc1-6b90faf3d25a"
+        ],
+        "tags": [
+          "issue",
+          "assignment"
+        ]
+      },
+      {
+        "claim_id": "46c9ae2d-3a5f-425f-bd2a-0c5c397b9612",
+        "claim_type": "ASSIGNED_TO",
+        "predicate": "Issue I005 assigned to PERS-P008",
+        "value": "PERS-P008",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "5fa804ff-3774-48be-9a17-3be5ea30ec8b"
+        ],
+        "tags": [
+          "issue",
+          "assignment"
+        ]
+      },
+      {
+        "claim_id": "ef480192-fd50-4293-8d69-5125f7adc8c0",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Novexcore uses PostgreSQL",
+        "value": "PostgreSQL",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-15T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "73541493-4dc1-4eaf-98a0-829177bc19ac",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+          "8659a450-61df-495a-829f-0dc09561437a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "cfebbad3-8abf-4b6c-9aa3-5ac381b9d7f6",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Novexcore uses Kubernetes",
+        "value": "Kubernetes",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "66db125b-d16e-420c-b322-b8e9f98e4cbd",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+          "ab086b5f-142d-49e7-bb52-4a9403977b4a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "0a2c03a4-9d3f-4e9b-b0c3-4e5e15da5873",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Novexcore uses MySQL",
+        "value": "MySQL",
+        "confidence": 0.95,
+        "is_current": true,
+        "valid_from": "2024-02-19T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "c0389bc6-bfc9-4e80-af6e-510014096265",
+          "4963830c-7bbf-407e-bfcc-4f37fec4d40d"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "d690b5da-0ca3-41d0-857b-03eb7b8b05c3",
+        "claim_type": "USES_TECHNOLOGY",
+        "predicate": "Reportingengine uses Kubernetes",
+        "value": "Kubernetes",
+        "confidence": 0.85,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "ab086b5f-142d-49e7-bb52-4a9403977b4a"
+        ],
+        "tags": [
+          "technology",
+          "project"
+        ]
+      },
+      {
+        "claim_id": "0abd63be-71f0-4076-b566-533be4898211",
+        "claim_type": "PERFORMANCE_METRIC",
+        "predicate": "Performance metric in I006: 200ms",
+        "value": "200ms",
+        "confidence": 0.8,
+        "is_current": true,
+        "valid_from": "2024-02-24T21:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "208bf6c5-6d52-42e6-8445-49723243eec4"
+        ],
+        "tags": [
+          "performance",
+          "metric"
+        ]
+      }
+    ],
+    "evidence_snippets": [
+      {
+        "evidence_id": "4e45c32c-09d6-4628-821e-18cae8c8de7a",
+        "source_id": "EMAIL-T006-00",
+        "source_type": "email",
+        "timestamp": "2024-01-29T09:00:00Z",
+        "excerpt": "Opening a Senior Backend Engineer role. Requirements: Go or Python, distributed systems experience, Kafka a plus. JD attached.",
+        "relevance_score": 0.2698,
+        "citation": "[EMAIL EMAIL-T006-00 @ 2024-01-29]"
+      },
+      {
+        "evidence_id": "9af0de72-6913-4871-a6cb-52001c64b3c6",
+        "source_id": "EMAIL-T006-00",
+        "source_type": "email",
+        "timestamp": "2024-01-29T09:00:00Z",
+        "excerpt": "Opening a Senior Backend Engineer role. Requirements: Go or Python, distributed systems experience, Kafka a plus. JD attached.",
+        "relevance_score": 0.2698,
+        "citation": "[EMAIL EMAIL-T006-00 @ 2024-01-29]"
+      },
+      {
+        "evidence_id": "b4fc7b7d-4bb6-4c3b-b569-fa271ba962f2",
+        "source_id": "EMAIL-T006-00",
+        "source_type": "email",
+        "timestamp": "2024-01-29T09:00:00Z",
+        "excerpt": "Opening a Senior Backend Engineer role. Requirements: Go or Python, distributed systems experience, Kafka a plus. JD attached.",
+        "relevance_score": 0.2698,
+        "citation": "[EMAIL EMAIL-T006-00 @ 2024-01-29]"
+      },
+      {
+        "evidence_id": "2ff25d00-246e-4d58-9f4c-9a34ffe435f3",
+        "source_id": "I005",
+        "source_type": "issue",
+        "timestamp": "2024-01-20T09:00:00Z",
+        "excerpt": "Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.",
+        "relevance_score": 0.0,
+        "citation": "[ISSUE I005 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "221a3365-ef71-49d2-abc1-6b90faf3d25a",
+        "source_id": "I005",
+        "source_type": "issue",
+        "timestamp": "2024-01-20T09:00:00Z",
+        "excerpt": "Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.",
+        "relevance_score": 0.0,
+        "citation": "[ISSUE I005 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "5fa804ff-3774-48be-9a17-3be5ea30ec8b",
+        "source_id": "I005",
+        "source_type": "issue",
+        "timestamp": "2024-01-20T09:00:00Z",
+        "excerpt": "Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.",
+        "relevance_score": 0.0,
+        "citation": "[ISSUE I005 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "73541493-4dc1-4eaf-98a0-829177bc19ac",
+        "source_id": "EMAIL-T001-00",
+        "source_type": "email",
+        "timestamp": "2024-01-15T09:00:00Z",
+        "excerpt": "Team, we need to decide on the database for NovexCore v2. I'm leaning toward PostgreSQL for its JSON support and strong ACID guarantees. Thoughts?",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T001-00 @ 2024-01-15]"
+      },
+      {
+        "evidence_id": "4963830c-7bbf-407e-bfcc-4f37fec4d40d",
+        "source_id": "EMAIL-T010-00",
+        "source_type": "email",
+        "timestamp": "2024-02-19T09:00:00Z",
+        "excerpt": "Notes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway (yes, we switched from Postgres)\n- New hire joins April 1\n- Q2 focus: InfraV2 Kubernetes migration",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T010-00 @ 2024-02-19]"
+      },
+      {
+        "evidence_id": "66db125b-d16e-420c-b322-b8e9f98e4cbd",
+        "source_id": "EMAIL-T003-01",
+        "source_type": "email",
+        "timestamp": "2024-01-20T16:12:00Z",
+        "excerpt": "Engineering capacity looks tight. NovexCore v2 and Kubernetes migration in same quarter is risky. Can we push InfraV2 to Q2?",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T003-01 @ 2024-01-20]"
+      },
+      {
+        "evidence_id": "c0389bc6-bfc9-4e80-af6e-510014096265",
+        "source_id": "EMAIL-T011-00",
+        "source_type": "email",
+        "timestamp": "2024-02-19T11:24:00Z",
+        "excerpt": "Forwarding to the engineering team.\n\nKey engineering items:\n- NovexCore v2 Feb 28 deadline\n- MySQL migration underway\n- New hire April 1\n\n--- Original ---\nNotes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway\n- New hire joins April 1",
+        "relevance_score": 0.0,
+        "citation": "[EMAIL EMAIL-T011-00 @ 2024-02-19]"
+      }
+    ],
+    "entities": [
+      {
+        "entity_id": "PERS-P008",
+        "entity_type": "person",
+        "canonical_name": "Hector Romero",
+        "aliases": [
+          "hector.romero@novex.com",
+          "hromero@novex.com",
+          "Hector R."
+        ]
+      },
+      {
+        "entity_id": "PROJ-NOVEXCORE",
+        "entity_type": "project",
+        "canonical_name": "NovexCore",
+        "aliases": [
+          "NovexCore"
+        ]
+      },
+      {
+        "entity_id": "PROJ-REPORTINGENGINE",
+        "entity_type": "project",
+        "canonical_name": "ReportingEngine",
+        "aliases": [
+          "ReportingEngine"
+        ]
+      }
+    ],
+    "conflicts_detected": [],
+    "answer_hint": "Issue I005 assigned to PERS-P008 | Issue I005 assigned to PERS-P008 | Issue I005 assigned to PERS-P008"
+  }
+}

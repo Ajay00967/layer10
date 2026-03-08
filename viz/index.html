@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Layer10 — Memory Graph Explorer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0c10;
+    --surface: #111318;
+    --surface2: #181c23;
+    --border: #232830;
+    --accent: #00d4aa;
+    --accent2: #0099ff;
+    --accent3: #ff6b6b;
+    --accent4: #ffd166;
+    --text: #d4dce8;
+    --text-dim: #6b7a8d;
+    --text-bright: #eef2f7;
+    --decision: #ffd166;
+    --reversal: #ff6b6b;
+    --incident: #ff4444;
+    --person: #60a5fa;
+    --project: #34d399;
+    --technology: #a78bfa;
+    --issue: #fb923c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', monospace;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  .logo {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  .logo span { color: var(--text-dim); }
+  .header-stats {
+    display: flex;
+    gap: 18px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .header-stats b { color: var(--accent); }
+  .tabs {
+    display: flex;
+    gap: 4px;
+  }
+  .tab {
+    padding: 5px 14px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.15s;
+    letter-spacing: 0.06em;
+  }
+  .tab:hover { border-color: var(--accent); color: var(--text); }
+  .tab.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+
+  /* ── Layout ── */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Left Panel ── */
+  .left-panel {
+    width: 280px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .panel-header {
+    padding: 10px 14px;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .search-box {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .search-box input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    border-radius: 4px;
+    outline: none;
+  }
+  .search-box input:focus { border-color: var(--accent); }
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .filter-chip {
+    padding: 2px 8px;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+  }
+  .filter-chip.on { opacity: 1; }
+  .filter-chip[data-type="person"] { background: rgba(96,165,250,0.15); color: var(--person); border-color: var(--person); }
+  .filter-chip[data-type="project"] { background: rgba(52,211,153,0.15); color: var(--project); border-color: var(--project); }
+  .filter-chip[data-type="technology"] { background: rgba(167,139,250,0.15); color: var(--technology); border-color: var(--technology); }
+  .filter-chip[data-type="issue"] { background: rgba(251,146,60,0.15); color: var(--issue); border-color: var(--issue); }
+  .entity-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 0;
+  }
+  .entity-item {
+    padding: 7px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-left: 2px solid transparent;
+    transition: all 0.12s;
+    font-size: 12px;
+  }
+  .entity-item:hover { background: var(--surface2); }
+  .entity-item.selected {
+    background: var(--surface2);
+  }
+  .entity-item.selected[data-type="person"] { border-color: var(--person); }
+  .entity-item.selected[data-type="project"] { border-color: var(--project); }
+  .entity-item.selected[data-type="technology"] { border-color: var(--technology); }
+  .entity-item.selected[data-type="issue"] { border-color: var(--issue); }
+  .etype-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-person { background: var(--person); }
+  .dot-project { background: var(--project); }
+  .dot-technology { background: var(--technology); }
+  .dot-issue { background: var(--issue); }
+  .dot-unknown { background: var(--text-dim); }
+  .entity-name { flex: 1; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .entity-type-badge {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  /* ── Center — Graph Canvas ── */
+  .center {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  #graphCanvas {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+  .graph-legend {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+  .legend-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .legend-row:last-child { margin-bottom: 0; }
+
+  /* ── Right Panel ── */
+  .right-panel {
+    width: 360px;
+    flex-shrink: 0;
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .detail-header {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .detail-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 2px;
+  }
+  .detail-subtitle {
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-dim);
+  }
+  .detail-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+  }
+  .section-label {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    margin: 16px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* Claim cards */
+  .claim-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+    position: relative;
+  }
+  .claim-card:hover { border-color: var(--accent); }
+  .claim-card.historical { opacity: 0.55; }
+  .claim-type-tag {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 2px 6px;
+    border-radius: 3px;
+    display: inline-block;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .tag-DECISION_MADE { background: rgba(255,209,102,0.2); color: var(--decision); }
+  .tag-DECISION_REVERSED { background: rgba(255,107,107,0.2); color: var(--reversal); }
+  .tag-INCIDENT_OCCURRED { background: rgba(255,68,68,0.2); color: var(--incident); }
+  .tag-HAS_STATUS { background: rgba(0,212,170,0.15); color: var(--accent); }
+  .tag-ASSIGNED_TO { background: rgba(96,165,250,0.15); color: var(--person); }
+  .tag-AUTHORED_BY { background: rgba(96,165,250,0.1); color: var(--person); }
+  .tag-USES_TECHNOLOGY { background: rgba(167,139,250,0.15); color: var(--technology); }
+  .tag-PERFORMANCE_METRIC { background: rgba(52,211,153,0.15); color: var(--project); }
+  .tag-SCOPE_CHANGE { background: rgba(251,146,60,0.15); color: var(--issue); }
+  .claim-predicate {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+  .claim-meta {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .confidence-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+  .confidence-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .historical-badge {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    background: rgba(255,107,107,0.2);
+    color: var(--reversal);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  .current-badge {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    background: rgba(0,212,170,0.15);
+    color: var(--accent);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
+  /* Evidence panel */
+  .evidence-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    border-left: 3px solid var(--accent);
+  }
+  .evidence-source {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .evidence-excerpt {
+    color: var(--text);
+    line-height: 1.6;
+    font-size: 11px;
+  }
+  .evidence-ts {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* Alias pills */
+  .alias-list { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+  .alias-pill {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 12px;
+    color: var(--text-dim);
+  }
+
+  /* Retrieval tab */
+  .query-panel { padding: 12px 16px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+  .query-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .query-input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 8px 12px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    border-radius: 4px;
+    outline: none;
+  }
+  .query-input:focus { border-color: var(--accent); }
+  .query-btn {
+    padding: 8px 14px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .query-btn:hover { opacity: 0.85; }
+  .preset-queries { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+  .preset-btn {
+    padding: 7px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: 'IBM Plex Mono', monospace;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.12s;
+  }
+  .preset-btn:hover { border-color: var(--accent); color: var(--text); }
+  .answer-hint {
+    background: rgba(0,212,170,0.08);
+    border: 1px solid rgba(0,212,170,0.25);
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .answer-label {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .conflict-card {
+    background: rgba(255,107,107,0.08);
+    border: 1px solid rgba(255,107,107,0.3);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .conflict-label {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--reversal);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .conflict-text { color: var(--text); line-height: 1.5; }
+  .conflict-note { color: var(--text-dim); font-size: 10px; margin-top: 3px; font-family: 'IBM Plex Mono', monospace; }
+
+  /* Dedup tab */
+  .dedup-panel { padding: 12px 16px; flex: 1; overflow-y: auto; }
+  .merge-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 6px;
+    font-size: 11px;
+  }
+  .merge-type {
+    font-size: 9px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent4);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .merge-arrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--text);
+  }
+  .merge-from { color: var(--reversal); }
+  .merge-to { color: var(--accent); }
+  .merge-reason { color: var(--text-dim); font-size: 10px; margin-top: 4px; }
+
+  /* Stats cards */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .stat-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .empty-state {
+    padding: 24px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .view { display: none; }
+  .view.active { display: flex; flex: 1; overflow: hidden; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Layer10 <span>// Memory Graph Explorer</span></div>
+  <div class="header-stats" id="headerStats">Loading...</div>
+  <div class="tabs">
+    <button class="tab active" onclick="switchView('graph')">Graph</button>
+    <button class="tab" onclick="switchView('retrieval')">Retrieval</button>
+    <button class="tab" onclick="switchView('dedup')">Dedup Audit</button>
+    <button class="tab" onclick="switchView('stats')">Stats</button>
+  </div>
+</header>
+
+<!-- GRAPH VIEW -->
+<div class="main view active" id="view-graph">
+  <div class="left-panel">
+    <div class="panel-header">Entities &amp; Issues</div>
+    <div class="search-box">
+      <input type="text" id="entitySearch" placeholder="Search entities..." oninput="filterEntities()">
+    </div>
+    <div class="filter-row" id="filterRow"></div>
+    <div class="entity-list" id="entityList"></div>
+  </div>
+  <div class="center">
+    <canvas id="graphCanvas"></canvas>
+    <div class="graph-legend">
+      <div class="legend-row"><div class="etype-dot dot-person"></div> Person</div>
+      <div class="legend-row"><div class="etype-dot dot-project"></div> Project</div>
+      <div class="legend-row"><div class="etype-dot dot-technology"></div> Technology</div>
+      <div class="legend-row"><div class="etype-dot dot-issue"></div> Issue</div>
+      <div class="legend-row" style="margin-top:6px">
+        <div style="width:20px;height:2px;background:var(--accent)"></div> Current claim
+      </div>
+      <div class="legend-row">
+        <div style="width:20px;height:2px;background:var(--reversal);border-top:2px dashed var(--reversal)"></div> Historical / Reversed
+      </div>
+    </div>
+  </div>
+  <div class="right-panel">
+    <div class="detail-header">
+      <div class="detail-title" id="detailTitle">Select an entity</div>
+      <div class="detail-subtitle" id="detailSubtitle">Click any node or list item to explore</div>
+    </div>
+    <div class="detail-body" id="detailBody">
+      <div class="empty-state">← Select an entity to see its claims, evidence, and history</div>
+    </div>
+  </div>
+</div>
+
+<!-- RETRIEVAL VIEW -->
+<div class="main view" id="view-retrieval">
+  <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+    <div class="query-panel">
+      <div class="section-label" style="margin-top:0">Query Memory Graph</div>
+      <div class="query-input-row">
+        <input class="query-input" id="queryInput" type="text" placeholder="e.g. What database was chosen for NovexCore?" onkeydown="if(event.key==='Enter') runQuery()">
+        <button class="query-btn" onclick="runQuery()">Search</button>
+      </div>
+      <div class="section-label">Preset Queries</div>
+      <div class="preset-queries" id="presetQueries"></div>
+      <div id="queryResults"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DEDUP VIEW -->
+<div class="main view" id="view-dedup">
+  <div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+    <div class="dedup-panel">
+      <div class="section-label" style="margin-top:0">Artifact Deduplication</div>
+      <div id="artifactDedupSection"></div>
+      <div class="section-label">Entity Canonicalization</div>
+      <div id="entityDedupSection"></div>
+      <div class="section-label">Claim Deduplication &amp; Reversal Links</div>
+      <div id="claimDedupSection"></div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS VIEW -->
+<div class="main view" id="view-stats">
+  <div style="flex:1;overflow-y:auto">
+    <div class="section-label" style="padding: 12px 16px 0; margin:0; border:none">System Statistics</div>
+    <div class="stats-grid" id="statsGrid"></div>
+    <div style="padding:0 12px">
+      <div class="section-label">Decision History Timeline</div>
+      <div id="decisionTimeline"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// DATA (embedded for standalone operation)
+// ══════════════════════════════════════════════════════
+const DATA = {"entities":[{"entity_id":"PERS-P001","entity_type":"person","canonical_name":"Alice Hartmann","aliases":"[\"alice.hartmann@novex.com\", \"ahartmann@novex.com\", \"A. Hartmann\", \"Alice Hartmann\"]"},{"entity_id":"PERS-P002","entity_type":"person","canonical_name":"Bob Delgado","aliases":"[\"bob.delgado@novex.com\", \"bdelgado@novex.com\", \"Bobby D\", \"Bob Delgado\"]"},{"entity_id":"PERS-P003","entity_type":"person","canonical_name":"Carol Finch","aliases":"[\"carol.finch@novex.com\", \"c.finch@novex.com\", \"Carol F.\", \"Carol Finch\"]"},{"entity_id":"PERS-P004","entity_type":"person","canonical_name":"David Osei","aliases":"[\"david.osei@novex.com\", \"dosei@novex.com\", \"Dave Osei\", \"David Osei\"]"},{"entity_id":"PERS-P005","entity_type":"person","canonical_name":"Eva Lindstr\u00f6m","aliases":"[\"eva.lindstrom@novex.com\", \"elindstrom@novex.com\", \"Eva L.\", \"Eva Lindstr\\u00f6m\"]"},{"entity_id":"PERS-P006","entity_type":"person","canonical_name":"Frank Nguyen","aliases":"[\"frank.nguyen@novex.com\", \"fnguyen@novex.com\", \"Frank N.\", \"Frank Nguyen\"]"},{"entity_id":"PERS-P007","entity_type":"person","canonical_name":"Grace Kim","aliases":"[\"grace.kim@novex.com\", \"gkim@novex.com\", \"G. Kim\", \"Grace Kim\"]"},{"entity_id":"PERS-P008","entity_type":"person","canonical_name":"Hector Romero","aliases":"[\"hector.romero@novex.com\", \"hromero@novex.com\", \"Hector R.\", \"Hector Romero\"]"},{"entity_id":"PERS-P009","entity_type":"person","canonical_name":"Iris Johansson","aliases":"[\"iris.johansson@novex.com\", \"ijohansson@novex.com\", \"Iris J.\", \"Iris Johansson\"]"},{"entity_id":"PERS-P010","entity_type":"person","canonical_name":"James Park","aliases":"[\"james.park@novex.com\", \"jpark@novex.com\", \"Jim Park\", \"James Park\"]"},{"entity_id":"PROJ-NOVEXCORE","entity_type":"project","canonical_name":"NovexCore","aliases":"[\"NovexCore\"]"},{"entity_id":"PROJ-DATAPIPELINE","entity_type":"project","canonical_name":"DataPipeline","aliases":"[\"DataPipeline\"]"},{"entity_id":"PROJ-AUTHSERVICE","entity_type":"project","canonical_name":"AuthService","aliases":"[\"AuthService\"]"},{"entity_id":"PROJ-REPORTINGENGINE","entity_type":"project","canonical_name":"ReportingEngine","aliases":"[\"ReportingEngine\"]"},{"entity_id":"PROJ-INFRAV2","entity_type":"project","canonical_name":"InfraV2","aliases":"[\"InfraV2\"]"},{"entity_id":"TECH-POSTGRESQL","entity_type":"technology","canonical_name":"PostgreSQL","aliases":"[\"PostgreSQL\"]"},{"entity_id":"TECH-MYSQL","entity_type":"technology","canonical_name":"MySQL","aliases":"[\"MySQL\"]"},{"entity_id":"TECH-REDIS","entity_type":"technology","canonical_name":"Redis","aliases":"[\"Redis\"]"},{"entity_id":"TECH-KAFKA","entity_type":"technology","canonical_name":"Kafka","aliases":"[\"Kafka\"]"},{"entity_id":"TECH-KUBERNETES","entity_type":"technology","canonical_name":"Kubernetes","aliases":"[\"Kubernetes\"]"},{"entity_id":"TECH-PYTHON","entity_type":"technology","canonical_name":"Python","aliases":"[\"Python\"]"},{"entity_id":"TECH-RABBITMQ","entity_type":"technology","canonical_name":"RabbitMQ","aliases":"[\"RabbitMQ\"]"},{"entity_id":"TECH-PAGERDUTY","entity_type":"technology","canonical_name":"PagerDuty","aliases":"[\"PagerDuty\"]"}],"claims":[{"claim_id":"74c860b1-1e50-468a-8f9f-d2b0e2b7f8e6","claim_type":"HAS_STATUS","subject_id":"ISSUE-I001","object_id":"","predicate":"Issue I001 status: open","value":"open","confidence":1.0,"valid_from":"2024-01-15T09:00:00Z","valid_until":"2024-01-16T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"74c860b1-1e50-468a-8f9f-d2b0e2b7f8e6\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I001\", \"object_entity_id\": \"\", \"predicate\": \"Issue I001 status: open\", \"value\": \"open\", \"confidence\": 1.0, \"evidence_ids\": [\"6441438d-edfe-4740-91c0-fbc0928fb92c\"], \"valid_from\": \"2024-01-15T09:00:00Z\", \"valid_until\": \"2024-01-16T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"970f024e-3ddc-4f59-901f-8e9eb884c820","claim_type":"HAS_STATUS","subject_id":"ISSUE-I001","object_id":"","predicate":"Issue I001 status: in_progress","value":"in_progress","confidence":1.0,"valid_from":"2024-01-16T09:00:00Z","valid_until":"2024-01-20T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"970f024e-3ddc-4f59-901f-8e9eb884c820\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I001\", \"object_entity_id\": \"\", \"predicate\": \"Issue I001 status: in_progress\", \"value\": \"in_progress\", \"confidence\": 1.0, \"evidence_ids\": [\"6441438d-edfe-4740-91c0-fbc0928fb92c\"], \"valid_from\": \"2024-01-16T09:00:00Z\", \"valid_until\": \"2024-01-20T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"d16c0c01-8913-4bf0-9635-c80e6700798f","claim_type":"HAS_STATUS","subject_id":"ISSUE-I001","object_id":"","predicate":"Issue I001 status: closed","value":"closed","confidence":1.0,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"d16c0c01-8913-4bf0-9635-c80e6700798f\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I001\", \"object_entity_id\": \"\", \"predicate\": \"Issue I001 status: closed\", \"value\": \"closed\", \"confidence\": 1.0, \"evidence_ids\": [\"6441438d-edfe-4740-91c0-fbc0928fb92c\"], \"valid_from\": \"2024-01-20T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"fb829628-a352-443c-a4a6-54d1e5dc4e52","claim_type":"ASSIGNED_TO","subject_id":"ISSUE-I001","object_id":"PERS-P006","predicate":"Issue I001 assigned to PERS-P006","value":"PERS-P006","confidence":1.0,"valid_from":"2024-01-15T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"fb829628-a352-443c-a4a6-54d1e5dc4e52\", \"claim_type\": \"ASSIGNED_TO\", \"subject_entity_id\": \"ISSUE-I001\", \"object_entity_id\": \"PERS-P006\", \"predicate\": \"Issue I001 assigned to PERS-P006\", \"value\": \"PERS-P006\", \"confidence\": 1.0, \"evidence_ids\": [\"6441438d-edfe-4740-91c0-fbc0928fb92c\"], \"valid_from\": \"2024-01-15T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"assignment\"]}"},{"claim_id":"41de7895-f113-41d5-a1b9-ed599a89197f","claim_type":"AUTHORED_BY","subject_id":"ISSUE-I001","object_id":"PERS-P003","predicate":"Issue I001 authored by PERS-P003","value":"PERS-P003","confidence":1.0,"valid_from":"2024-01-15T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"41de7895-f113-41d5-a1b9-ed599a89197f\", \"claim_type\": \"AUTHORED_BY\", \"subject_entity_id\": \"ISSUE-I001\", \"object_entity_id\": \"PERS-P003\", \"predicate\": \"Issue I001 authored by PERS-P003\", \"value\": \"PERS-P003\", \"confidence\": 1.0, \"evidence_ids\": [\"6441438d-edfe-4740-91c0-fbc0928fb92c\"], \"valid_from\": \"2024-01-15T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"authorship\"]}"},{"claim_id":"02aa20e2-4d1b-47df-93c4-30d934a54243","claim_type":"HAS_STATUS","subject_id":"ISSUE-I002","object_id":"","predicate":"Issue I002 status: open","value":"open","confidence":1.0,"valid_from":"2024-01-23T09:00:00Z","valid_until":"2024-01-24T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"02aa20e2-4d1b-47df-93c4-30d934a54243\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I002\", \"object_entity_id\": \"\", \"predicate\": \"Issue I002 status: open\", \"value\": \"open\", \"confidence\": 1.0, \"evidence_ids\": [\"3db161e2-07ee-472a-8f54-d418be94546c\"], \"valid_from\": \"2024-01-23T09:00:00Z\", \"valid_until\": \"2024-01-24T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"7ea89061-fb40-4e2f-8c7d-914bf1ae598e","claim_type":"HAS_STATUS","subject_id":"ISSUE-I002","object_id":"","predicate":"Issue I002 status: in_progress","value":"in_progress","confidence":1.0,"valid_from":"2024-01-24T09:00:00Z","valid_until":"2024-02-09T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"7ea89061-fb40-4e2f-8c7d-914bf1ae598e\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I002\", \"object_entity_id\": \"\", \"predicate\": \"Issue I002 status: in_progress\", \"value\": \"in_progress\", \"confidence\": 1.0, \"evidence_ids\": [\"3db161e2-07ee-472a-8f54-d418be94546c\"], \"valid_from\": \"2024-01-24T09:00:00Z\", \"valid_until\": \"2024-02-09T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"b6469955-358a-4629-af6b-a9c2df448226","claim_type":"HAS_STATUS","subject_id":"ISSUE-I002","object_id":"","predicate":"Issue I002 status: closed","value":"closed","confidence":1.0,"valid_from":"2024-02-09T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"b6469955-358a-4629-af6b-a9c2df448226\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I002\", \"object_entity_id\": \"\", \"predicate\": \"Issue I002 status: closed\", \"value\": \"closed\", \"confidence\": 1.0, \"evidence_ids\": [\"3db161e2-07ee-472a-8f54-d418be94546c\"], \"valid_from\": \"2024-02-09T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"e534ae94-0368-4790-ba4e-a6f02c809329","claim_type":"ASSIGNED_TO","subject_id":"ISSUE-I002","object_id":"PERS-P002","predicate":"Issue I002 assigned to PERS-P002","value":"PERS-P002","confidence":1.0,"valid_from":"2024-01-23T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"e534ae94-0368-4790-ba4e-a6f02c809329\", \"claim_type\": \"ASSIGNED_TO\", \"subject_entity_id\": \"ISSUE-I002\", \"object_entity_id\": \"PERS-P002\", \"predicate\": \"Issue I002 assigned to PERS-P002\", \"value\": \"PERS-P002\", \"confidence\": 1.0, \"evidence_ids\": [\"3db161e2-07ee-472a-8f54-d418be94546c\"], \"valid_from\": \"2024-01-23T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"assignment\"]}"},{"claim_id":"811e3a93-fb98-4808-9892-9c9ff46b95ba","claim_type":"AUTHORED_BY","subject_id":"ISSUE-I002","object_id":"PERS-P001","predicate":"Issue I002 authored by PERS-P001","value":"PERS-P001","confidence":1.0,"valid_from":"2024-01-23T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"811e3a93-fb98-4808-9892-9c9ff46b95ba\", \"claim_type\": \"AUTHORED_BY\", \"subject_entity_id\": \"ISSUE-I002\", \"object_entity_id\": \"PERS-P001\", \"predicate\": \"Issue I002 authored by PERS-P001\", \"value\": \"PERS-P001\", \"confidence\": 1.0, \"evidence_ids\": [\"3db161e2-07ee-472a-8f54-d418be94546c\"], \"valid_from\": \"2024-01-23T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"authorship\"]}"},{"claim_id":"a5262abc-1650-41b1-83f2-820b6c35455c","claim_type":"HAS_STATUS","subject_id":"ISSUE-I003","object_id":"","predicate":"Issue I003 status: open","value":"open","confidence":1.0,"valid_from":"2024-01-18T09:00:00Z","valid_until":"2024-01-18T13:48:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"a5262abc-1650-41b1-83f2-820b6c35455c\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I003\", \"object_entity_id\": \"\", \"predicate\": \"Issue I003 status: open\", \"value\": \"open\", \"confidence\": 1.0, \"evidence_ids\": [\"39b6aa55-a929-4e2f-b2b3-717b2ac83717\"], \"valid_from\": \"2024-01-18T09:00:00Z\", \"valid_until\": \"2024-01-18T13:48:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"f72fe7c1-664f-41d0-8daa-70524aaaf4a2","claim_type":"HAS_STATUS","subject_id":"ISSUE-I003","object_id":"","predicate":"Issue I003 status: in_progress","value":"in_progress","confidence":1.0,"valid_from":"2024-01-18T13:48:00Z","valid_until":"2024-01-19T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"f72fe7c1-664f-41d0-8daa-70524aaaf4a2\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I003\", \"object_entity_id\": \"\", \"predicate\": \"Issue I003 status: in_progress\", \"value\": \"in_progress\", \"confidence\": 1.0, \"evidence_ids\": [\"39b6aa55-a929-4e2f-b2b3-717b2ac83717\"], \"valid_from\": \"2024-01-18T13:48:00Z\", \"valid_until\": \"2024-01-19T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"5718607f-10a5-414e-879d-664700249925","claim_type":"HAS_STATUS","subject_id":"ISSUE-I003","object_id":"","predicate":"Issue I003 status: closed","value":"closed","confidence":1.0,"valid_from":"2024-01-19T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"5718607f-10a5-414e-879d-664700249925\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I003\", \"object_entity_id\": \"\", \"predicate\": \"Issue I003 status: closed\", \"value\": \"closed\", \"confidence\": 1.0, \"evidence_ids\": [\"39b6aa55-a929-4e2f-b2b3-717b2ac83717\"], \"valid_from\": \"2024-01-19T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"46be3ca4-09d6-418a-aebe-011eecf5d76e","claim_type":"ASSIGNED_TO","subject_id":"ISSUE-I003","object_id":"PERS-P006","predicate":"Issue I003 assigned to PERS-P006","value":"PERS-P006","confidence":1.0,"valid_from":"2024-01-18T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"46be3ca4-09d6-418a-aebe-011eecf5d76e\", \"claim_type\": \"ASSIGNED_TO\", \"subject_entity_id\": \"ISSUE-I003\", \"object_entity_id\": \"PERS-P006\", \"predicate\": \"Issue I003 assigned to PERS-P006\", \"value\": \"PERS-P006\", \"confidence\": 1.0, \"evidence_ids\": [\"39b6aa55-a929-4e2f-b2b3-717b2ac83717\"], \"valid_from\": \"2024-01-18T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"assignment\"]}"},{"claim_id":"c024bda2-6f0c-4d28-8143-27b4ed4c468d","claim_type":"AUTHORED_BY","subject_id":"ISSUE-I003","object_id":"PERS-P009","predicate":"Issue I003 authored by PERS-P009","value":"PERS-P009","confidence":1.0,"valid_from":"2024-01-18T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"c024bda2-6f0c-4d28-8143-27b4ed4c468d\", \"claim_type\": \"AUTHORED_BY\", \"subject_entity_id\": \"ISSUE-I003\", \"object_entity_id\": \"PERS-P009\", \"predicate\": \"Issue I003 authored by PERS-P009\", \"value\": \"PERS-P009\", \"confidence\": 1.0, \"evidence_ids\": [\"39b6aa55-a929-4e2f-b2b3-717b2ac83717\"], \"valid_from\": \"2024-01-18T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"authorship\"]}"},{"claim_id":"c5f4f852-8ba5-4d17-86e5-ae5fdf55d0c5","claim_type":"HAS_STATUS","subject_id":"ISSUE-I004","object_id":"","predicate":"Issue I004 status: open","value":"open","confidence":1.0,"valid_from":"2024-01-26T09:00:00Z","valid_until":"2024-01-27T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"c5f4f852-8ba5-4d17-86e5-ae5fdf55d0c5\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I004\", \"object_entity_id\": \"\", \"predicate\": \"Issue I004 status: open\", \"value\": \"open\", \"confidence\": 1.0, \"evidence_ids\": [\"f582ac82-113a-48f1-af13-70cbd8519263\"], \"valid_from\": \"2024-01-26T09:00:00Z\", \"valid_until\": \"2024-01-27T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"fe3f3e31-5e14-4096-9be0-fe8a2279c043","claim_type":"HAS_STATUS","subject_id":"ISSUE-I004","object_id":"","predicate":"Issue I004 status: in_progress","value":"in_progress","confidence":1.0,"valid_from":"2024-01-27T09:00:00Z","valid_until":"2024-02-02T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"fe3f3e31-5e14-4096-9be0-fe8a2279c043\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I004\", \"object_entity_id\": \"\", \"predicate\": \"Issue I004 status: in_progress\", \"value\": \"in_progress\", \"confidence\": 1.0, \"evidence_ids\": [\"f582ac82-113a-48f1-af13-70cbd8519263\"], \"valid_from\": \"2024-01-27T09:00:00Z\", \"valid_until\": \"2024-02-02T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"b49e5cd2-401f-4584-9b91-e7ee681cd158","claim_type":"HAS_STATUS","subject_id":"ISSUE-I004","object_id":"","predicate":"Issue I004 status: in_review","value":"in_review","confidence":1.0,"valid_from":"2024-02-02T09:00:00Z","valid_until":"2024-02-06T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"b49e5cd2-401f-4584-9b91-e7ee681cd158\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I004\", \"object_entity_id\": \"\", \"predicate\": \"Issue I004 status: in_review\", \"value\": \"in_review\", \"confidence\": 1.0, \"evidence_ids\": [\"f582ac82-113a-48f1-af13-70cbd8519263\"], \"valid_from\": \"2024-02-02T09:00:00Z\", \"valid_until\": \"2024-02-06T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"31a20022-d755-49e6-9c55-ccaa4c970bd4","claim_type":"HAS_STATUS","subject_id":"ISSUE-I004","object_id":"","predicate":"Issue I004 status: closed","value":"closed","confidence":1.0,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"31a20022-d755-49e6-9c55-ccaa4c970bd4\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I004\", \"object_entity_id\": \"\", \"predicate\": \"Issue I004 status: closed\", \"value\": \"closed\", \"confidence\": 1.0, \"evidence_ids\": [\"f582ac82-113a-48f1-af13-70cbd8519263\"], \"valid_from\": \"2024-02-06T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"1170b717-6b65-4c5e-a393-d9f385390d1c","claim_type":"ASSIGNED_TO","subject_id":"ISSUE-I004","object_id":"PERS-P010","predicate":"Issue I004 assigned to PERS-P010","value":"PERS-P010","confidence":1.0,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"1170b717-6b65-4c5e-a393-d9f385390d1c\", \"claim_type\": \"ASSIGNED_TO\", \"subject_entity_id\": \"ISSUE-I004\", \"object_entity_id\": \"PERS-P010\", \"predicate\": \"Issue I004 assigned to PERS-P010\", \"value\": \"PERS-P010\", \"confidence\": 1.0, \"evidence_ids\": [\"f582ac82-113a-48f1-af13-70cbd8519263\"], \"valid_from\": \"2024-01-26T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"assignment\"]}"},{"claim_id":"aa66ad08-613b-442a-b5f3-b18c1182159d","claim_type":"AUTHORED_BY","subject_id":"ISSUE-I004","object_id":"PERS-P002","predicate":"Issue I004 authored by PERS-P002","value":"PERS-P002","confidence":1.0,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"aa66ad08-613b-442a-b5f3-b18c1182159d\", \"claim_type\": \"AUTHORED_BY\", \"subject_entity_id\": \"ISSUE-I004\", \"object_entity_id\": \"PERS-P002\", \"predicate\": \"Issue I004 authored by PERS-P002\", \"value\": \"PERS-P002\", \"confidence\": 1.0, \"evidence_ids\": [\"f582ac82-113a-48f1-af13-70cbd8519263\"], \"valid_from\": \"2024-01-26T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"authorship\"]}"},{"claim_id":"90d0cd24-5f2f-4d7d-a472-78d507ec875d","claim_type":"HAS_STATUS","subject_id":"ISSUE-I005","object_id":"","predicate":"Issue I005 status: open","value":"open","confidence":1.0,"valid_from":"2024-01-20T09:00:00Z","valid_until":"2024-01-21T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"90d0cd24-5f2f-4d7d-a472-78d507ec875d\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I005\", \"object_entity_id\": \"\", \"predicate\": \"Issue I005 status: open\", \"value\": \"open\", \"confidence\": 1.0, \"evidence_ids\": [\"2ff25d00-246e-4d58-9f4c-9a34ffe435f3\"], \"valid_from\": \"2024-01-20T09:00:00Z\", \"valid_until\": \"2024-01-21T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"d3359e97-3779-4ef0-9ae8-123812009f86","claim_type":"HAS_STATUS","subject_id":"ISSUE-I005","object_id":"","predicate":"Issue I005 status: deferred","value":"deferred","confidence":1.0,"valid_from":"2024-01-21T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"d3359e97-3779-4ef0-9ae8-123812009f86\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I005\", \"object_entity_id\": \"\", \"predicate\": \"Issue I005 status: deferred\", \"value\": \"deferred\", \"confidence\": 1.0, \"evidence_ids\": [\"2ff25d00-246e-4d58-9f4c-9a34ffe435f3\"], \"valid_from\": \"2024-01-21T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"f3d23be0-0eea-42d4-bd68-4c20134e5b35","claim_type":"ASSIGNED_TO","subject_id":"ISSUE-I005","object_id":"PERS-P008","predicate":"Issue I005 assigned to PERS-P008","value":"PERS-P008","confidence":1.0,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"f3d23be0-0eea-42d4-bd68-4c20134e5b35\", \"claim_type\": \"ASSIGNED_TO\", \"subject_entity_id\": \"ISSUE-I005\", \"object_entity_id\": \"PERS-P008\", \"predicate\": \"Issue I005 assigned to PERS-P008\", \"value\": \"PERS-P008\", \"confidence\": 1.0, \"evidence_ids\": [\"2ff25d00-246e-4d58-9f4c-9a34ffe435f3\"], \"valid_from\": \"2024-01-20T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"assignment\"]}"},{"claim_id":"841bb7d6-bd4d-49ca-be01-075b7a5c8e55","claim_type":"AUTHORED_BY","subject_id":"ISSUE-I005","object_id":"PERS-P007","predicate":"Issue I005 authored by PERS-P007","value":"PERS-P007","confidence":1.0,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"841bb7d6-bd4d-49ca-be01-075b7a5c8e55\", \"claim_type\": \"AUTHORED_BY\", \"subject_entity_id\": \"ISSUE-I005\", \"object_entity_id\": \"PERS-P007\", \"predicate\": \"Issue I005 authored by PERS-P007\", \"value\": \"PERS-P007\", \"confidence\": 1.0, \"evidence_ids\": [\"2ff25d00-246e-4d58-9f4c-9a34ffe435f3\"], \"valid_from\": \"2024-01-20T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"authorship\"]}"},{"claim_id":"685814c7-5346-4067-b639-07d092bf8efb","claim_type":"HAS_STATUS","subject_id":"ISSUE-I006","object_id":"","predicate":"Issue I006 status: open","value":"open","confidence":1.0,"valid_from":"2024-02-24T09:00:00Z","valid_until":"2024-02-24T13:48:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"685814c7-5346-4067-b639-07d092bf8efb\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I006\", \"object_entity_id\": \"\", \"predicate\": \"Issue I006 status: open\", \"value\": \"open\", \"confidence\": 1.0, \"evidence_ids\": [\"208bf6c5-6d52-42e6-8445-49723243eec4\"], \"valid_from\": \"2024-02-24T09:00:00Z\", \"valid_until\": \"2024-02-24T13:48:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"5dd20a3a-3fec-4f14-b00c-a4eb4af02b86","claim_type":"HAS_STATUS","subject_id":"ISSUE-I006","object_id":"","predicate":"Issue I006 status: in_progress","value":"in_progress","confidence":1.0,"valid_from":"2024-02-24T13:48:00Z","valid_until":"2024-02-24T21:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"5dd20a3a-3fec-4f14-b00c-a4eb4af02b86\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I006\", \"object_entity_id\": \"\", \"predicate\": \"Issue I006 status: in_progress\", \"value\": \"in_progress\", \"confidence\": 1.0, \"evidence_ids\": [\"208bf6c5-6d52-42e6-8445-49723243eec4\"], \"valid_from\": \"2024-02-24T13:48:00Z\", \"valid_until\": \"2024-02-24T21:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"20eb012c-054b-4070-92e9-ac06a9dcf00b","claim_type":"HAS_STATUS","subject_id":"ISSUE-I006","object_id":"","predicate":"Issue I006 status: closed","value":"closed","confidence":1.0,"valid_from":"2024-02-24T21:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"20eb012c-054b-4070-92e9-ac06a9dcf00b\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I006\", \"object_entity_id\": \"\", \"predicate\": \"Issue I006 status: closed\", \"value\": \"closed\", \"confidence\": 1.0, \"evidence_ids\": [\"208bf6c5-6d52-42e6-8445-49723243eec4\"], \"valid_from\": \"2024-02-24T21:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"e80ed2e5-4c38-49b1-8604-7bbbeee9d68b","claim_type":"ASSIGNED_TO","subject_id":"ISSUE-I006","object_id":"PERS-P010","predicate":"Issue I006 assigned to PERS-P010","value":"PERS-P010","confidence":1.0,"valid_from":"2024-02-24T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"e80ed2e5-4c38-49b1-8604-7bbbeee9d68b\", \"claim_type\": \"ASSIGNED_TO\", \"subject_entity_id\": \"ISSUE-I006\", \"object_entity_id\": \"PERS-P010\", \"predicate\": \"Issue I006 assigned to PERS-P010\", \"value\": \"PERS-P010\", \"confidence\": 1.0, \"evidence_ids\": [\"208bf6c5-6d52-42e6-8445-49723243eec4\"], \"valid_from\": \"2024-02-24T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"assignment\"]}"},{"claim_id":"0e45c947-b492-46b1-b5e3-4fbc1ef51928","claim_type":"AUTHORED_BY","subject_id":"ISSUE-I006","object_id":"PERS-P009","predicate":"Issue I006 authored by PERS-P009","value":"PERS-P009","confidence":1.0,"valid_from":"2024-02-24T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"0e45c947-b492-46b1-b5e3-4fbc1ef51928\", \"claim_type\": \"AUTHORED_BY\", \"subject_entity_id\": \"ISSUE-I006\", \"object_entity_id\": \"PERS-P009\", \"predicate\": \"Issue I006 authored by PERS-P009\", \"value\": \"PERS-P009\", \"confidence\": 1.0, \"evidence_ids\": [\"208bf6c5-6d52-42e6-8445-49723243eec4\"], \"valid_from\": \"2024-02-24T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"authorship\"]}"},{"claim_id":"3161b884-1098-44f1-8ef0-73c54c1d7438","claim_type":"HAS_STATUS","subject_id":"ISSUE-I007","object_id":"","predicate":"Issue I007 status: open","value":"open","confidence":1.0,"valid_from":"2024-02-06T09:00:00Z","valid_until":"2024-02-06T21:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"3161b884-1098-44f1-8ef0-73c54c1d7438\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I007\", \"object_entity_id\": \"\", \"predicate\": \"Issue I007 status: open\", \"value\": \"open\", \"confidence\": 1.0, \"evidence_ids\": [\"30d84ab4-97d5-4a00-9006-7a205a062c3a\"], \"valid_from\": \"2024-02-06T09:00:00Z\", \"valid_until\": \"2024-02-06T21:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"7b6860a8-5b3f-4321-a565-a715bf9d9459","claim_type":"HAS_STATUS","subject_id":"ISSUE-I007","object_id":"","predicate":"Issue I007 status: in_progress","value":"in_progress","confidence":1.0,"valid_from":"2024-02-06T21:00:00Z","valid_until":"2024-02-14T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"7b6860a8-5b3f-4321-a565-a715bf9d9459\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I007\", \"object_entity_id\": \"\", \"predicate\": \"Issue I007 status: in_progress\", \"value\": \"in_progress\", \"confidence\": 1.0, \"evidence_ids\": [\"30d84ab4-97d5-4a00-9006-7a205a062c3a\"], \"valid_from\": \"2024-02-06T21:00:00Z\", \"valid_until\": \"2024-02-14T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"06f4d4d7-d073-4baf-b21f-56efdb212e2d","claim_type":"HAS_STATUS","subject_id":"ISSUE-I007","object_id":"","predicate":"Issue I007 status: closed","value":"closed","confidence":1.0,"valid_from":"2024-02-14T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"06f4d4d7-d073-4baf-b21f-56efdb212e2d\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I007\", \"object_entity_id\": \"\", \"predicate\": \"Issue I007 status: closed\", \"value\": \"closed\", \"confidence\": 1.0, \"evidence_ids\": [\"30d84ab4-97d5-4a00-9006-7a205a062c3a\"], \"valid_from\": \"2024-02-14T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"e8e5e2e2-fc66-4b06-8aa2-b3451d21e34d","claim_type":"ASSIGNED_TO","subject_id":"ISSUE-I007","object_id":"PERS-P005","predicate":"Issue I007 assigned to PERS-P005","value":"PERS-P005","confidence":1.0,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"e8e5e2e2-fc66-4b06-8aa2-b3451d21e34d\", \"claim_type\": \"ASSIGNED_TO\", \"subject_entity_id\": \"ISSUE-I007\", \"object_entity_id\": \"PERS-P005\", \"predicate\": \"Issue I007 assigned to PERS-P005\", \"value\": \"PERS-P005\", \"confidence\": 1.0, \"evidence_ids\": [\"30d84ab4-97d5-4a00-9006-7a205a062c3a\"], \"valid_from\": \"2024-02-06T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"assignment\"]}"},{"claim_id":"4b8b8662-9067-4c01-8758-2bf4fab957a6","claim_type":"AUTHORED_BY","subject_id":"ISSUE-I007","object_id":"PERS-P004","predicate":"Issue I007 authored by PERS-P004","value":"PERS-P004","confidence":1.0,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"4b8b8662-9067-4c01-8758-2bf4fab957a6\", \"claim_type\": \"AUTHORED_BY\", \"subject_entity_id\": \"ISSUE-I007\", \"object_entity_id\": \"PERS-P004\", \"predicate\": \"Issue I007 authored by PERS-P004\", \"value\": \"PERS-P004\", \"confidence\": 1.0, \"evidence_ids\": [\"30d84ab4-97d5-4a00-9006-7a205a062c3a\"], \"valid_from\": \"2024-02-06T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"authorship\"]}"},{"claim_id":"a2f6d79a-a74b-4e0f-aa2b-5dcaa8e474a8","claim_type":"HAS_STATUS","subject_id":"ISSUE-I008","object_id":"","predicate":"Issue I008 status: open","value":"open","confidence":1.0,"valid_from":"2024-01-21T09:00:00Z","valid_until":"2024-01-22T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"a2f6d79a-a74b-4e0f-aa2b-5dcaa8e474a8\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I008\", \"object_entity_id\": \"\", \"predicate\": \"Issue I008 status: open\", \"value\": \"open\", \"confidence\": 1.0, \"evidence_ids\": [\"b7682018-31ad-4b18-abb1-29f31841a65b\"], \"valid_from\": \"2024-01-21T09:00:00Z\", \"valid_until\": \"2024-01-22T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"f78f0adb-43f1-4334-b788-86be9fee5402","claim_type":"HAS_STATUS","subject_id":"ISSUE-I008","object_id":"","predicate":"Issue I008 status: in_progress","value":"in_progress","confidence":1.0,"valid_from":"2024-01-22T09:00:00Z","valid_until":"2024-01-25T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"f78f0adb-43f1-4334-b788-86be9fee5402\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I008\", \"object_entity_id\": \"\", \"predicate\": \"Issue I008 status: in_progress\", \"value\": \"in_progress\", \"confidence\": 1.0, \"evidence_ids\": [\"b7682018-31ad-4b18-abb1-29f31841a65b\"], \"valid_from\": \"2024-01-22T09:00:00Z\", \"valid_until\": \"2024-01-25T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"712f4291-083a-4cb6-b170-ed92e7a45434","claim_type":"HAS_STATUS","subject_id":"ISSUE-I008","object_id":"","predicate":"Issue I008 status: in_review","value":"in_review","confidence":1.0,"valid_from":"2024-01-25T09:00:00Z","valid_until":"2024-01-27T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"712f4291-083a-4cb6-b170-ed92e7a45434\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I008\", \"object_entity_id\": \"\", \"predicate\": \"Issue I008 status: in_review\", \"value\": \"in_review\", \"confidence\": 1.0, \"evidence_ids\": [\"b7682018-31ad-4b18-abb1-29f31841a65b\"], \"valid_from\": \"2024-01-25T09:00:00Z\", \"valid_until\": \"2024-01-27T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"9642cc59-285c-4b75-9bf4-29714afb747b","claim_type":"HAS_STATUS","subject_id":"ISSUE-I008","object_id":"","predicate":"Issue I008 status: closed","value":"closed","confidence":1.0,"valid_from":"2024-01-27T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"9642cc59-285c-4b75-9bf4-29714afb747b\", \"claim_type\": \"HAS_STATUS\", \"subject_entity_id\": \"ISSUE-I008\", \"object_entity_id\": \"\", \"predicate\": \"Issue I008 status: closed\", \"value\": \"closed\", \"confidence\": 1.0, \"evidence_ids\": [\"b7682018-31ad-4b18-abb1-29f31841a65b\"], \"valid_from\": \"2024-01-27T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"status\"]}"},{"claim_id":"b1479d0e-2853-44c0-91f7-22d2e93f28b2","claim_type":"ASSIGNED_TO","subject_id":"ISSUE-I008","object_id":"PERS-P006","predicate":"Issue I008 assigned to PERS-P006","value":"PERS-P006","confidence":1.0,"valid_from":"2024-01-21T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"b1479d0e-2853-44c0-91f7-22d2e93f28b2\", \"claim_type\": \"ASSIGNED_TO\", \"subject_entity_id\": \"ISSUE-I008\", \"object_entity_id\": \"PERS-P006\", \"predicate\": \"Issue I008 assigned to PERS-P006\", \"value\": \"PERS-P006\", \"confidence\": 1.0, \"evidence_ids\": [\"b7682018-31ad-4b18-abb1-29f31841a65b\"], \"valid_from\": \"2024-01-21T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"assignment\"]}"},{"claim_id":"88fd0ab3-ad42-4432-a666-ff95ae52df0e","claim_type":"AUTHORED_BY","subject_id":"ISSUE-I008","object_id":"PERS-P003","predicate":"Issue I008 authored by PERS-P003","value":"PERS-P003","confidence":1.0,"valid_from":"2024-01-21T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"88fd0ab3-ad42-4432-a666-ff95ae52df0e\", \"claim_type\": \"AUTHORED_BY\", \"subject_entity_id\": \"ISSUE-I008\", \"object_entity_id\": \"PERS-P003\", \"predicate\": \"Issue I008 authored by PERS-P003\", \"value\": \"PERS-P003\", \"confidence\": 1.0, \"evidence_ids\": [\"b7682018-31ad-4b18-abb1-29f31841a65b\"], \"valid_from\": \"2024-01-21T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"issue\", \"authorship\"]}"},{"claim_id":"e7069528-cfd0-4fc3-8923-339eea6fc6d9","claim_type":"DECISION_REVERSED","subject_id":"DEC-c3ac0b38","object_id":"PERS-P007","predicate":"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.","value":"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.","confidence":0.95,"valid_from":"2024-01-23T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"e7069528-cfd0-4fc3-8923-339eea6fc6d9\", \"claim_type\": \"DECISION_REVERSED\", \"subject_entity_id\": \"DEC-c3ac0b38\", \"object_entity_id\": \"PERS-P007\", \"predicate\": \"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.\", \"value\": \"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.\", \"confidence\": 0.95, \"evidence_ids\": [\"c3ac0b38-607a-4982-8cbf-8b52cca7498b\"], \"valid_from\": \"2024-01-23T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"decision\", \"reversal\"]}"},{"claim_id":"98a3b5fc-c4e9-4b50-b2a2-64ea66539787","claim_type":"DECISION_REVERSED","subject_id":"DEC-2e817958","object_id":"PERS-P001","predicate":"After cost review, we are switching to MySQL. I know this reverses our earlier decision \u2014 documenting the reason: vendor","value":"After cost review, we are switching to MySQL. I know this reverses our earlier decision \u2014 documenting the reason: vendor discount + ops simplicity.","confidence":0.95,"valid_from":"2024-01-23T13:48:00Z","valid_until":"","is_current":1,"supersedes_id":"59e2d441-7e3e-445e-bc14-32482fd677f9","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"98a3b5fc-c4e9-4b50-b2a2-64ea66539787\", \"claim_type\": \"DECISION_REVERSED\", \"subject_entity_id\": \"DEC-2e817958\", \"object_entity_id\": \"PERS-P001\", \"predicate\": \"After cost review, we are switching to MySQL. I know this reverses our earlier decision \\u2014 documenting the reason: vendor\", \"value\": \"After cost review, we are switching to MySQL. I know this reverses our earlier decision \\u2014 documenting the reason: vendor discount + ops simplicity.\", \"confidence\": 0.95, \"evidence_ids\": [\"2e817958-088d-4aaf-afbe-e672d63fbb09\"], \"valid_from\": \"2024-01-23T13:48:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"59e2d441-7e3e-445e-bc14-32482fd677f9\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"decision\", \"reversal\"]}"},{"claim_id":"0f7bde80-ad29-4832-90d4-d62c987afa4f","claim_type":"INCIDENT_OCCURRED","subject_id":"ISSUE-I001","object_id":"PROJ-NOVEXCORE","predicate":"Security/incident: Implement JWT authentication","value":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.","confidence":0.95,"valid_from":"2024-01-15T09:00:00Z","valid_until":"2024-01-20T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"0f7bde80-ad29-4832-90d4-d62c987afa4f\", \"claim_type\": \"INCIDENT_OCCURRED\", \"subject_entity_id\": \"ISSUE-I001\", \"object_entity_id\": \"PROJ-NOVEXCORE\", \"predicate\": \"Security/incident: Implement JWT authentication\", \"value\": \"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.\", \"confidence\": 0.95, \"evidence_ids\": [\"6441438d-edfe-4740-91c0-fbc0928fb92c\", \"5bd63edd-0d5e-4241-8b56-77870ff46f17\", \"bbf05149-8fd4-4aef-8da7-299c6d9b9858\", \"9694c833-5afe-4061-96fc-a6a12e26ee1c\"], \"valid_from\": \"2024-01-15T09:00:00Z\", \"valid_until\": \"2024-01-20T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"incident\", \"security\"]}"},{"claim_id":"3fed4932-df8f-4b62-b934-9159171d77f6","claim_type":"INCIDENT_OCCURRED","subject_id":"ISSUE-I003","object_id":"PROJ-AUTHSERVICE","predicate":"Security/incident: Security: tokens never expire","value":"CRITICAL: Auth tokens missing exp claim. All tokens issued before 2024-01-10 are permanent. Immediate fix required.","confidence":0.95,"valid_from":"2024-01-18T09:00:00Z","valid_until":"2024-01-19T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"3fed4932-df8f-4b62-b934-9159171d77f6\", \"claim_type\": \"INCIDENT_OCCURRED\", \"subject_entity_id\": \"ISSUE-I003\", \"object_entity_id\": \"PROJ-AUTHSERVICE\", \"predicate\": \"Security/incident: Security: tokens never expire\", \"value\": \"CRITICAL: Auth tokens missing exp claim. All tokens issued before 2024-01-10 are permanent. Immediate fix required.\", \"confidence\": 0.95, \"evidence_ids\": [\"39b6aa55-a929-4e2f-b2b3-717b2ac83717\", \"ca106a8d-46fe-42c4-9593-35cd13a740aa\", \"ea5d68bd-bb2a-4df4-81d5-38705e71ed6d\"], \"valid_from\": \"2024-01-18T09:00:00Z\", \"valid_until\": \"2024-01-19T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"incident\", \"security\"]}"},{"claim_id":"9b9af9cd-b279-4179-857f-8b08638c1db5","claim_type":"INCIDENT_OCCURRED","subject_id":"ISSUE-I008","object_id":"PROJ-AUTHSERVICE","predicate":"Security/incident: Add refresh token support","value":"Implement refresh token flow. Access tokens: 24h. Refresh tokens: 30 days, single-use.","confidence":0.95,"valid_from":"2024-01-21T09:00:00Z","valid_until":"2024-01-27T09:00:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"9b9af9cd-b279-4179-857f-8b08638c1db5\", \"claim_type\": \"INCIDENT_OCCURRED\", \"subject_entity_id\": \"ISSUE-I008\", \"object_entity_id\": \"PROJ-AUTHSERVICE\", \"predicate\": \"Security/incident: Add refresh token support\", \"value\": \"Implement refresh token flow. Access tokens: 24h. Refresh tokens: 30 days, single-use.\", \"confidence\": 0.95, \"evidence_ids\": [\"b7682018-31ad-4b18-abb1-29f31841a65b\", \"137c3a22-b17b-4575-b9d7-bf598b9e9c49\", \"1a9df605-f72d-45b2-bb33-85cad4d3f965\", \"3a1a7113-52fe-42b2-a669-21f1a3d2e92f\", \"7319f2e2-be5d-4cb7-986a-c02dbef04778\"], \"valid_from\": \"2024-01-21T09:00:00Z\", \"valid_until\": \"2024-01-27T09:00:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"incident\", \"security\"]}"},{"claim_id":"59e2d441-7e3e-445e-bc14-32482fd677f9","claim_type":"DECISION_MADE","subject_id":"DEC-82a9b97b","object_id":"PERS-P001","predicate":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","value":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","confidence":0.9,"valid_from":"2024-01-16T13:48:00Z","valid_until":"2024-01-23T13:48:00Z","is_current":0,"supersedes_id":"","superseded_by_id":"98a3b5fc-c4e9-4b50-b2a2-64ea66539787","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"59e2d441-7e3e-445e-bc14-32482fd677f9\", \"claim_type\": \"DECISION_MADE\", \"subject_entity_id\": \"DEC-82a9b97b\", \"object_entity_id\": \"PERS-P001\", \"predicate\": \"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.\", \"value\": \"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.\", \"confidence\": 0.9, \"evidence_ids\": [\"82a9b97b-b05c-4937-8552-88406dfc3147\"], \"valid_from\": \"2024-01-16T13:48:00Z\", \"valid_until\": \"2024-01-23T13:48:00Z\", \"is_current\": false, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"98a3b5fc-c4e9-4b50-b2a2-64ea66539787\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"decision\"]}"},{"claim_id":"1b29309c-11a1-44ac-b1b7-0234adfbabef","claim_type":"DECISION_MADE","subject_id":"DEC-85d79ac7","object_id":"PERS-P002","predicate":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","value":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","confidence":0.9,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"1b29309c-11a1-44ac-b1b7-0234adfbabef\", \"claim_type\": \"DECISION_MADE\", \"subject_entity_id\": \"DEC-85d79ac7\", \"object_entity_id\": \"PERS-P002\", \"predicate\": \"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.\", \"value\": \"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.\", \"confidence\": 0.9, \"evidence_ids\": [\"85d79ac7-cbfc-49c4-9ab9-3ff3acca181e\"], \"valid_from\": \"2024-01-26T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"decision\"]}"},{"claim_id":"40039ea2-45b1-4deb-a0d1-5c567d14a82a","claim_type":"DECISION_MADE","subject_id":"DEC-157e3179","object_id":"PERS-P001","predicate":"Approved. Let's aim to have someone onboarded by Q2.","value":"Approved. Let's aim to have someone onboarded by Q2.","confidence":0.9,"valid_from":"2024-01-29T11:24:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"40039ea2-45b1-4deb-a0d1-5c567d14a82a\", \"claim_type\": \"DECISION_MADE\", \"subject_entity_id\": \"DEC-157e3179\", \"object_entity_id\": \"PERS-P001\", \"predicate\": \"Approved. Let's aim to have someone onboarded by Q2.\", \"value\": \"Approved. Let's aim to have someone onboarded by Q2.\", \"confidence\": 0.9, \"evidence_ids\": [\"157e3179-d231-4685-806c-0b0266481ea1\"], \"valid_from\": \"2024-01-29T11:24:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"decision\"]}"},{"claim_id":"d0d6beb3-bb42-4735-bfa1-04999e2dff86","claim_type":"DECISION_MADE","subject_id":"DEC-8798e889","object_id":"PERS-P001","predicate":"Approved. Hector please set up PagerDuty.","value":"Approved. Hector please set up PagerDuty.","confidence":0.9,"valid_from":"2024-01-30T16:12:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"d0d6beb3-bb42-4735-bfa1-04999e2dff86\", \"claim_type\": \"DECISION_MADE\", \"subject_entity_id\": \"DEC-8798e889\", \"object_entity_id\": \"PERS-P001\", \"predicate\": \"Approved. Hector please set up PagerDuty.\", \"value\": \"Approved. Hector please set up PagerDuty.\", \"confidence\": 0.9, \"evidence_ids\": [\"8798e889-1b86-4437-ab59-7dfa59bcc5a0\"], \"valid_from\": \"2024-01-30T16:12:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"decision\"]}"},{"claim_id":"25e4ccd6-e530-4d2a-9ac5-3bd99584aa6e","claim_type":"PERFORMANCE_METRIC","subject_id":"ISSUE-I004","object_id":"PROJ-DATAPIPELINE","predicate":"Performance metric in I004: 850k msg/sec","value":"850k msg/sec","confidence":0.8,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"25e4ccd6-e530-4d2a-9ac5-3bd99584aa6e\", \"claim_type\": \"PERFORMANCE_METRIC\", \"subject_entity_id\": \"ISSUE-I004\", \"object_entity_id\": \"PROJ-DATAPIPELINE\", \"predicate\": \"Performance metric in I004: 850k msg/sec\", \"value\": \"850k msg/sec\", \"confidence\": 0.8, \"evidence_ids\": [\"f582ac82-113a-48f1-af13-70cbd8519263\"], \"valid_from\": \"2024-02-06T09:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"performance\", \"metric\"]}"},{"claim_id":"0abd63be-71f0-4076-b566-533be4898211","claim_type":"PERFORMANCE_METRIC","subject_id":"ISSUE-I006","object_id":"PROJ-REPORTINGENGINE","predicate":"Performance metric in I006: 200ms","value":"200ms","confidence":0.8,"valid_from":"2024-02-24T21:00:00Z","valid_until":"","is_current":1,"supersedes_id":"","superseded_by_id":"","stored_at":"2026-03-08T16:00:40.767098Z","json_data":"{\"claim_id\": \"0abd63be-71f0-4076-b566-533be4898211\", \"claim_type\": \"PERFORMANCE_METRIC\", \"subject_entity_id\": \"ISSUE-I006\", \"object_entity_id\": \"PROJ-REPORTINGENGINE\", \"predicate\": \"Performance metric in I006: 200ms\", \"value\": \"200ms\", \"confidence\": 0.8, \"evidence_ids\": [\"208bf6c5-6d52-42e6-8445-49723243eec4\"], \"valid_from\": \"2024-02-24T21:00:00Z\", \"valid_until\": \"\", \"is_current\": true, \"supersedes_claim_id\": \"\", \"superseded_by_claim_id\": \"\", \"merged_from_claim_ids\": [], \"merge_reason\": \"\", \"extracted_at\": \"2026-03-08T16:00:40.191599Z\", \"schema_version\": \"1.0.0\", \"extraction_version\": \"1.0.0\", \"tags\": [\"performance\", \"metric\"]}"}],"evidence":[{"evidence_id":"d37630d1-75d5-46a7-a914-55badbb2f5c9","source_id":"EMAIL-T001-00","source_type":"email","timestamp":"2024-01-15T09:00:00Z","excerpt":"Team, we need to decide on the database for NovexCore v2. I'm leaning toward PostgreSQL for its JSON support and strong ACID guarantees. Thoughts?"},{"evidence_id":"52f16cbf-6fb1-402d-bc85-f7f68e46c10c","source_id":"EMAIL-T001-01","source_type":"email","timestamp":"2024-01-15T16:12:00Z","excerpt":"Agree on Postgres. We've used it in DataPipeline and it's been rock solid. MySQL is an option but Postgres has better window functions."},{"evidence_id":"8a56a0f0-8d36-41f6-8b57-8f8b1dd48921","source_id":"EMAIL-T001-02","source_type":"email","timestamp":"2024-01-15T21:00:00Z","excerpt":"I've benchmarked both. PostgreSQL wins on complex queries by ~30%. My recommendation: PostgreSQL."},{"evidence_id":"50459030-e901-4c32-ab46-56f631b2ba72","source_id":"EMAIL-T001-03","source_type":"email","timestamp":"2024-01-16T09:00:00Z","excerpt":"From a product angle, either works. I'll defer to engineering here."},{"evidence_id":"82a9b97b-b05c-4937-8552-88406dfc3147","source_id":"EMAIL-T001-04","source_type":"email","timestamp":"2024-01-16T13:48:00Z","excerpt":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR."},{"evidence_id":"c3ac0b38-607a-4982-8cbf-8b52cca7498b","source_id":"EMAIL-T001-05","source_type":"email","timestamp":"2024-01-23T09:00:00Z","excerpt":"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision."},{"evidence_id":"2e817958-088d-4aaf-afbe-e672d63fbb09","source_id":"EMAIL-T001-06","source_type":"email","timestamp":"2024-01-23T13:48:00Z","excerpt":"After cost review, we are switching to MySQL. I know this reverses our earlier decision \u2014 documenting the reason: vendor discount + ops simplicity."},{"evidence_id":"9f54dfdd-97cb-4328-a0ab-b044024301f5","source_id":"EMAIL-T001-07","source_type":"email","timestamp":"2024-01-23T16:12:00Z","excerpt":"Understood. Will update migration scripts. Not ideal but makes sense economically."},{"evidence_id":"bc41d521-6cc5-4354-902e-65d64507564b","source_id":"EMAIL-T002-00","source_type":"email","timestamp":"2024-01-18T09:00:00Z","excerpt":"Found a bug: auth tokens never expire in AuthService. This is a security vulnerability. Assigning to Frank."},{"evidence_id":"10f047f9-91c2-45a7-bf59-c5d8b4f66b86","source_id":"EMAIL-T002-01","source_type":"email","timestamp":"2024-01-18T13:48:00Z","excerpt":"Confirmed. Tokens issued before 2024-01-10 have no exp claim. Working on a fix now."},{"evidence_id":"94523d24-a211-4397-b420-a53aef441145","source_id":"EMAIL-T002-02","source_type":"email","timestamp":"2024-01-18T18:36:00Z","excerpt":"I can force-rotate all tokens in prod as a hotfix. Risk: users get logged out. Worth it?"},{"evidence_id":"922ee202-a790-49af-9211-5b28e300d45a","source_id":"EMAIL-T002-03","source_type":"email","timestamp":"2024-01-18T21:00:00Z","excerpt":"Yes, force rotate. User disruption acceptable given security risk. Hector please proceed."},{"evidence_id":"6e136bc2-25f5-4486-a305-6efbc2b815cb","source_id":"EMAIL-T002-04","source_type":"email","timestamp":"2024-01-18T23:24:00Z","excerpt":"Token rotation complete. 2,847 sessions invalidated. Monitoring for issues."},{"evidence_id":"5a94fa58-1c61-4758-bfa6-49f9b0136c50","source_id":"EMAIL-T002-05","source_type":"email","timestamp":"2024-01-19T09:00:00Z","excerpt":"Fix deployed: tokens now have 24h expiry. Added regression test. Closing."},{"evidence_id":"0f743941-2db1-492f-8f4b-5b454370eee8","source_id":"EMAIL-T003-00","source_type":"email","timestamp":"2024-01-20T09:00:00Z","excerpt":"Sharing Q1 roadmap draft. Key items: (1) NovexCore v2 launch, (2) ReportingEngine beta, (3) InfraV2 Kubernetes migration. Please review by Friday."},{"evidence_id":"ca013343-0520-4742-8805-8dd7f87b4141","source_id":"EMAIL-T003-01","source_type":"email","timestamp":"2024-01-20T16:12:00Z","excerpt":"Engineering capacity looks tight. NovexCore v2 and Kubernetes migration in same quarter is risky. Can we push InfraV2 to Q2?"},{"evidence_id":"2e7a7669-baa2-41e8-995b-6db6fc17c690","source_id":"EMAIL-T003-02","source_type":"email","timestamp":"2024-01-20T21:00:00Z","excerpt":"Agreed with Grace. InfraV2 moves to Q2. NovexCore v2 stays Q1. Carol, update the roadmap."},{"evidence_id":"a98162fa-6fab-45bd-92fa-ba4cca8d3fe7","source_id":"EMAIL-T003-03","source_type":"email","timestamp":"2024-01-20T23:24:00Z","excerpt":"Updated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration."},{"evidence_id":"f66e5fed-f385-4050-9de2-28c444366329","source_id":"EMAIL-T004-00","source_type":"email","timestamp":"2024-01-21T09:00:00Z","excerpt":"Forwarding Carol's roadmap update for the data team. Key: NovexCore v2 in Q1 means we need DataPipeline connectors ready by March 1.\n\n--- Forwarded ---\nUpdated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration."},{"evidence_id":"deac350d-2930-4580-a8f3-ec12b626bc90","source_id":"EMAIL-T005-00","source_type":"email","timestamp":"2024-01-25T09:00:00Z","excerpt":"We need an event streaming solution for the analytics pipeline. Evaluating Kafka and RabbitMQ."},{"evidence_id":"126c7689-adb9-4190-9ee9-7a9cfbd49650","source_id":"EMAIL-T005-01","source_type":"email","timestamp":"2024-01-25T13:48:00Z","excerpt":"Kafka is the clear choice for high-throughput. We're talking millions of events/day. RabbitMQ would struggle."},{"evidence_id":"c2d2e5fa-383c-473b-9d32-6783256d855c","source_id":"EMAIL-T005-02","source_type":"email","timestamp":"2024-01-25T18:36:00Z","excerpt":"Agreed on Kafka. I've set up a POC. Throughput: 850k msg/sec. Latency p99: 12ms. Very promising."},{"evidence_id":"85d79ac7-cbfc-49c4-9ab9-3ff3acca181e","source_id":"EMAIL-T005-03","source_type":"email","timestamp":"2024-01-26T09:00:00Z","excerpt":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation."},{"evidence_id":"4e45c32c-09d6-4628-821e-18cae8c8de7a","source_id":"EMAIL-T006-00","source_type":"email","timestamp":"2024-01-29T09:00:00Z","excerpt":"Opening a Senior Backend Engineer role. Requirements: Go or Python, distributed systems experience, Kafka a plus. JD attached."},{"evidence_id":"157e3179-d231-4685-806c-0b0266481ea1","source_id":"EMAIL-T006-01","source_type":"email","timestamp":"2024-01-29T11:24:00Z","excerpt":"Approved. Let's aim to have someone onboarded by Q2."},{"evidence_id":"84eef62c-3d7e-4e24-9512-6f0741e808e5","source_id":"EMAIL-T006-02","source_type":"email","timestamp":"2024-02-05T09:00:00Z","excerpt":"Update: 3 strong candidates. Moving to final interviews."},{"evidence_id":"904637a8-9d7a-4c3e-a1f9-91a49288a100","source_id":"EMAIL-T006-03","source_type":"email","timestamp":"2024-02-12T09:00:00Z","excerpt":"Offer extended to Candidate A. Joining April 1."},{"evidence_id":"7a4dbe92-9d79-4d90-9097-b308963041f5","source_id":"EMAIL-T007-00","source_type":"email","timestamp":"2024-01-30T09:00:00Z","excerpt":"Proposing new on-call rotation: 1-week shifts, 4-person pool. Current 2-person rotation is burning people out."},{"evidence_id":"6b5cf10b-23a5-4269-8dcb-874b38389cdb","source_id":"EMAIL-T007-01","source_type":"email","timestamp":"2024-01-30T13:48:00Z","excerpt":"Fully support this. Let's implement immediately."},{"evidence_id":"8798e889-1b86-4437-ab59-7dfa59bcc5a0","source_id":"EMAIL-T007-02","source_type":"email","timestamp":"2024-01-30T16:12:00Z","excerpt":"Approved. Hector please set up PagerDuty."},{"evidence_id":"066d53eb-9cbe-4ef7-9922-ca4da965e137","source_id":"EMAIL-T007-03","source_type":"email","timestamp":"2024-01-30T21:00:00Z","excerpt":"PagerDuty rotation configured. New schedule starts Monday."},{"evidence_id":"65f89ded-1fcc-421b-b6e4-8d630e08f5c2","source_id":"EMAIL-T009-00","source_type":"email","timestamp":"2024-02-06T09:00:00Z","excerpt":"Proposing upgrade from Python 3.10 to 3.12 across all services. ~15% performance improvement on benchmarks."},{"evidence_id":"3854ad7b-1d20-4137-9953-e779140c3202","source_id":"EMAIL-T009-01","source_type":"email","timestamp":"2024-02-06T11:24:00Z","excerpt":"Tested on AuthService \u2014 no breaking changes. +18% on crypto operations."},{"evidence_id":"a5dc6062-3403-4d29-a9c5-d2c0c7ce7707","source_id":"EMAIL-T009-02","source_type":"email","timestamp":"2024-02-06T16:12:00Z","excerpt":"ReportingEngine has one dependency (legacy-stats 1.2) not 3.12 compatible. Need to replace it first."},{"evidence_id":"1d5f9701-4a00-4f01-9232-4d988a3b6976","source_id":"EMAIL-T009-03","source_type":"email","timestamp":"2024-02-06T21:00:00Z","excerpt":"I'll handle the legacy-stats replacement \u2014 ETA 1 week."},{"evidence_id":"b247a09f-ff64-4a57-8ba4-d2de2ac7a516","source_id":"EMAIL-T009-04","source_type":"email","timestamp":"2024-02-14T09:00:00Z","excerpt":"All services now on Python 3.12. legacy-stats replaced with statslib. Upgrade complete."},{"evidence_id":"623020d4-e63f-4169-b889-3debb7fa4da1","source_id":"EMAIL-T010-00","source_type":"email","timestamp":"2024-02-19T09:00:00Z","excerpt":"Notes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway (yes, we switched from Postgres)\n- New hire joins April 1\n- Q2 focus: InfraV2 Kubernetes migration"},{"evidence_id":"69e46c70-ccfb-403d-a1bc-66a2c1200174","source_id":"EMAIL-T011-00","source_type":"email","timestamp":"2024-02-19T11:24:00Z","excerpt":"Forwarding to the engineering team.\n\nKey engineering items:\n- NovexCore v2 Feb 28 deadline\n- MySQL migration underway\n- New hire April 1\n\n--- Original ---\nNotes from today's all-hands:\n- NovexCore v2 on track for Feb 28\n- MySQL migration underway\n- New hire joins April 1"},{"evidence_id":"87544157-1da1-4a41-8eff-4f6da161d1c3","source_id":"EMAIL-T012-00","source_type":"email","timestamp":"2024-02-24T09:00:00Z","excerpt":"Detected 3x slowdown in ReportingEngine after last deploy. P99 latency went from 200ms to 650ms."},{"evidence_id":"9fb223ef-a986-48fa-80b6-50ca1f31e1c9","source_id":"EMAIL-T012-01","source_type":"email","timestamp":"2024-02-24T13:48:00Z","excerpt":"Bisected to commit a3f9d. The new analytics aggregation query is doing a full table scan. Missing index."},{"evidence_id":"9d02361a-48e5-49e6-991d-6e43d179ad67","source_id":"EMAIL-T012-02","source_type":"email","timestamp":"2024-02-24T18:36:00Z","excerpt":"Fix deployed: added composite index on (tenant_id, created_at). P99 back to 185ms."},{"evidence_id":"a0b5729c-c471-4612-b489-fa72cc53fcc7","source_id":"EMAIL-T012-03","source_type":"email","timestamp":"2024-02-24T21:00:00Z","excerpt":"Confirmed. Performance restored. Post-mortem due Friday."},{"evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c","source_id":"I001","source_type":"issue","timestamp":"2024-01-15T09:00:00Z","excerpt":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry."},{"evidence_id":"5bd63edd-0d5e-4241-8b56-77870ff46f17","source_id":"I001-CMT-2318ba6e4f6c07b9","source_type":"issue_comment","timestamp":"2024-01-17T09:00:00Z","excerpt":"Working on this. Using python-jose library."},{"evidence_id":"bbf05149-8fd4-4aef-8da7-299c6d9b9858","source_id":"I001-CMT-77da4bb3eb1f4ac8","source_type":"issue_comment","timestamp":"2024-01-19T21:00:00Z","excerpt":"PR raised: #42. Includes unit tests and integration tests."},{"evidence_id":"9694c833-5afe-4061-96fc-a6a12e26ee1c","source_id":"I001-CMT-b030f9e471790ad7","source_type":"issue_comment","timestamp":"2024-01-20T09:00:00Z","excerpt":"Reviewed and approved. Tests pass. Closing."},{"evidence_id":"3db161e2-07ee-472a-8f54-d418be94546c","source_id":"I002","source_type":"issue","timestamp":"2024-01-23T09:00:00Z","excerpt":"Migrate NovexCore v2 from PostgreSQL to MySQL following cost-driven decision reversal. See email thread T001."},{"evidence_id":"cf1318e2-a3e8-4461-b190-3d001035b786","source_id":"I002-CMT-2422c8de40f1fca0","source_type":"issue_comment","timestamp":"2024-01-24T09:00:00Z","excerpt":"Starting migration. Using Alembic for schema migrations."},{"evidence_id":"47d375c6-6803-4029-80bc-3fe632e2995e","source_id":"I002-CMT-7720d01a79496a44","source_type":"issue_comment","timestamp":"2024-01-27T09:00:00Z","excerpt":"Compatibility issue: PostgreSQL JSONB \u2192 MySQL JSON. Need to audit all JSONB queries."},{"evidence_id":"ff793ec5-2ba2-455c-8c27-74c2ccf84515","source_id":"I002-CMT-201c1e6ff216b412","source_type":"issue_comment","timestamp":"2024-02-04T09:00:00Z","excerpt":"All queries updated. Running full regression suite."},{"evidence_id":"7254dd88-eded-4de5-9727-06bb5e0d021c","source_id":"I002-CMT-f359b91eaceef62c","source_type":"issue_comment","timestamp":"2024-02-09T09:00:00Z","excerpt":"Migration complete. All tests pass. Closing."},{"evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717","source_id":"I003","source_type":"issue","timestamp":"2024-01-18T09:00:00Z","excerpt":"CRITICAL: Auth tokens missing exp claim. All tokens issued before 2024-01-10 are permanent. Immediate fix required."},{"evidence_id":"ca106a8d-46fe-42c4-9593-35cd13a740aa","source_id":"I003-CMT-eed00dd53ce592a9","source_type":"issue_comment","timestamp":"2024-01-18T18:36:00Z","excerpt":"Rotating all tokens in prod as emergency hotfix."},{"evidence_id":"ea5d68bd-bb2a-4df4-81d5-38705e71ed6d","source_id":"I003-CMT-f7c7588ef90aac4b","source_type":"issue_comment","timestamp":"2024-01-19T09:00:00Z","excerpt":"Permanent fix deployed. 24h expiry enforced."},{"evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263","source_id":"I004","source_type":"issue","timestamp":"2024-01-26T09:00:00Z","excerpt":"Implement Kafka producer/consumer for DataPipeline analytics events. Target: 1M msg/sec throughput."},{"evidence_id":"7ff13162-edaf-4941-994b-798855baaf8a","source_id":"I004-CMT-fb01a024ab8016b7","source_type":"issue_comment","timestamp":"2024-01-27T09:00:00Z","excerpt":"Setting up Kafka cluster on K8s."},{"evidence_id":"76f19adc-f1a0-485d-87cb-813e8ced8706","source_id":"I004-CMT-390da3585ac84f62","source_type":"issue_comment","timestamp":"2024-02-02T09:00:00Z","excerpt":"POC complete. 850k msg/sec achieved. Raising PR."},{"evidence_id":"a32ce813-105d-454a-ad77-e9cd6bb81c38","source_id":"I004-CMT-75f141e3f92b9185","source_type":"issue_comment","timestamp":"2024-02-04T09:00:00Z","excerpt":"Reviewed. Schema registry integration needed before merge."},{"evidence_id":"8de32355-6530-40b5-ad5f-034453232334","source_id":"I004-CMT-f85b3bbfa599b9fe","source_type":"issue_comment","timestamp":"2024-02-06T09:00:00Z","excerpt":"Schema registry integrated. Merging."},{"evidence_id":"2ff25d00-246e-4d58-9f4c-9a34ffe435f3","source_id":"I005","source_type":"issue","timestamp":"2024-01-20T09:00:00Z","excerpt":"Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision."},{"evidence_id":"1d572b23-630c-4523-aecd-9b6f9b77b44a","source_id":"I005-CMT-e238221edf091f9d","source_type":"issue_comment","timestamp":"2024-01-20T21:00:00Z","excerpt":"Created migration runbook. Estimating 6-week effort."},{"evidence_id":"9be96d21-d736-40cf-b8f1-1cb514633d39","source_id":"I005-CMT-7f9d1dc199f95821","source_type":"issue_comment","timestamp":"2024-01-21T09:00:00Z","excerpt":"Deferring to Q2 per Alice's decision in roadmap sync."},{"evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4","source_id":"I006","source_type":"issue","timestamp":"2024-02-24T09:00:00Z","excerpt":"P99 latency spiked from 200ms to 650ms after deploy on day 40."},{"evidence_id":"930713e8-8898-4749-b687-b5fdbd842626","source_id":"I006-CMT-53ad0a2d6f4d8752","source_type":"issue_comment","timestamp":"2024-02-24T13:48:00Z","excerpt":"Root cause: missing index on (tenant_id, created_at)."},{"evidence_id":"c32153cb-ab69-4dc5-be0c-2adece109182","source_id":"I006-CMT-6d5713d25f67e913","source_type":"issue_comment","timestamp":"2024-02-24T18:36:00Z","excerpt":"Fix deployed. P99 at 185ms \u2014 better than before."},{"evidence_id":"839651d5-40e2-47d5-8f10-30825e9bd9d3","source_id":"I006-CMT-41ae84198d656223","source_type":"issue_comment","timestamp":"2024-02-24T21:00:00Z","excerpt":"Confirmed resolved."},{"evidence_id":"30d84ab4-97d5-4a00-9006-7a205a062c3a","source_id":"I007","source_type":"issue","timestamp":"2024-02-06T09:00:00Z","excerpt":"Upgrade all NovexCore services from Python 3.10 to 3.12. Blocker: replace legacy-stats 1.2."},{"evidence_id":"10fab7e4-32b5-408e-b2a2-cca1619df458","source_id":"I007-CMT-634597f97262c704","source_type":"issue_comment","timestamp":"2024-02-07T09:00:00Z","excerpt":"Replacing legacy-stats with statslib. ETA 1 week."},{"evidence_id":"8c9609d6-5828-4215-b8ea-d5de4791c694","source_id":"I007-CMT-a8cfa60872a96d50","source_type":"issue_comment","timestamp":"2024-02-12T09:00:00Z","excerpt":"statslib integrated. All tests pass on 3.12."},{"evidence_id":"7c20bcd5-e9b7-43e6-b691-1e931bfa7e71","source_id":"I007-CMT-1769a3eb9c31c2b1","source_type":"issue_comment","timestamp":"2024-02-14T09:00:00Z","excerpt":"All services upgraded. Closing."},{"evidence_id":"b7682018-31ad-4b18-abb1-29f31841a65b","source_id":"I008","source_type":"issue","timestamp":"2024-01-21T09:00:00Z","excerpt":"Implement refresh token flow. Access tokens: 24h. Refresh tokens: 30 days, single-use."},{"evidence_id":"137c3a22-b17b-4575-b9d7-bf598b9e9c49","source_id":"I008-CMT-46d0dac1464edc05","source_type":"issue_comment","timestamp":"2024-01-22T09:00:00Z","excerpt":"Implementing. Using Redis for refresh token storage."},{"evidence_id":"1a9df605-f72d-45b2-bb33-85cad4d3f965","source_id":"I008-CMT-87524366422bac37","source_type":"issue_comment","timestamp":"2024-01-26T09:00:00Z","excerpt":"Code review done. One security concern: refresh tokens should be rotated on use."},{"evidence_id":"3a1a7113-52fe-42b2-a669-21f1a3d2e92f","source_id":"I008-CMT-f888056b8e665c68","source_type":"issue_comment","timestamp":"2024-01-26T21:00:00Z","excerpt":"Addressed rotation. Updated."},{"evidence_id":"7319f2e2-be5d-4cb7-986a-c02dbef04778","source_id":"I008-CMT-fe0cfe7c4ff03ec2","source_type":"issue_comment","timestamp":"2024-01-27T09:00:00Z","excerpt":"Approved and merged."}],"artifacts":[{"artifact_id":"ART-EMAIL-T001-00","artifact_type":"email","source_id":"EMAIL-T001-00","timestamp":"2024-01-15T09:00:00Z","subject":"Database selection for NovexCore v2","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T001-01","artifact_type":"email","source_id":"EMAIL-T001-01","timestamp":"2024-01-15T16:12:00Z","subject":"Database selection for NovexCore v2","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T001-02","artifact_type":"email","source_id":"EMAIL-T001-02","timestamp":"2024-01-15T21:00:00Z","subject":"Database selection for NovexCore v2","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T001-03","artifact_type":"email","source_id":"EMAIL-T001-03","timestamp":"2024-01-16T09:00:00Z","subject":"Database selection for NovexCore v2","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T001-04","artifact_type":"email","source_id":"EMAIL-T001-04","timestamp":"2024-01-16T13:48:00Z","subject":"Database selection for NovexCore v2","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T001-05","artifact_type":"email","source_id":"EMAIL-T001-05","timestamp":"2024-01-23T09:00:00Z","subject":"Database selection for NovexCore v2","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T001-06","artifact_type":"email","source_id":"EMAIL-T001-06","timestamp":"2024-01-23T13:48:00Z","subject":"Database selection for NovexCore v2","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T001-07","artifact_type":"email","source_id":"EMAIL-T001-07","timestamp":"2024-01-23T16:12:00Z","subject":"Database selection for NovexCore v2","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T002-00","artifact_type":"email","source_id":"EMAIL-T002-00","timestamp":"2024-01-18T09:00:00Z","subject":"Auth token expiry \u2014 security incident","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T002-01","artifact_type":"email","source_id":"EMAIL-T002-01","timestamp":"2024-01-18T13:48:00Z","subject":"Auth token expiry \u2014 security incident","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T002-02","artifact_type":"email","source_id":"EMAIL-T002-02","timestamp":"2024-01-18T18:36:00Z","subject":"Auth token expiry \u2014 security incident","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T002-03","artifact_type":"email","source_id":"EMAIL-T002-03","timestamp":"2024-01-18T21:00:00Z","subject":"Auth token expiry \u2014 security incident","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T002-04","artifact_type":"email","source_id":"EMAIL-T002-04","timestamp":"2024-01-18T23:24:00Z","subject":"Auth token expiry \u2014 security incident","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T002-05","artifact_type":"email","source_id":"EMAIL-T002-05","timestamp":"2024-01-19T09:00:00Z","subject":"Auth token expiry \u2014 security incident","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T003-00","artifact_type":"email","source_id":"EMAIL-T003-00","timestamp":"2024-01-20T09:00:00Z","subject":"Q1 roadmap sync","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T003-01","artifact_type":"email","source_id":"EMAIL-T003-01","timestamp":"2024-01-20T16:12:00Z","subject":"Q1 roadmap sync","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T003-02","artifact_type":"email","source_id":"EMAIL-T003-02","timestamp":"2024-01-20T21:00:00Z","subject":"Q1 roadmap sync","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T003-03","artifact_type":"email","source_id":"EMAIL-T003-03","timestamp":"2024-01-20T23:24:00Z","subject":"Q1 roadmap sync","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T004-00","artifact_type":"email","source_id":"EMAIL-T004-00","timestamp":"2024-01-21T09:00:00Z","subject":"Re: Re: Q1 roadmap sync","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T005-00","artifact_type":"email","source_id":"EMAIL-T005-00","timestamp":"2024-01-25T09:00:00Z","subject":"Kafka vs RabbitMQ for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T005-01","artifact_type":"email","source_id":"EMAIL-T005-01","timestamp":"2024-01-25T13:48:00Z","subject":"Kafka vs RabbitMQ for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T005-02","artifact_type":"email","source_id":"EMAIL-T005-02","timestamp":"2024-01-25T18:36:00Z","subject":"Kafka vs RabbitMQ for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T005-03","artifact_type":"email","source_id":"EMAIL-T005-03","timestamp":"2024-01-26T09:00:00Z","subject":"Kafka vs RabbitMQ for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T006-00","artifact_type":"email","source_id":"EMAIL-T006-00","timestamp":"2024-01-29T09:00:00Z","subject":"Hiring: Senior Backend Engineer","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T006-01","artifact_type":"email","source_id":"EMAIL-T006-01","timestamp":"2024-01-29T11:24:00Z","subject":"Hiring: Senior Backend Engineer","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T006-02","artifact_type":"email","source_id":"EMAIL-T006-02","timestamp":"2024-02-05T09:00:00Z","subject":"Hiring: Senior Backend Engineer","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T006-03","artifact_type":"email","source_id":"EMAIL-T006-03","timestamp":"2024-02-12T09:00:00Z","subject":"Hiring: Senior Backend Engineer","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T007-00","artifact_type":"email","source_id":"EMAIL-T007-00","timestamp":"2024-01-30T09:00:00Z","subject":"On-call rotation changes","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T007-01","artifact_type":"email","source_id":"EMAIL-T007-01","timestamp":"2024-01-30T13:48:00Z","subject":"On-call rotation changes","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T007-02","artifact_type":"email","source_id":"EMAIL-T007-02","timestamp":"2024-01-30T16:12:00Z","subject":"On-call rotation changes","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T007-03","artifact_type":"email","source_id":"EMAIL-T007-03","timestamp":"2024-01-30T21:00:00Z","subject":"On-call rotation changes","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T008-00","artifact_type":"email","source_id":"EMAIL-T008-00","timestamp":"2024-02-04T09:00:00Z","subject":"","is_redacted":1,"dedup_id":""},{"artifact_id":"ART-EMAIL-T009-00","artifact_type":"email","source_id":"EMAIL-T009-00","timestamp":"2024-02-06T09:00:00Z","subject":"Python version upgrade to 3.12","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T009-01","artifact_type":"email","source_id":"EMAIL-T009-01","timestamp":"2024-02-06T11:24:00Z","subject":"Python version upgrade to 3.12","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T009-02","artifact_type":"email","source_id":"EMAIL-T009-02","timestamp":"2024-02-06T16:12:00Z","subject":"Python version upgrade to 3.12","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T009-03","artifact_type":"email","source_id":"EMAIL-T009-03","timestamp":"2024-02-06T21:00:00Z","subject":"Python version upgrade to 3.12","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T009-04","artifact_type":"email","source_id":"EMAIL-T009-04","timestamp":"2024-02-14T09:00:00Z","subject":"Python version upgrade to 3.12","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T010-00","artifact_type":"email","source_id":"EMAIL-T010-00","timestamp":"2024-02-19T09:00:00Z","subject":"Cross-post: All-hands notes Jan 30","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T011-00","artifact_type":"email","source_id":"EMAIL-T011-00","timestamp":"2024-02-19T11:24:00Z","subject":"Re: All-hands notes Jan 30","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T012-00","artifact_type":"email","source_id":"EMAIL-T012-00","timestamp":"2024-02-24T09:00:00Z","subject":"ReportingEngine performance regression","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T012-01","artifact_type":"email","source_id":"EMAIL-T012-01","timestamp":"2024-02-24T13:48:00Z","subject":"ReportingEngine performance regression","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T012-02","artifact_type":"email","source_id":"EMAIL-T012-02","timestamp":"2024-02-24T18:36:00Z","subject":"ReportingEngine performance regression","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-EMAIL-T012-03","artifact_type":"email","source_id":"EMAIL-T012-03","timestamp":"2024-02-24T21:00:00Z","subject":"ReportingEngine performance regression","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I001","artifact_type":"issue","source_id":"I001","timestamp":"2024-01-15T09:00:00Z","subject":"Implement JWT authentication","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I001-CMT-2318ba6e4f6c07b9","artifact_type":"issue_comment","source_id":"I001-CMT-2318ba6e4f6c07b9","timestamp":"2024-01-17T09:00:00Z","subject":"Comment on Implement JWT authentication","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I001-CMT-77da4bb3eb1f4ac8","artifact_type":"issue_comment","source_id":"I001-CMT-77da4bb3eb1f4ac8","timestamp":"2024-01-19T21:00:00Z","subject":"Comment on Implement JWT authentication","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I001-CMT-b030f9e471790ad7","artifact_type":"issue_comment","source_id":"I001-CMT-b030f9e471790ad7","timestamp":"2024-01-20T09:00:00Z","subject":"Comment on Implement JWT authentication","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I002","artifact_type":"issue","source_id":"I002","timestamp":"2024-01-23T09:00:00Z","subject":"Database migration: PostgreSQL \u2192 MySQL","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I002-CMT-2422c8de40f1fca0","artifact_type":"issue_comment","source_id":"I002-CMT-2422c8de40f1fca0","timestamp":"2024-01-24T09:00:00Z","subject":"Comment on Database migration: PostgreSQL \u2192 MySQL","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I002-CMT-7720d01a79496a44","artifact_type":"issue_comment","source_id":"I002-CMT-7720d01a79496a44","timestamp":"2024-01-27T09:00:00Z","subject":"Comment on Database migration: PostgreSQL \u2192 MySQL","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I002-CMT-201c1e6ff216b412","artifact_type":"issue_comment","source_id":"I002-CMT-201c1e6ff216b412","timestamp":"2024-02-04T09:00:00Z","subject":"Comment on Database migration: PostgreSQL \u2192 MySQL","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I002-CMT-f359b91eaceef62c","artifact_type":"issue_comment","source_id":"I002-CMT-f359b91eaceef62c","timestamp":"2024-02-09T09:00:00Z","subject":"Comment on Database migration: PostgreSQL \u2192 MySQL","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I003","artifact_type":"issue","source_id":"I003","timestamp":"2024-01-18T09:00:00Z","subject":"Security: tokens never expire","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I003-CMT-eed00dd53ce592a9","artifact_type":"issue_comment","source_id":"I003-CMT-eed00dd53ce592a9","timestamp":"2024-01-18T18:36:00Z","subject":"Comment on Security: tokens never expire","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I003-CMT-f7c7588ef90aac4b","artifact_type":"issue_comment","source_id":"I003-CMT-f7c7588ef90aac4b","timestamp":"2024-01-19T09:00:00Z","subject":"Comment on Security: tokens never expire","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I004","artifact_type":"issue","source_id":"I004","timestamp":"2024-01-26T09:00:00Z","subject":"Integrate Kafka for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I004-CMT-fb01a024ab8016b7","artifact_type":"issue_comment","source_id":"I004-CMT-fb01a024ab8016b7","timestamp":"2024-01-27T09:00:00Z","subject":"Comment on Integrate Kafka for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I004-CMT-390da3585ac84f62","artifact_type":"issue_comment","source_id":"I004-CMT-390da3585ac84f62","timestamp":"2024-02-02T09:00:00Z","subject":"Comment on Integrate Kafka for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I004-CMT-75f141e3f92b9185","artifact_type":"issue_comment","source_id":"I004-CMT-75f141e3f92b9185","timestamp":"2024-02-04T09:00:00Z","subject":"Comment on Integrate Kafka for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I004-CMT-f85b3bbfa599b9fe","artifact_type":"issue_comment","source_id":"I004-CMT-f85b3bbfa599b9fe","timestamp":"2024-02-06T09:00:00Z","subject":"Comment on Integrate Kafka for event streaming","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I005","artifact_type":"issue","source_id":"I005","timestamp":"2024-01-20T09:00:00Z","subject":"Kubernetes migration planning","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I005-CMT-e238221edf091f9d","artifact_type":"issue_comment","source_id":"I005-CMT-e238221edf091f9d","timestamp":"2024-01-20T21:00:00Z","subject":"Comment on Kubernetes migration planning","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I005-CMT-7f9d1dc199f95821","artifact_type":"issue_comment","source_id":"I005-CMT-7f9d1dc199f95821","timestamp":"2024-01-21T09:00:00Z","subject":"Comment on Kubernetes migration planning","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I006","artifact_type":"issue","source_id":"I006","timestamp":"2024-02-24T09:00:00Z","subject":"Performance regression: 3x latency spike","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I006-CMT-53ad0a2d6f4d8752","artifact_type":"issue_comment","source_id":"I006-CMT-53ad0a2d6f4d8752","timestamp":"2024-02-24T13:48:00Z","subject":"Comment on Performance regression: 3x latency spike","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I006-CMT-6d5713d25f67e913","artifact_type":"issue_comment","source_id":"I006-CMT-6d5713d25f67e913","timestamp":"2024-02-24T18:36:00Z","subject":"Comment on Performance regression: 3x latency spike","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I006-CMT-41ae84198d656223","artifact_type":"issue_comment","source_id":"I006-CMT-41ae84198d656223","timestamp":"2024-02-24T21:00:00Z","subject":"Comment on Performance regression: 3x latency spike","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I007","artifact_type":"issue","source_id":"I007","timestamp":"2024-02-06T09:00:00Z","subject":"Python 3.12 upgrade","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I007-CMT-634597f97262c704","artifact_type":"issue_comment","source_id":"I007-CMT-634597f97262c704","timestamp":"2024-02-07T09:00:00Z","subject":"Comment on Python 3.12 upgrade","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I007-CMT-a8cfa60872a96d50","artifact_type":"issue_comment","source_id":"I007-CMT-a8cfa60872a96d50","timestamp":"2024-02-12T09:00:00Z","subject":"Comment on Python 3.12 upgrade","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I007-CMT-1769a3eb9c31c2b1","artifact_type":"issue_comment","source_id":"I007-CMT-1769a3eb9c31c2b1","timestamp":"2024-02-14T09:00:00Z","subject":"Comment on Python 3.12 upgrade","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I008","artifact_type":"issue","source_id":"I008","timestamp":"2024-01-21T09:00:00Z","subject":"Add refresh token support","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I008-CMT-46d0dac1464edc05","artifact_type":"issue_comment","source_id":"I008-CMT-46d0dac1464edc05","timestamp":"2024-01-22T09:00:00Z","subject":"Comment on Add refresh token support","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I008-CMT-87524366422bac37","artifact_type":"issue_comment","source_id":"I008-CMT-87524366422bac37","timestamp":"2024-01-26T09:00:00Z","subject":"Comment on Add refresh token support","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I008-CMT-f888056b8e665c68","artifact_type":"issue_comment","source_id":"I008-CMT-f888056b8e665c68","timestamp":"2024-01-26T21:00:00Z","subject":"Comment on Add refresh token support","is_redacted":0,"dedup_id":""},{"artifact_id":"ART-I008-CMT-fe0cfe7c4ff03ec2","artifact_type":"issue_comment","source_id":"I008-CMT-fe0cfe7c4ff03ec2","timestamp":"2024-01-27T09:00:00Z","subject":"Comment on Add refresh token support","is_redacted":0,"dedup_id":""}],"dedup_audit":[{"id":1,"event_type":"decision_reversal_linked","merged_id":"","canonical_id":"","reason":"word overlap score 3","merged_at":"2026-03-08T16:00:40.194762Z"}],"claim_evidence":[{"claim_id":"59e2d441-7e3e-445e-bc14-32482fd677f9","evidence_id":"82a9b97b-b05c-4937-8552-88406dfc3147"},{"claim_id":"e7069528-cfd0-4fc3-8923-339eea6fc6d9","evidence_id":"c3ac0b38-607a-4982-8cbf-8b52cca7498b"},{"claim_id":"98a3b5fc-c4e9-4b50-b2a2-64ea66539787","evidence_id":"2e817958-088d-4aaf-afbe-e672d63fbb09"},{"claim_id":"1b29309c-11a1-44ac-b1b7-0234adfbabef","evidence_id":"85d79ac7-cbfc-49c4-9ab9-3ff3acca181e"},{"claim_id":"40039ea2-45b1-4deb-a0d1-5c567d14a82a","evidence_id":"157e3179-d231-4685-806c-0b0266481ea1"},{"claim_id":"d0d6beb3-bb42-4735-bfa1-04999e2dff86","evidence_id":"8798e889-1b86-4437-ab59-7dfa59bcc5a0"},{"claim_id":"74c860b1-1e50-468a-8f9f-d2b0e2b7f8e6","evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c"},{"claim_id":"970f024e-3ddc-4f59-901f-8e9eb884c820","evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c"},{"claim_id":"d16c0c01-8913-4bf0-9635-c80e6700798f","evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c"},{"claim_id":"fb829628-a352-443c-a4a6-54d1e5dc4e52","evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c"},{"claim_id":"41de7895-f113-41d5-a1b9-ed599a89197f","evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c"},{"claim_id":"0f7bde80-ad29-4832-90d4-d62c987afa4f","evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c"},{"claim_id":"0f7bde80-ad29-4832-90d4-d62c987afa4f","evidence_id":"5bd63edd-0d5e-4241-8b56-77870ff46f17"},{"claim_id":"0f7bde80-ad29-4832-90d4-d62c987afa4f","evidence_id":"bbf05149-8fd4-4aef-8da7-299c6d9b9858"},{"claim_id":"0f7bde80-ad29-4832-90d4-d62c987afa4f","evidence_id":"9694c833-5afe-4061-96fc-a6a12e26ee1c"},{"claim_id":"02aa20e2-4d1b-47df-93c4-30d934a54243","evidence_id":"3db161e2-07ee-472a-8f54-d418be94546c"},{"claim_id":"7ea89061-fb40-4e2f-8c7d-914bf1ae598e","evidence_id":"3db161e2-07ee-472a-8f54-d418be94546c"},{"claim_id":"b6469955-358a-4629-af6b-a9c2df448226","evidence_id":"3db161e2-07ee-472a-8f54-d418be94546c"},{"claim_id":"e534ae94-0368-4790-ba4e-a6f02c809329","evidence_id":"3db161e2-07ee-472a-8f54-d418be94546c"},{"claim_id":"811e3a93-fb98-4808-9892-9c9ff46b95ba","evidence_id":"3db161e2-07ee-472a-8f54-d418be94546c"},{"claim_id":"a5262abc-1650-41b1-83f2-820b6c35455c","evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717"},{"claim_id":"f72fe7c1-664f-41d0-8daa-70524aaaf4a2","evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717"},{"claim_id":"5718607f-10a5-414e-879d-664700249925","evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717"},{"claim_id":"46be3ca4-09d6-418a-aebe-011eecf5d76e","evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717"},{"claim_id":"c024bda2-6f0c-4d28-8143-27b4ed4c468d","evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717"},{"claim_id":"3fed4932-df8f-4b62-b934-9159171d77f6","evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717"},{"claim_id":"3fed4932-df8f-4b62-b934-9159171d77f6","evidence_id":"ca106a8d-46fe-42c4-9593-35cd13a740aa"},{"claim_id":"3fed4932-df8f-4b62-b934-9159171d77f6","evidence_id":"ea5d68bd-bb2a-4df4-81d5-38705e71ed6d"},{"claim_id":"c5f4f852-8ba5-4d17-86e5-ae5fdf55d0c5","evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263"},{"claim_id":"fe3f3e31-5e14-4096-9be0-fe8a2279c043","evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263"},{"claim_id":"b49e5cd2-401f-4584-9b91-e7ee681cd158","evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263"},{"claim_id":"31a20022-d755-49e6-9c55-ccaa4c970bd4","evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263"},{"claim_id":"1170b717-6b65-4c5e-a393-d9f385390d1c","evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263"},{"claim_id":"aa66ad08-613b-442a-b5f3-b18c1182159d","evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263"},{"claim_id":"25e4ccd6-e530-4d2a-9ac5-3bd99584aa6e","evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263"},{"claim_id":"90d0cd24-5f2f-4d7d-a472-78d507ec875d","evidence_id":"2ff25d00-246e-4d58-9f4c-9a34ffe435f3"},{"claim_id":"d3359e97-3779-4ef0-9ae8-123812009f86","evidence_id":"2ff25d00-246e-4d58-9f4c-9a34ffe435f3"},{"claim_id":"f3d23be0-0eea-42d4-bd68-4c20134e5b35","evidence_id":"2ff25d00-246e-4d58-9f4c-9a34ffe435f3"},{"claim_id":"841bb7d6-bd4d-49ca-be01-075b7a5c8e55","evidence_id":"2ff25d00-246e-4d58-9f4c-9a34ffe435f3"},{"claim_id":"685814c7-5346-4067-b639-07d092bf8efb","evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4"},{"claim_id":"5dd20a3a-3fec-4f14-b00c-a4eb4af02b86","evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4"},{"claim_id":"20eb012c-054b-4070-92e9-ac06a9dcf00b","evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4"},{"claim_id":"e80ed2e5-4c38-49b1-8604-7bbbeee9d68b","evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4"},{"claim_id":"0e45c947-b492-46b1-b5e3-4fbc1ef51928","evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4"},{"claim_id":"0abd63be-71f0-4076-b566-533be4898211","evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4"},{"claim_id":"3161b884-1098-44f1-8ef0-73c54c1d7438","evidence_id":"30d84ab4-97d5-4a00-9006-7a205a062c3a"},{"claim_id":"7b6860a8-5b3f-4321-a565-a715bf9d9459","evidence_id":"30d84ab4-97d5-4a00-9006-7a205a062c3a"},{"claim_id":"06f4d4d7-d073-4baf-b21f-56efdb212e2d","evidence_id":"30d84ab4-97d5-4a00-9006-7a205a062c3a"},{"claim_id":"e8e5e2e2-fc66-4b06-8aa2-b3451d21e34d","evidence_id":"30d84ab4-97d5-4a00-9006-7a205a062c3a"},{"claim_id":"4b8b8662-9067-4c01-8758-2bf4fab957a6","evidence_id":"30d84ab4-97d5-4a00-9006-7a205a062c3a"},{"claim_id":"a2f6d79a-a74b-4e0f-aa2b-5dcaa8e474a8","evidence_id":"b7682018-31ad-4b18-abb1-29f31841a65b"},{"claim_id":"f78f0adb-43f1-4334-b788-86be9fee5402","evidence_id":"b7682018-31ad-4b18-abb1-29f31841a65b"},{"claim_id":"712f4291-083a-4cb6-b170-ed92e7a45434","evidence_id":"b7682018-31ad-4b18-abb1-29f31841a65b"},{"claim_id":"9642cc59-285c-4b75-9bf4-29714afb747b","evidence_id":"b7682018-31ad-4b18-abb1-29f31841a65b"},{"claim_id":"b1479d0e-2853-44c0-91f7-22d2e93f28b2","evidence_id":"b7682018-31ad-4b18-abb1-29f31841a65b"},{"claim_id":"88fd0ab3-ad42-4432-a666-ff95ae52df0e","evidence_id":"b7682018-31ad-4b18-abb1-29f31841a65b"},{"claim_id":"9b9af9cd-b279-4179-857f-8b08638c1db5","evidence_id":"b7682018-31ad-4b18-abb1-29f31841a65b"},{"claim_id":"9b9af9cd-b279-4179-857f-8b08638c1db5","evidence_id":"137c3a22-b17b-4575-b9d7-bf598b9e9c49"},{"claim_id":"9b9af9cd-b279-4179-857f-8b08638c1db5","evidence_id":"1a9df605-f72d-45b2-bb33-85cad4d3f965"},{"claim_id":"9b9af9cd-b279-4179-857f-8b08638c1db5","evidence_id":"3a1a7113-52fe-42b2-a669-21f1a3d2e92f"},{"claim_id":"9b9af9cd-b279-4179-857f-8b08638c1db5","evidence_id":"7319f2e2-be5d-4cb7-986a-c02dbef04778"}],"context_packs":[{"query":"What database was chosen for NovexCore v2?","context_pack":{"query":"What database was chosen for NovexCore v2?","retrieved_at":"2026-03-08T16:00:40.773162Z","claims":[{"claim_id":"d16c0c01-8913-4bf0-9635-c80e6700798f","claim_type":"HAS_STATUS","predicate":"Issue I001 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","status"]},{"claim_id":"fb829628-a352-443c-a4a6-54d1e5dc4e52","claim_type":"ASSIGNED_TO","predicate":"Issue I001 assigned to PERS-P006","value":"PERS-P006","confidence":1.0,"is_current":true,"valid_from":"2024-01-15T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","assignment"]},{"claim_id":"41de7895-f113-41d5-a1b9-ed599a89197f","claim_type":"AUTHORED_BY","predicate":"Issue I001 authored by PERS-P003","value":"PERS-P003","confidence":1.0,"is_current":true,"valid_from":"2024-01-15T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","authorship"]},{"claim_id":"b6469955-358a-4629-af6b-a9c2df448226","claim_type":"HAS_STATUS","predicate":"Issue I002 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-02-09T09:00:00Z","valid_until":"","evidence_ids":["3db161e2-07ee-472a-8f54-d418be94546c"],"tags":["issue","status"]},{"claim_id":"e534ae94-0368-4790-ba4e-a6f02c809329","claim_type":"ASSIGNED_TO","predicate":"Issue I002 assigned to PERS-P002","value":"PERS-P002","confidence":1.0,"is_current":true,"valid_from":"2024-01-23T09:00:00Z","valid_until":"","evidence_ids":["3db161e2-07ee-472a-8f54-d418be94546c"],"tags":["issue","assignment"]},{"claim_id":"811e3a93-fb98-4808-9892-9c9ff46b95ba","claim_type":"AUTHORED_BY","predicate":"Issue I002 authored by PERS-P001","value":"PERS-P001","confidence":1.0,"is_current":true,"valid_from":"2024-01-23T09:00:00Z","valid_until":"","evidence_ids":["3db161e2-07ee-472a-8f54-d418be94546c"],"tags":["issue","authorship"]},{"claim_id":"1b29309c-11a1-44ac-b1b7-0234adfbabef","claim_type":"DECISION_MADE","predicate":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","value":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","confidence":0.9,"is_current":true,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","evidence_ids":["85d79ac7-cbfc-49c4-9ab9-3ff3acca181e"],"tags":["decision"]},{"claim_id":"06f4d4d7-d073-4baf-b21f-56efdb212e2d","claim_type":"HAS_STATUS","predicate":"Issue I007 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-02-14T09:00:00Z","valid_until":"","evidence_ids":["30d84ab4-97d5-4a00-9006-7a205a062c3a"],"tags":["issue","status"]}],"evidence_snippets":[{"evidence_id":"d37630d1-75d5-46a7-a914-55badbb2f5c9","source_id":"EMAIL-T001-00","source_type":"email","timestamp":"2024-01-15T09:00:00Z","excerpt":"Team, we need to decide on the database for NovexCore v2. I'm leaning toward PostgreSQL for its JSON support and strong ACID guarantees. Thoughts?","relevance_score":0.5032,"citation":"[EMAIL EMAIL-T001-00 @ 2024-01-15]"},{"evidence_id":"a98162fa-6fab-45bd-92fa-ba4cca8d3fe7","source_id":"EMAIL-T003-03","source_type":"email","timestamp":"2024-01-20T23:24:00Z","excerpt":"Updated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration.","relevance_score":0.4169,"citation":"[EMAIL EMAIL-T003-03 @ 2024-01-20]"},{"evidence_id":"82a9b97b-b05c-4937-8552-88406dfc3147","source_id":"EMAIL-T001-04","source_type":"email","timestamp":"2024-01-16T13:48:00Z","excerpt":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","relevance_score":0.3932,"citation":"[EMAIL EMAIL-T001-04 @ 2024-01-16]"},{"evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c","source_id":"I001","source_type":"issue","timestamp":"2024-01-15T09:00:00Z","excerpt":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.","relevance_score":0.367,"citation":"[ISSUE I001 @ 2024-01-15]"},{"evidence_id":"f66e5fed-f385-4050-9de2-28c444366329","source_id":"EMAIL-T004-00","source_type":"email","timestamp":"2024-01-21T09:00:00Z","excerpt":"Forwarding Carol's roadmap update for the data team. Key: NovexCore v2 in Q1 means we need DataPipeline connectors ready by March 1.\n\n--- Forwarded ---\nUpdated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration.","relevance_score":0.2986,"citation":"[EMAIL EMAIL-T004-00 @ 2024-01-21]"},{"evidence_id":"cf1318e2-a3e8-4461-b190-3d001035b786","source_id":"I002-CMT-2422c8de40f1fca0","source_type":"issue_comment","timestamp":"2024-01-24T09:00:00Z","excerpt":"Starting migration. Using Alembic for schema migrations.","relevance_score":0.2504,"citation":"[ISSUE_COMMENT I002-CMT-2422c8de40f1fca0 @ 2024-01-24]"},{"evidence_id":"137c3a22-b17b-4575-b9d7-bf598b9e9c49","source_id":"I008-CMT-46d0dac1464edc05","source_type":"issue_comment","timestamp":"2024-01-22T09:00:00Z","excerpt":"Implementing. Using Redis for refresh token storage.","relevance_score":0.2504,"citation":"[ISSUE_COMMENT I008-CMT-46d0dac1464edc05 @ 2024-01-22]"},{"evidence_id":"2e7a7669-baa2-41e8-995b-6db6fc17c690","source_id":"EMAIL-T003-02","source_type":"email","timestamp":"2024-01-20T21:00:00Z","excerpt":"Agreed with Grace. InfraV2 moves to Q2. NovexCore v2 stays Q1. Carol, update the roadmap.","relevance_score":0.2501,"citation":"[EMAIL EMAIL-T003-02 @ 2024-01-20]"},{"evidence_id":"3db161e2-07ee-472a-8f54-d418be94546c","source_id":"I002","source_type":"issue","timestamp":"2024-01-23T09:00:00Z","excerpt":"Migrate NovexCore v2 from PostgreSQL to MySQL following cost-driven decision reversal. See email thread T001.","relevance_score":0.0,"citation":"[ISSUE I002 @ 2024-01-23]"},{"evidence_id":"85d79ac7-cbfc-49c4-9ab9-3ff3acca181e","source_id":"EMAIL-T005-03","source_type":"email","timestamp":"2024-01-26T09:00:00Z","excerpt":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","relevance_score":0.0,"citation":"[EMAIL EMAIL-T005-03 @ 2024-01-26]"}],"entities":[{"entity_id":"PROJ-NOVEXCORE","entity_type":"project","canonical_name":"NovexCore","aliases":["NovexCore"]},{"entity_id":"PROJ-INFRAV2","entity_type":"project","canonical_name":"InfraV2","aliases":["InfraV2"]}],"conflicts_detected":[],"answer_hint":"Issue I001 status: closed | Issue I001 assigned to PERS-P006 | Issue I001 authored by PERS-P003"}},{"query":"Who is responsible for the auth token security incident?","context_pack":{"query":"Who is responsible for the auth token security incident?","retrieved_at":"2026-03-08T16:00:40.773162Z","claims":[{"claim_id":"c024bda2-6f0c-4d28-8143-27b4ed4c468d","claim_type":"AUTHORED_BY","predicate":"Issue I003 authored by PERS-P009","value":"PERS-P009","confidence":1.0,"is_current":true,"valid_from":"2024-01-18T09:00:00Z","valid_until":"","evidence_ids":["39b6aa55-a929-4e2f-b2b3-717b2ac83717"],"tags":["issue","authorship"]},{"claim_id":"0e45c947-b492-46b1-b5e3-4fbc1ef51928","claim_type":"AUTHORED_BY","predicate":"Issue I006 authored by PERS-P009","value":"PERS-P009","confidence":1.0,"is_current":true,"valid_from":"2024-02-24T09:00:00Z","valid_until":"","evidence_ids":["208bf6c5-6d52-42e6-8445-49723243eec4"],"tags":["issue","authorship"]},{"claim_id":"d16c0c01-8913-4bf0-9635-c80e6700798f","claim_type":"HAS_STATUS","predicate":"Issue I001 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","status"]},{"claim_id":"fb829628-a352-443c-a4a6-54d1e5dc4e52","claim_type":"ASSIGNED_TO","predicate":"Issue I001 assigned to PERS-P006","value":"PERS-P006","confidence":1.0,"is_current":true,"valid_from":"2024-01-15T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","assignment"]},{"claim_id":"41de7895-f113-41d5-a1b9-ed599a89197f","claim_type":"AUTHORED_BY","predicate":"Issue I001 authored by PERS-P003","value":"PERS-P003","confidence":1.0,"is_current":true,"valid_from":"2024-01-15T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","authorship"]},{"claim_id":"9642cc59-285c-4b75-9bf4-29714afb747b","claim_type":"HAS_STATUS","predicate":"Issue I008 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-01-27T09:00:00Z","valid_until":"","evidence_ids":["b7682018-31ad-4b18-abb1-29f31841a65b"],"tags":["issue","status"]},{"claim_id":"b1479d0e-2853-44c0-91f7-22d2e93f28b2","claim_type":"ASSIGNED_TO","predicate":"Issue I008 assigned to PERS-P006","value":"PERS-P006","confidence":1.0,"is_current":true,"valid_from":"2024-01-21T09:00:00Z","valid_until":"","evidence_ids":["b7682018-31ad-4b18-abb1-29f31841a65b"],"tags":["issue","assignment"]},{"claim_id":"88fd0ab3-ad42-4432-a666-ff95ae52df0e","claim_type":"AUTHORED_BY","predicate":"Issue I008 authored by PERS-P003","value":"PERS-P003","confidence":1.0,"is_current":true,"valid_from":"2024-01-21T09:00:00Z","valid_until":"","evidence_ids":["b7682018-31ad-4b18-abb1-29f31841a65b"],"tags":["issue","authorship"]}],"evidence_snippets":[{"evidence_id":"137c3a22-b17b-4575-b9d7-bf598b9e9c49","source_id":"I008-CMT-46d0dac1464edc05","source_type":"issue_comment","timestamp":"2024-01-22T09:00:00Z","excerpt":"Implementing. Using Redis for refresh token storage.","relevance_score":0.7102,"citation":"[ISSUE_COMMENT I008-CMT-46d0dac1464edc05 @ 2024-01-22]"},{"evidence_id":"bc41d521-6cc5-4354-902e-65d64507564b","source_id":"EMAIL-T002-00","source_type":"email","timestamp":"2024-01-18T09:00:00Z","excerpt":"Found a bug: auth tokens never expire in AuthService. This is a security vulnerability. Assigning to Frank.","relevance_score":0.5976,"citation":"[EMAIL EMAIL-T002-00 @ 2024-01-18]"},{"evidence_id":"6e136bc2-25f5-4486-a305-6efbc2b815cb","source_id":"EMAIL-T002-04","source_type":"email","timestamp":"2024-01-18T23:24:00Z","excerpt":"Token rotation complete. 2,847 sessions invalidated. Monitoring for issues.","relevance_score":0.5524,"citation":"[EMAIL EMAIL-T002-04 @ 2024-01-18]"},{"evidence_id":"126c7689-adb9-4190-9ee9-7a9cfbd49650","source_id":"EMAIL-T005-01","source_type":"email","timestamp":"2024-01-25T13:48:00Z","excerpt":"Kafka is the clear choice for high-throughput. We're talking millions of events/day. RabbitMQ would struggle.","relevance_score":0.3443,"citation":"[EMAIL EMAIL-T005-01 @ 2024-01-25]"},{"evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c","source_id":"I001","source_type":"issue","timestamp":"2024-01-15T09:00:00Z","excerpt":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.","relevance_score":0.3314,"citation":"[ISSUE I001 @ 2024-01-15]"},{"evidence_id":"9fb223ef-a986-48fa-80b6-50ca1f31e1c9","source_id":"EMAIL-T012-01","source_type":"email","timestamp":"2024-02-24T13:48:00Z","excerpt":"Bisected to commit a3f9d. The new analytics aggregation query is doing a full table scan. Missing index.","relevance_score":0.2778,"citation":"[EMAIL EMAIL-T012-01 @ 2024-02-24]"},{"evidence_id":"922ee202-a790-49af-9211-5b28e300d45a","source_id":"EMAIL-T002-03","source_type":"email","timestamp":"2024-01-18T21:00:00Z","excerpt":"Yes, force rotate. User disruption acceptable given security risk. Hector please proceed.","relevance_score":0.2682,"citation":"[EMAIL EMAIL-T002-03 @ 2024-01-18]"},{"evidence_id":"82a9b97b-b05c-4937-8552-88406dfc3147","source_id":"EMAIL-T001-04","source_type":"email","timestamp":"2024-01-16T13:48:00Z","excerpt":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","relevance_score":0.2623,"citation":"[EMAIL EMAIL-T001-04 @ 2024-01-16]"},{"evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717","source_id":"I003","source_type":"issue","timestamp":"2024-01-18T09:00:00Z","excerpt":"CRITICAL: Auth tokens missing exp claim. All tokens issued before 2024-01-10 are permanent. Immediate fix required.","relevance_score":0.0,"citation":"[ISSUE I003 @ 2024-01-18]"},{"evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4","source_id":"I006","source_type":"issue","timestamp":"2024-02-24T09:00:00Z","excerpt":"P99 latency spiked from 200ms to 650ms after deploy on day 40.","relevance_score":0.0,"citation":"[ISSUE I006 @ 2024-02-24]"}],"entities":[{"entity_id":"PERS-P009","entity_type":"person","canonical_name":"Iris Johansson","aliases":["iris.johansson@novex.com","ijohansson@novex.com","Iris J."]},{"entity_id":"PROJ-AUTHSERVICE","entity_type":"project","canonical_name":"AuthService","aliases":["AuthService"]},{"entity_id":"TECH-REDIS","entity_type":"technology","canonical_name":"Redis","aliases":["Redis"]}],"conflicts_detected":[],"answer_hint":"Issue I003 authored by PERS-P009 | Issue I006 authored by PERS-P009 | Issue I001 status: closed"}},{"query":"What is the status of the Kubernetes migration?","context_pack":{"query":"What is the status of the Kubernetes migration?","retrieved_at":"2026-03-08T16:00:40.773162Z","claims":[{"claim_id":"c024bda2-6f0c-4d28-8143-27b4ed4c468d","claim_type":"AUTHORED_BY","predicate":"Issue I003 authored by PERS-P009","value":"PERS-P009","confidence":1.0,"is_current":true,"valid_from":"2024-01-18T09:00:00Z","valid_until":"","evidence_ids":["39b6aa55-a929-4e2f-b2b3-717b2ac83717"],"tags":["issue","authorship"]},{"claim_id":"0e45c947-b492-46b1-b5e3-4fbc1ef51928","claim_type":"AUTHORED_BY","predicate":"Issue I006 authored by PERS-P009","value":"PERS-P009","confidence":1.0,"is_current":true,"valid_from":"2024-02-24T09:00:00Z","valid_until":"","evidence_ids":["208bf6c5-6d52-42e6-8445-49723243eec4"],"tags":["issue","authorship"]},{"claim_id":"d3359e97-3779-4ef0-9ae8-123812009f86","claim_type":"HAS_STATUS","predicate":"Issue I005 status: deferred","value":"deferred","confidence":1.0,"is_current":true,"valid_from":"2024-01-21T09:00:00Z","valid_until":"","evidence_ids":["2ff25d00-246e-4d58-9f4c-9a34ffe435f3"],"tags":["issue","status"]},{"claim_id":"f3d23be0-0eea-42d4-bd68-4c20134e5b35","claim_type":"ASSIGNED_TO","predicate":"Issue I005 assigned to PERS-P008","value":"PERS-P008","confidence":1.0,"is_current":true,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","evidence_ids":["2ff25d00-246e-4d58-9f4c-9a34ffe435f3"],"tags":["issue","assignment"]},{"claim_id":"841bb7d6-bd4d-49ca-be01-075b7a5c8e55","claim_type":"AUTHORED_BY","predicate":"Issue I005 authored by PERS-P007","value":"PERS-P007","confidence":1.0,"is_current":true,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","evidence_ids":["2ff25d00-246e-4d58-9f4c-9a34ffe435f3"],"tags":["issue","authorship"]},{"claim_id":"e7069528-cfd0-4fc3-8923-339eea6fc6d9","claim_type":"DECISION_REVERSED","predicate":"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.","value":"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.","confidence":0.95,"is_current":true,"valid_from":"2024-01-23T09:00:00Z","valid_until":"","evidence_ids":["c3ac0b38-607a-4982-8cbf-8b52cca7498b"],"tags":["decision","reversal"]},{"claim_id":"90d0cd24-5f2f-4d7d-a472-78d507ec875d","claim_type":"HAS_STATUS","predicate":"Issue I005 status: open","value":"open","confidence":1.0,"is_current":false,"valid_from":"2024-01-20T09:00:00Z","valid_until":"2024-01-21T09:00:00Z","evidence_ids":["2ff25d00-246e-4d58-9f4c-9a34ffe435f3"],"tags":["issue","status"]},{"claim_id":"59e2d441-7e3e-445e-bc14-32482fd677f9","claim_type":"DECISION_MADE","predicate":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","value":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","confidence":0.9,"is_current":false,"valid_from":"2024-01-16T13:48:00Z","valid_until":"2024-01-23T13:48:00Z","evidence_ids":["82a9b97b-b05c-4937-8552-88406dfc3147"],"tags":["decision"]}],"evidence_snippets":[{"evidence_id":"2ff25d00-246e-4d58-9f4c-9a34ffe435f3","source_id":"I005","source_type":"issue","timestamp":"2024-01-20T09:00:00Z","excerpt":"Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.","relevance_score":0.4985,"citation":"[ISSUE I005 @ 2024-01-20]"},{"evidence_id":"126c7689-adb9-4190-9ee9-7a9cfbd49650","source_id":"EMAIL-T005-01","source_type":"email","timestamp":"2024-01-25T13:48:00Z","excerpt":"Kafka is the clear choice for high-throughput. We're talking millions of events/day. RabbitMQ would struggle.","relevance_score":0.4483,"citation":"[EMAIL EMAIL-T005-01 @ 2024-01-25]"},{"evidence_id":"ca013343-0520-4742-8805-8dd7f87b4141","source_id":"EMAIL-T003-01","source_type":"email","timestamp":"2024-01-20T16:12:00Z","excerpt":"Engineering capacity looks tight. NovexCore v2 and Kubernetes migration in same quarter is risky. Can we push InfraV2 to Q2?","relevance_score":0.3688,"citation":"[EMAIL EMAIL-T003-01 @ 2024-01-20]"},{"evidence_id":"7254dd88-eded-4de5-9727-06bb5e0d021c","source_id":"I002-CMT-f359b91eaceef62c","source_type":"issue_comment","timestamp":"2024-02-09T09:00:00Z","excerpt":"Migration complete. All tests pass. Closing.","relevance_score":0.3199,"citation":"[ISSUE_COMMENT I002-CMT-f359b91eaceef62c @ 2024-02-09]"},{"evidence_id":"1d572b23-630c-4523-aecd-9b6f9b77b44a","source_id":"I005-CMT-e238221edf091f9d","source_type":"issue_comment","timestamp":"2024-01-20T21:00:00Z","excerpt":"Created migration runbook. Estimating 6-week effort.","relevance_score":0.3199,"citation":"[ISSUE_COMMENT I005-CMT-e238221edf091f9d @ 2024-01-20]"},{"evidence_id":"9fb223ef-a986-48fa-80b6-50ca1f31e1c9","source_id":"EMAIL-T012-01","source_type":"email","timestamp":"2024-02-24T13:48:00Z","excerpt":"Bisected to commit a3f9d. The new analytics aggregation query is doing a full table scan. Missing index.","relevance_score":0.2778,"citation":"[EMAIL EMAIL-T012-01 @ 2024-02-24]"},{"evidence_id":"cf1318e2-a3e8-4461-b190-3d001035b786","source_id":"I002-CMT-2422c8de40f1fca0","source_type":"issue_comment","timestamp":"2024-01-24T09:00:00Z","excerpt":"Starting migration. Using Alembic for schema migrations.","relevance_score":0.2742,"citation":"[ISSUE_COMMENT I002-CMT-2422c8de40f1fca0 @ 2024-01-24]"},{"evidence_id":"0f743941-2db1-492f-8f4b-5b454370eee8","source_id":"EMAIL-T003-00","source_type":"email","timestamp":"2024-01-20T09:00:00Z","excerpt":"Sharing Q1 roadmap draft. Key items: (1) NovexCore v2 launch, (2) ReportingEngine beta, (3) InfraV2 Kubernetes migration. Please review by Friday.","relevance_score":0.2695,"citation":"[EMAIL EMAIL-T003-00 @ 2024-01-20]"},{"evidence_id":"39b6aa55-a929-4e2f-b2b3-717b2ac83717","source_id":"I003","source_type":"issue","timestamp":"2024-01-18T09:00:00Z","excerpt":"CRITICAL: Auth tokens missing exp claim. All tokens issued before 2024-01-10 are permanent. Immediate fix required.","relevance_score":0.0,"citation":"[ISSUE I003 @ 2024-01-18]"},{"evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4","source_id":"I006","source_type":"issue","timestamp":"2024-02-24T09:00:00Z","excerpt":"P99 latency spiked from 200ms to 650ms after deploy on day 40.","relevance_score":0.0,"citation":"[ISSUE I006 @ 2024-02-24]"}],"entities":[{"entity_id":"PERS-P009","entity_type":"person","canonical_name":"Iris Johansson","aliases":["iris.johansson@novex.com","ijohansson@novex.com","Iris J."]},{"entity_id":"TECH-REDIS","entity_type":"technology","canonical_name":"Redis","aliases":["Redis"]},{"entity_id":"TECH-KUBERNETES","entity_type":"technology","canonical_name":"Kubernetes","aliases":["Kubernetes"]}],"conflicts_detected":[{"claim_id":"59e2d441-7e3e-445e-bc14-32482fd677f9","predicate":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","valid_from":"2024-01-16T13:48:00Z","valid_until":"2024-01-23T13:48:00Z","is_current":false,"superseded_by":"98a3b5fc-c4e9-4b50-b2a2-64ea66539787","supersedes":"","conflict_note":"This claim was later reversed/superseded"}],"answer_hint":"Issue I003 authored by PERS-P009 | Issue I006 authored by PERS-P009 | Issue I005 status: deferred"}},{"query":"What decisions were reversed or changed?","context_pack":{"query":"What decisions were reversed or changed?","retrieved_at":"2026-03-08T16:00:40.773162Z","claims":[{"claim_id":"f3d23be0-0eea-42d4-bd68-4c20134e5b35","claim_type":"ASSIGNED_TO","predicate":"Issue I005 assigned to PERS-P008","value":"PERS-P008","confidence":1.0,"is_current":true,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","evidence_ids":["2ff25d00-246e-4d58-9f4c-9a34ffe435f3"],"tags":["issue","assignment"]},{"claim_id":"0abd63be-71f0-4076-b566-533be4898211","claim_type":"PERFORMANCE_METRIC","predicate":"Performance metric in I006: 200ms","value":"200ms","confidence":0.8,"is_current":true,"valid_from":"2024-02-24T21:00:00Z","valid_until":"","evidence_ids":["208bf6c5-6d52-42e6-8445-49723243eec4"],"tags":["performance","metric"]},{"claim_id":"0f7bde80-ad29-4832-90d4-d62c987afa4f","claim_type":"INCIDENT_OCCURRED","predicate":"Security/incident: Implement JWT authentication","value":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.","confidence":0.95,"is_current":false,"valid_from":"2024-01-15T09:00:00Z","valid_until":"2024-01-20T09:00:00Z","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c","5bd63edd-0d5e-4241-8b56-77870ff46f17","bbf05149-8fd4-4aef-8da7-299c6d9b9858","9694c833-5afe-4061-96fc-a6a12e26ee1c"],"tags":["incident","security"]}],"evidence_snippets":[{"evidence_id":"4e45c32c-09d6-4628-821e-18cae8c8de7a","source_id":"EMAIL-T006-00","source_type":"email","timestamp":"2024-01-29T09:00:00Z","excerpt":"Opening a Senior Backend Engineer role. Requirements: Go or Python, distributed systems experience, Kafka a plus. JD attached.","relevance_score":0.2698,"citation":"[EMAIL EMAIL-T006-00 @ 2024-01-29]"},{"evidence_id":"2ff25d00-246e-4d58-9f4c-9a34ffe435f3","source_id":"I005","source_type":"issue","timestamp":"2024-01-20T09:00:00Z","excerpt":"Plan and execute migration of all services to Kubernetes. Originally Q1 \u2014 deferred to Q2 per roadmap decision.","relevance_score":0.0,"citation":"[ISSUE I005 @ 2024-01-20]"},{"evidence_id":"208bf6c5-6d52-42e6-8445-49723243eec4","source_id":"I006","source_type":"issue","timestamp":"2024-02-24T09:00:00Z","excerpt":"P99 latency spiked from 200ms to 650ms after deploy on day 40.","relevance_score":0.0,"citation":"[ISSUE I006 @ 2024-02-24]"},{"evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c","source_id":"I001","source_type":"issue","timestamp":"2024-01-15T09:00:00Z","excerpt":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.","relevance_score":0.0,"citation":"[ISSUE I001 @ 2024-01-15]"},{"evidence_id":"5bd63edd-0d5e-4241-8b56-77870ff46f17","source_id":"I001-CMT-2318ba6e4f6c07b9","source_type":"issue_comment","timestamp":"2024-01-17T09:00:00Z","excerpt":"Working on this. Using python-jose library.","relevance_score":0.0,"citation":"[ISSUE_COMMENT I001-CMT-2318ba6e4f6c07b9 @ 2024-01-17]"}],"entities":[{"entity_id":"PERS-P008","entity_type":"person","canonical_name":"Hector Romero","aliases":["hector.romero@novex.com","hromero@novex.com","Hector R."]},{"entity_id":"PROJ-NOVEXCORE","entity_type":"project","canonical_name":"NovexCore","aliases":["NovexCore"]},{"entity_id":"PROJ-REPORTINGENGINE","entity_type":"project","canonical_name":"ReportingEngine","aliases":["ReportingEngine"]}],"conflicts_detected":[],"answer_hint":"Issue I005 assigned to PERS-P008 | Performance metric in I006: 200ms"}},{"query":"What performance metrics were reported for Kafka?","context_pack":{"query":"What performance metrics were reported for Kafka?","retrieved_at":"2026-03-08T16:00:40.773162Z","claims":[{"claim_id":"1b29309c-11a1-44ac-b1b7-0234adfbabef","claim_type":"DECISION_MADE","predicate":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","value":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","confidence":0.9,"is_current":true,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","evidence_ids":["85d79ac7-cbfc-49c4-9ab9-3ff3acca181e"],"tags":["decision"]},{"claim_id":"31a20022-d755-49e6-9c55-ccaa4c970bd4","claim_type":"HAS_STATUS","predicate":"Issue I004 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["issue","status"]},{"claim_id":"1170b717-6b65-4c5e-a393-d9f385390d1c","claim_type":"ASSIGNED_TO","predicate":"Issue I004 assigned to PERS-P010","value":"PERS-P010","confidence":1.0,"is_current":true,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["issue","assignment"]},{"claim_id":"aa66ad08-613b-442a-b5f3-b18c1182159d","claim_type":"AUTHORED_BY","predicate":"Issue I004 authored by PERS-P002","value":"PERS-P002","confidence":1.0,"is_current":true,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["issue","authorship"]},{"claim_id":"25e4ccd6-e530-4d2a-9ac5-3bd99584aa6e","claim_type":"PERFORMANCE_METRIC","predicate":"Performance metric in I004: 850k msg/sec","value":"850k msg/sec","confidence":0.8,"is_current":true,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["performance","metric"]},{"claim_id":"d16c0c01-8913-4bf0-9635-c80e6700798f","claim_type":"HAS_STATUS","predicate":"Issue I001 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-01-20T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","status"]},{"claim_id":"fb829628-a352-443c-a4a6-54d1e5dc4e52","claim_type":"ASSIGNED_TO","predicate":"Issue I001 assigned to PERS-P006","value":"PERS-P006","confidence":1.0,"is_current":true,"valid_from":"2024-01-15T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","assignment"]},{"claim_id":"41de7895-f113-41d5-a1b9-ed599a89197f","claim_type":"AUTHORED_BY","predicate":"Issue I001 authored by PERS-P003","value":"PERS-P003","confidence":1.0,"is_current":true,"valid_from":"2024-01-15T09:00:00Z","valid_until":"","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c"],"tags":["issue","authorship"]}],"evidence_snippets":[{"evidence_id":"a0b5729c-c471-4612-b489-fa72cc53fcc7","source_id":"EMAIL-T012-03","source_type":"email","timestamp":"2024-02-24T21:00:00Z","excerpt":"Confirmed. Performance restored. Post-mortem due Friday.","relevance_score":0.5178,"citation":"[EMAIL EMAIL-T012-03 @ 2024-02-24]"},{"evidence_id":"7ff13162-edaf-4941-994b-798855baaf8a","source_id":"I004-CMT-fb01a024ab8016b7","source_type":"issue_comment","timestamp":"2024-01-27T09:00:00Z","excerpt":"Setting up Kafka cluster on K8s.","relevance_score":0.3953,"citation":"[ISSUE_COMMENT I004-CMT-fb01a024ab8016b7 @ 2024-01-27]"},{"evidence_id":"85d79ac7-cbfc-49c4-9ab9-3ff3acca181e","source_id":"EMAIL-T005-03","source_type":"email","timestamp":"2024-01-26T09:00:00Z","excerpt":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","relevance_score":0.3749,"citation":"[EMAIL EMAIL-T005-03 @ 2024-01-26]"},{"evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263","source_id":"I004","source_type":"issue","timestamp":"2024-01-26T09:00:00Z","excerpt":"Implement Kafka producer/consumer for DataPipeline analytics events. Target: 1M msg/sec throughput.","relevance_score":0.3172,"citation":"[ISSUE I004 @ 2024-01-26]"},{"evidence_id":"deac350d-2930-4580-a8f3-ec12b626bc90","source_id":"EMAIL-T005-00","source_type":"email","timestamp":"2024-01-25T09:00:00Z","excerpt":"We need an event streaming solution for the analytics pipeline. Evaluating Kafka and RabbitMQ.","relevance_score":0.2946,"citation":"[EMAIL EMAIL-T005-00 @ 2024-01-25]"},{"evidence_id":"cf1318e2-a3e8-4461-b190-3d001035b786","source_id":"I002-CMT-2422c8de40f1fca0","source_type":"issue_comment","timestamp":"2024-01-24T09:00:00Z","excerpt":"Starting migration. Using Alembic for schema migrations.","relevance_score":0.2504,"citation":"[ISSUE_COMMENT I002-CMT-2422c8de40f1fca0 @ 2024-01-24]"},{"evidence_id":"137c3a22-b17b-4575-b9d7-bf598b9e9c49","source_id":"I008-CMT-46d0dac1464edc05","source_type":"issue_comment","timestamp":"2024-01-22T09:00:00Z","excerpt":"Implementing. Using Redis for refresh token storage.","relevance_score":0.2504,"citation":"[ISSUE_COMMENT I008-CMT-46d0dac1464edc05 @ 2024-01-22]"},{"evidence_id":"65f89ded-1fcc-421b-b6e4-8d630e08f5c2","source_id":"EMAIL-T009-00","source_type":"email","timestamp":"2024-02-06T09:00:00Z","excerpt":"Proposing upgrade from Python 3.10 to 3.12 across all services. ~15% performance improvement on benchmarks.","relevance_score":0.2416,"citation":"[EMAIL EMAIL-T009-00 @ 2024-02-06]"},{"evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c","source_id":"I001","source_type":"issue","timestamp":"2024-01-15T09:00:00Z","excerpt":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.","relevance_score":0.0,"citation":"[ISSUE I001 @ 2024-01-15]"}],"entities":[{"entity_id":"TECH-KAFKA","entity_type":"technology","canonical_name":"Kafka","aliases":["Kafka"]}],"conflicts_detected":[],"answer_hint":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation. | Issue I004 status: closed | Issue I004 assigned to PERS-P010"}},{"query":"Who owns the DataPipeline project?","context_pack":{"query":"Who owns the DataPipeline project?","retrieved_at":"2026-03-08T16:00:40.773162Z","claims":[{"claim_id":"25e4ccd6-e530-4d2a-9ac5-3bd99584aa6e","claim_type":"PERFORMANCE_METRIC","predicate":"Performance metric in I004: 850k msg/sec","value":"850k msg/sec","confidence":0.8,"is_current":true,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["performance","metric"]},{"claim_id":"1b29309c-11a1-44ac-b1b7-0234adfbabef","claim_type":"DECISION_MADE","predicate":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","value":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","confidence":0.9,"is_current":true,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","evidence_ids":["85d79ac7-cbfc-49c4-9ab9-3ff3acca181e"],"tags":["decision"]},{"claim_id":"31a20022-d755-49e6-9c55-ccaa4c970bd4","claim_type":"HAS_STATUS","predicate":"Issue I004 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["issue","status"]},{"claim_id":"1170b717-6b65-4c5e-a393-d9f385390d1c","claim_type":"ASSIGNED_TO","predicate":"Issue I004 assigned to PERS-P010","value":"PERS-P010","confidence":1.0,"is_current":true,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["issue","assignment"]},{"claim_id":"aa66ad08-613b-442a-b5f3-b18c1182159d","claim_type":"AUTHORED_BY","predicate":"Issue I004 authored by PERS-P002","value":"PERS-P002","confidence":1.0,"is_current":true,"valid_from":"2024-01-26T09:00:00Z","valid_until":"","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["issue","authorship"]},{"claim_id":"e7069528-cfd0-4fc3-8923-339eea6fc6d9","claim_type":"DECISION_REVERSED","predicate":"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.","value":"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.","confidence":0.95,"is_current":true,"valid_from":"2024-01-23T09:00:00Z","valid_until":"","evidence_ids":["c3ac0b38-607a-4982-8cbf-8b52cca7498b"],"tags":["decision","reversal"]},{"claim_id":"98a3b5fc-c4e9-4b50-b2a2-64ea66539787","claim_type":"DECISION_REVERSED","predicate":"After cost review, we are switching to MySQL. I know this reverses our earlier decision \u2014 documenting the reason: vendor","value":"After cost review, we are switching to MySQL. I know this reverses our earlier decision \u2014 documenting the reason: vendor discount + ops simplicity.","confidence":0.95,"is_current":true,"valid_from":"2024-01-23T13:48:00Z","valid_until":"","evidence_ids":["2e817958-088d-4aaf-afbe-e672d63fbb09"],"tags":["decision","reversal"]},{"claim_id":"c5f4f852-8ba5-4d17-86e5-ae5fdf55d0c5","claim_type":"HAS_STATUS","predicate":"Issue I004 status: open","value":"open","confidence":1.0,"is_current":false,"valid_from":"2024-01-26T09:00:00Z","valid_until":"2024-01-27T09:00:00Z","evidence_ids":["f582ac82-113a-48f1-af13-70cbd8519263"],"tags":["issue","status"]}],"evidence_snippets":[{"evidence_id":"85d79ac7-cbfc-49c4-9ab9-3ff3acca181e","source_id":"EMAIL-T005-03","source_type":"email","timestamp":"2024-01-26T09:00:00Z","excerpt":"Decision: Kafka for event streaming in DataPipeline. James to lead implementation.","relevance_score":0.2665,"citation":"[EMAIL EMAIL-T005-03 @ 2024-01-26]"},{"evidence_id":"1d5f9701-4a00-4f01-9232-4d988a3b6976","source_id":"EMAIL-T009-03","source_type":"email","timestamp":"2024-02-06T21:00:00Z","excerpt":"I'll handle the legacy-stats replacement \u2014 ETA 1 week.","relevance_score":0.2399,"citation":"[EMAIL EMAIL-T009-03 @ 2024-02-06]"},{"evidence_id":"f582ac82-113a-48f1-af13-70cbd8519263","source_id":"I004","source_type":"issue","timestamp":"2024-01-26T09:00:00Z","excerpt":"Implement Kafka producer/consumer for DataPipeline analytics events. Target: 1M msg/sec throughput.","relevance_score":0.2255,"citation":"[ISSUE I004 @ 2024-01-26]"},{"evidence_id":"c3ac0b38-607a-4982-8cbf-8b52cca7498b","source_id":"EMAIL-T001-05","source_type":"email","timestamp":"2024-01-23T09:00:00Z","excerpt":"Heads up: the cloud vendor deal gives us managed MySQL at 40% lower cost. Re-opening the DB decision.","relevance_score":0.2021,"citation":"[EMAIL EMAIL-T001-05 @ 2024-01-23]"},{"evidence_id":"f66e5fed-f385-4050-9de2-28c444366329","source_id":"EMAIL-T004-00","source_type":"email","timestamp":"2024-01-21T09:00:00Z","excerpt":"Forwarding Carol's roadmap update for the data team. Key: NovexCore v2 in Q1 means we need DataPipeline connectors ready by March 1.\n\n--- Forwarded ---\nUpdated. Q1: NovexCore v2 + ReportingEngine beta. Q2: InfraV2 migration.","relevance_score":0.1565,"citation":"[EMAIL EMAIL-T004-00 @ 2024-01-21]"},{"evidence_id":"82a9b97b-b05c-4937-8552-88406dfc3147","source_id":"EMAIL-T001-04","source_type":"email","timestamp":"2024-01-16T13:48:00Z","excerpt":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","relevance_score":0.1371,"citation":"[EMAIL EMAIL-T001-04 @ 2024-01-16]"},{"evidence_id":"deac350d-2930-4580-a8f3-ec12b626bc90","source_id":"EMAIL-T005-00","source_type":"email","timestamp":"2024-01-25T09:00:00Z","excerpt":"We need an event streaming solution for the analytics pipeline. Evaluating Kafka and RabbitMQ.","relevance_score":0.1371,"citation":"[EMAIL EMAIL-T005-00 @ 2024-01-25]"},{"evidence_id":"2e7a7669-baa2-41e8-995b-6db6fc17c690","source_id":"EMAIL-T003-02","source_type":"email","timestamp":"2024-01-20T21:00:00Z","excerpt":"Agreed with Grace. InfraV2 moves to Q2. NovexCore v2 stays Q1. Carol, update the roadmap.","relevance_score":0.128,"citation":"[EMAIL EMAIL-T003-02 @ 2024-01-20]"},{"evidence_id":"2e817958-088d-4aaf-afbe-e672d63fbb09","source_id":"EMAIL-T001-06","source_type":"email","timestamp":"2024-01-23T13:48:00Z","excerpt":"After cost review, we are switching to MySQL. I know this reverses our earlier decision \u2014 documenting the reason: vendor discount + ops simplicity.","relevance_score":0.0,"citation":"[EMAIL EMAIL-T001-06 @ 2024-01-23]"}],"entities":[{"entity_id":"PROJ-DATAPIPELINE","entity_type":"project","canonical_name":"DataPipeline","aliases":["DataPipeline"]}],"conflicts_detected":[],"answer_hint":"Performance metric in I004: 850k msg/sec | Decision: Kafka for event streaming in DataPipeline. James to lead implementation. | Issue I004 status: closed"}},{"query":"What happened with Python version upgrades?","context_pack":{"query":"What happened with Python version upgrades?","retrieved_at":"2026-03-08T16:00:40.773162Z","claims":[{"claim_id":"06f4d4d7-d073-4baf-b21f-56efdb212e2d","claim_type":"HAS_STATUS","predicate":"Issue I007 status: closed","value":"closed","confidence":1.0,"is_current":true,"valid_from":"2024-02-14T09:00:00Z","valid_until":"","evidence_ids":["30d84ab4-97d5-4a00-9006-7a205a062c3a"],"tags":["issue","status"]},{"claim_id":"e8e5e2e2-fc66-4b06-8aa2-b3451d21e34d","claim_type":"ASSIGNED_TO","predicate":"Issue I007 assigned to PERS-P005","value":"PERS-P005","confidence":1.0,"is_current":true,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","evidence_ids":["30d84ab4-97d5-4a00-9006-7a205a062c3a"],"tags":["issue","assignment"]},{"claim_id":"4b8b8662-9067-4c01-8758-2bf4fab957a6","claim_type":"AUTHORED_BY","predicate":"Issue I007 authored by PERS-P004","value":"PERS-P004","confidence":1.0,"is_current":true,"valid_from":"2024-02-06T09:00:00Z","valid_until":"","evidence_ids":["30d84ab4-97d5-4a00-9006-7a205a062c3a"],"tags":["issue","authorship"]},{"claim_id":"0f7bde80-ad29-4832-90d4-d62c987afa4f","claim_type":"INCIDENT_OCCURRED","predicate":"Security/incident: Implement JWT authentication","value":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.","confidence":0.95,"is_current":false,"valid_from":"2024-01-15T09:00:00Z","valid_until":"2024-01-20T09:00:00Z","evidence_ids":["6441438d-edfe-4740-91c0-fbc0928fb92c","5bd63edd-0d5e-4241-8b56-77870ff46f17","bbf05149-8fd4-4aef-8da7-299c6d9b9858","9694c833-5afe-4061-96fc-a6a12e26ee1c"],"tags":["incident","security"]},{"claim_id":"59e2d441-7e3e-445e-bc14-32482fd677f9","claim_type":"DECISION_MADE","predicate":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","value":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","confidence":0.9,"is_current":false,"valid_from":"2024-01-16T13:48:00Z","valid_until":"2024-01-23T13:48:00Z","evidence_ids":["82a9b97b-b05c-4937-8552-88406dfc3147"],"tags":["decision"]},{"claim_id":"3161b884-1098-44f1-8ef0-73c54c1d7438","claim_type":"HAS_STATUS","predicate":"Issue I007 status: open","value":"open","confidence":1.0,"is_current":false,"valid_from":"2024-02-06T09:00:00Z","valid_until":"2024-02-06T21:00:00Z","evidence_ids":["30d84ab4-97d5-4a00-9006-7a205a062c3a"],"tags":["issue","status"]},{"claim_id":"7b6860a8-5b3f-4321-a565-a715bf9d9459","claim_type":"HAS_STATUS","predicate":"Issue I007 status: in_progress","value":"in_progress","confidence":1.0,"is_current":false,"valid_from":"2024-02-06T21:00:00Z","valid_until":"2024-02-14T09:00:00Z","evidence_ids":["30d84ab4-97d5-4a00-9006-7a205a062c3a"],"tags":["issue","status"]}],"evidence_snippets":[{"evidence_id":"b247a09f-ff64-4a57-8ba4-d2de2ac7a516","source_id":"EMAIL-T009-04","source_type":"email","timestamp":"2024-02-14T09:00:00Z","excerpt":"All services now on Python 3.12. legacy-stats replaced with statslib. Upgrade complete.","relevance_score":0.4338,"citation":"[EMAIL EMAIL-T009-04 @ 2024-02-14]"},{"evidence_id":"10fab7e4-32b5-408e-b2a2-cca1619df458","source_id":"I007-CMT-634597f97262c704","source_type":"issue_comment","timestamp":"2024-02-07T09:00:00Z","excerpt":"Replacing legacy-stats with statslib. ETA 1 week.","relevance_score":0.4187,"citation":"[ISSUE_COMMENT I007-CMT-634597f97262c704 @ 2024-02-07]"},{"evidence_id":"5bd63edd-0d5e-4241-8b56-77870ff46f17","source_id":"I001-CMT-2318ba6e4f6c07b9","source_type":"issue_comment","timestamp":"2024-01-17T09:00:00Z","excerpt":"Working on this. Using python-jose library.","relevance_score":0.3869,"citation":"[ISSUE_COMMENT I001-CMT-2318ba6e4f6c07b9 @ 2024-01-17]"},{"evidence_id":"82a9b97b-b05c-4937-8552-88406dfc3147","source_id":"EMAIL-T001-04","source_type":"email","timestamp":"2024-01-16T13:48:00Z","excerpt":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","relevance_score":0.2094,"citation":"[EMAIL EMAIL-T001-04 @ 2024-01-16]"},{"evidence_id":"30d84ab4-97d5-4a00-9006-7a205a062c3a","source_id":"I007","source_type":"issue","timestamp":"2024-02-06T09:00:00Z","excerpt":"Upgrade all NovexCore services from Python 3.10 to 3.12. Blocker: replace legacy-stats 1.2.","relevance_score":0.2083,"citation":"[ISSUE I007 @ 2024-02-06]"},{"evidence_id":"2e7a7669-baa2-41e8-995b-6db6fc17c690","source_id":"EMAIL-T003-02","source_type":"email","timestamp":"2024-01-20T21:00:00Z","excerpt":"Agreed with Grace. InfraV2 moves to Q2. NovexCore v2 stays Q1. Carol, update the roadmap.","relevance_score":0.1954,"citation":"[EMAIL EMAIL-T003-02 @ 2024-01-20]"},{"evidence_id":"65f89ded-1fcc-421b-b6e4-8d630e08f5c2","source_id":"EMAIL-T009-00","source_type":"email","timestamp":"2024-02-06T09:00:00Z","excerpt":"Proposing upgrade from Python 3.10 to 3.12 across all services. ~15% performance improvement on benchmarks.","relevance_score":0.1805,"citation":"[EMAIL EMAIL-T009-00 @ 2024-02-06]"},{"evidence_id":"4e45c32c-09d6-4628-821e-18cae8c8de7a","source_id":"EMAIL-T006-00","source_type":"email","timestamp":"2024-01-29T09:00:00Z","excerpt":"Opening a Senior Backend Engineer role. Requirements: Go or Python, distributed systems experience, Kafka a plus. JD attached.","relevance_score":0.1693,"citation":"[EMAIL EMAIL-T006-00 @ 2024-01-29]"},{"evidence_id":"6441438d-edfe-4740-91c0-fbc0928fb92c","source_id":"I001","source_type":"issue","timestamp":"2024-01-15T09:00:00Z","excerpt":"Implement JWT-based auth for all NovexCore v2 API endpoints. Tokens must have 24h expiry.","relevance_score":0.0,"citation":"[ISSUE I001 @ 2024-01-15]"}],"entities":[{"entity_id":"TECH-PYTHON","entity_type":"technology","canonical_name":"Python","aliases":["Python"]}],"conflicts_detected":[{"claim_id":"59e2d441-7e3e-445e-bc14-32482fd677f9","predicate":"Decision made: we go with PostgreSQL for NovexCore v2. David, please update the ADR.","valid_from":"2024-01-16T13:48:00Z","valid_until":"2024-01-23T13:48:00Z","is_current":false,"superseded_by":"98a3b5fc-c4e9-4b50-b2a2-64ea66539787","supersedes":"","conflict_note":"This claim was later reversed/superseded"}],"answer_hint":"Issue I007 status: closed | Issue I007 assigned to PERS-P005 | Issue I007 authored by PERS-P004"}}],"stats":{"entities":23,"claims_total":52,"claims_current":31,"evidence":75,"artifacts":76,"artifacts_redacted":1,"artifacts_deduplicated":0,"decision_reversals":2,"graph_nodes":37,"graph_edges":27}};
+
+const entities = DATA.entities || [];
+const claims = DATA.claims || [];
+const evidence = DATA.evidence || [];
+const artifacts = DATA.artifacts || [];
+const dedup_audit = DATA.dedup_audit || [];
+const claim_evidence = DATA.claim_evidence || [];
+const context_packs = DATA.context_packs || [];
+const stats = DATA.stats || {};
+
+// Build lookup maps
+const entityById = {};
+entities.forEach(e => entityById[e.entity_id] = e);
+const evidenceById = {};
+evidence.forEach(e => evidenceById[e.evidence_id] = e);
+const claimById = {};
+claims.forEach(c => claimById[c.claim_id] = c);
+const claimEvMap = {}; // claim_id → [evidence_id]
+claim_evidence.forEach(ce => {
+  if (!claimEvMap[ce.claim_id]) claimEvMap[ce.claim_id] = [];
+  claimEvMap[ce.claim_id].push(ce.evidence_id);
+});
+
+// ══════════════════════════════════════════════════════
+// HEADER STATS
+// ══════════════════════════════════════════════════════
+document.getElementById('headerStats').innerHTML = `
+  <span>Entities: <b>${stats.entities||0}</b></span>
+  <span>Claims: <b>${stats.claims_total||0}</b></span>
+  <span>Evidence: <b>${stats.evidence||0}</b></span>
+  <span>Reversals: <b>${stats.decision_reversals||0}</b></span>
+`;
+
+// ══════════════════════════════════════════════════════
+// VIEW SWITCHING
+// ══════════════════════════════════════════════════════
+function switchView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  event.target.classList.add('active');
+  if (name === 'graph') { setTimeout(renderGraph, 50); }
+}
+
+// ══════════════════════════════════════════════════════
+// ENTITY LIST
+// ══════════════════════════════════════════════════════
+const TYPE_COLORS = {
+  person: '#60a5fa', project: '#34d399', technology: '#a78bfa',
+  issue: '#fb923c', unknown: '#6b7a8d'
+};
+let activeFilters = new Set(['person','project','technology','issue']);
+let selectedEntityId = null;
+
+// Build issue pseudo-entities from claims
+const issueIds = new Set();
+claims.forEach(c => { if (c.subject_id && c.subject_id.startsWith('ISSUE-')) issueIds.add(c.subject_id); });
+const issueEntities = Array.from(issueIds).map(iid => {
+  const titleClaim = claims.find(c => c.subject_id === iid && c.predicate);
+  return { entity_id: iid, entity_type: 'issue', canonical_name: iid.replace('ISSUE-',''), aliases: [] };
+});
+const allEntities = [...entities, ...issueEntities];
+
+function buildFilterRow() {
+  const types = ['person','project','technology','issue'];
+  const labels = { person:'People', project:'Projects', technology:'Tech', issue:'Issues' };
+  const row = document.getElementById('filterRow');
+  row.innerHTML = types.map(t => `
+    <div class="filter-chip on" data-type="${t}" onclick="toggleFilter('${t}',this)">${labels[t]}</div>
+  `).join('');
+}
+
+function toggleFilter(type, el) {
+  if (activeFilters.has(type)) { activeFilters.delete(type); el.classList.remove('on'); }
+  else { activeFilters.add(type); el.classList.add('on'); }
+  renderEntityList();
+}
+
+function renderEntityList(filter='') {
+  const list = document.getElementById('entityList');
+  const shown = allEntities.filter(e =>
+    activeFilters.has(e.entity_type) &&
+    (!filter || e.canonical_name.toLowerCase().includes(filter.toLowerCase()) ||
+     (e.aliases||[]).some(a => a.toLowerCase().includes(filter.toLowerCase())))
+  );
+  list.innerHTML = shown.map(e => {
+    const dotClass = 'dot-' + (TYPE_COLORS[e.entity_type] ? e.entity_type : 'unknown');
+    return `<div class="entity-item ${selectedEntityId===e.entity_id?'selected':''}" 
+      data-type="${e.entity_type}" data-id="${e.entity_id}"
+      onclick="selectEntity('${e.entity_id}')">
+      <div class="etype-dot ${dotClass}"></div>
+      <div class="entity-name">${e.canonical_name}</div>
+      <div class="entity-type-badge">${e.entity_type}</div>
+    </div>`;
+  }).join('') || '<div class="empty-state">No results</div>';
+}
+
+function filterEntities() {
+  renderEntityList(document.getElementById('entitySearch').value);
+}
+
+// ══════════════════════════════════════════════════════
+// ENTITY DETAIL PANEL
+// ══════════════════════════════════════════════════════
+function selectEntity(eid) {
+  selectedEntityId = eid;
+  document.querySelectorAll('.entity-item').forEach(el => {
+    el.classList.toggle('selected', el.dataset.id === eid);
+  });
+
+  const ent = allEntities.find(e => e.entity_id === eid);
+  if (!ent) return;
+
+  document.getElementById('detailTitle').textContent = ent.canonical_name;
+  document.getElementById('detailSubtitle').textContent = ent.entity_type + ' · ' + eid;
+
+  // Claims for this entity
+  const entClaims = claims.filter(c => c.subject_id === eid || c.object_id === eid);
+  const currentClaims = entClaims.filter(c => c.is_current);
+  const historicalClaims = entClaims.filter(c => !c.is_current);
+
+  let html = '';
+
+  // Aliases
+  if (ent.aliases && ent.aliases.length > 0) {
+    html += `<div class="section-label">Aliases / Known As</div>
+    <div class="alias-list">${ent.aliases.slice(0,8).map(a=>`<span class="alias-pill">${a}</span>`).join('')}</div>`;
+  }
+  if (ent.role) html += `<div style="margin-top:8px;font-size:11px;color:var(--text-dim)">Role: <span style="color:var(--text)">${ent.role}</span></div>`;
+
+  // Current claims
+  if (currentClaims.length > 0) {
+    html += `<div class="section-label">Current Claims (${currentClaims.length})</div>`;
+    html += currentClaims.map(c => renderClaimCard(c, false)).join('');
+  }
+
+  // Historical claims
+  if (historicalClaims.length > 0) {
+    html += `<div class="section-label">Historical Claims (${historicalClaims.length})</div>`;
+    html += historicalClaims.map(c => renderClaimCard(c, true)).join('');
+  }
+
+  if (entClaims.length === 0) {
+    html += '<div class="empty-state">No claims found for this entity</div>';
+  }
+
+  document.getElementById('detailBody').innerHTML = html;
+  highlightNode(eid);
+}
+
+function renderClaimCard(c, historical) {
+  const evIds = claimEvMap[c.claim_id] || c.evidence_ids || [];
+  const conf = parseFloat(c.confidence || 1);
+  const tagClass = 'tag-' + (c.claim_type||'').replace(/[^A-Z_]/g,'');
+  const validRange = [c.valid_from, c.valid_until].filter(Boolean).join(' → ');
+
+  return `<div class="claim-card ${historical?'historical':''}" onclick="showClaimEvidence('${c.claim_id}')">
+    <div>
+      <span class="claim-type-tag ${tagClass}">${c.claim_type||''}</span>
+      ${historical ? '<span class="historical-badge">HISTORICAL</span>' : '<span class="current-badge">CURRENT</span>'}
+    </div>
+    <div class="claim-predicate">${escHtml(c.predicate||'').substring(0,150)}</div>
+    <div class="claim-meta">
+      <span>${validRange ? validRange.substring(0,32) : ''}</span>
+      <span>${evIds.length} evidence</span>
+    </div>
+    <div class="confidence-bar"><div class="confidence-fill" style="width:${Math.round(conf*100)}%"></div></div>
+  </div>`;
+}
+
+function showClaimEvidence(claimId) {
+  const c = claimById[claimId];
+  if (!c) return;
+  const evIds = claimEvMap[claimId] || c.evidence_ids || [];
+  const evItems = evIds.map(id => evidenceById[id]).filter(Boolean);
+
+  let html = document.getElementById('detailBody').innerHTML;
+  // Append evidence section
+  const existing = document.getElementById('ev-panel-' + claimId);
+  if (existing) { existing.remove(); return; }
+
+  const evHtml = `<div id="ev-panel-${claimId}" style="margin-top:8px">
+    <div class="section-label">Evidence for this claim</div>
+    ${evItems.length === 0 ? '<div class="empty-state">No evidence found</div>' :
+      evItems.map(ev => `
+        <div class="evidence-card">
+          <div class="evidence-source">
+            <span>${ev.source_type?.toUpperCase()||''}: ${ev.source_id||''}</span>
+          </div>
+          <div class="evidence-excerpt">${escHtml((ev.excerpt||'').substring(0,300))}</div>
+          <div class="evidence-ts">${ev.timestamp||''}</div>
+        </div>
+      `).join('')}
+  </div>`;
+
+  document.getElementById('detailBody').innerHTML += evHtml;
+}
+
+// ══════════════════════════════════════════════════════
+// GRAPH CANVAS
+// ══════════════════════════════════════════════════════
+let nodes = [], edges = [], animFrame = null;
+let transform = { x: 0, y: 0, scale: 1 };
+let dragging = null, lastMouse = null;
+let hoveredNode = null;
+
+function buildGraphData() {
+  // Build node list
+  const nodeMap = {};
+  allEntities.forEach(e => {
+    nodeMap[e.entity_id] = {
+      id: e.entity_id, label: e.canonical_name,
+      type: e.entity_type, x: 0, y: 0, vx: 0, vy: 0, r: nodeRadius(e.entity_type)
+    };
+  });
+  // Build edges from claims
+  const edgeList = [];
+  claims.forEach(c => {
+    if (c.subject_id && c.object_id && nodeMap[c.subject_id] && nodeMap[c.object_id]) {
+      edgeList.push({
+        src: c.subject_id, dst: c.object_id,
+        type: c.claim_type, is_current: c.is_current,
+        claim_id: c.claim_id, label: (c.claim_type||'').replace(/_/g,' ')
+      });
+    }
+  });
+  return { nodeMap, edgeList };
+}
+
+function nodeRadius(type) {
+  return { person: 10, project: 14, technology: 9, issue: 8 }[type] || 8;
+}
+
+function initGraph() {
+  const { nodeMap, edgeList } = buildGraphData();
+  nodes = Object.values(nodeMap);
+  edges = edgeList;
+
+  // Initial positions — circle layout
+  const cx = 0, cy = 0, r = 200;
+  nodes.forEach((n, i) => {
+    const angle = (i / nodes.length) * Math.PI * 2;
+    n.x = cx + r * Math.cos(angle) + (Math.random()-0.5)*60;
+    n.y = cy + r * Math.sin(angle) + (Math.random()-0.5)*60;
+  });
+
+  // Run force simulation
+  for (let iter = 0; iter < 300; iter++) forceStep();
+}
+
+function forceStep() {
+  const k = 80, kr = 5000, damping = 0.8;
+  // Reset forces
+  nodes.forEach(n => { n.fx = 0; n.fy = 0; });
+  // Repulsion
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i+1; j < nodes.length; j++) {
+      const dx = nodes[j].x - nodes[i].x;
+      const dy = nodes[j].y - nodes[i].y;
+      const d2 = dx*dx + dy*dy + 0.01;
+      const f = kr / d2;
+      const fx = f * dx / Math.sqrt(d2);
+      const fy = f * dy / Math.sqrt(d2);
+      nodes[i].fx -= fx; nodes[i].fy -= fy;
+      nodes[j].fx += fx; nodes[j].fy += fy;
+    }
+  }
+  // Attraction along edges
+  const nodeIndex = {};
+  nodes.forEach(n => nodeIndex[n.id] = n);
+  edges.forEach(e => {
+    const a = nodeIndex[e.src], b = nodeIndex[e.dst];
+    if (!a || !b) return;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const d = Math.sqrt(dx*dx+dy*dy)+0.01;
+    const f = (d - k) * 0.05;
+    a.fx += f*dx/d; a.fy += f*dy/d;
+    b.fx -= f*dx/d; b.fy -= f*dy/d;
+  });
+  // Gravity to center
+  nodes.forEach(n => { n.fx -= n.x*0.01; n.fy -= n.y*0.01; });
+  // Integrate
+  nodes.forEach(n => {
+    n.vx = (n.vx + n.fx) * damping;
+    n.vy = (n.vy + n.fy) * damping;
+    n.x += n.vx; n.y += n.vy;
+  });
+}
+
+function renderGraph() {
+  const canvas = document.getElementById('graphCanvas');
+  if (!canvas) return;
+  const W = canvas.offsetWidth, H = canvas.offsetHeight;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.save();
+  ctx.translate(W/2 + transform.x, H/2 + transform.y);
+  ctx.scale(transform.scale, transform.scale);
+
+  // Draw edges
+  const nodeIndex = {};
+  nodes.forEach(n => nodeIndex[n.id] = n);
+
+  edges.forEach(e => {
+    const a = nodeIndex[e.src], b = nodeIndex[e.dst];
+    if (!a || !b) return;
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.strokeStyle = e.is_current ? 'rgba(0,212,170,0.35)' : 'rgba(255,107,107,0.25)';
+    ctx.lineWidth = e.is_current ? 1.5 : 1;
+    if (!e.is_current) { ctx.setLineDash([4, 3]); } else { ctx.setLineDash([]); }
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+
+  // Draw nodes
+  nodes.forEach(n => {
+    const isSelected = n.id === selectedEntityId;
+    const isHovered = n.id === hoveredNode;
+    const color = TYPE_COLORS[n.type] || '#6b7a8d';
+    const r = n.r * (isSelected ? 1.4 : isHovered ? 1.2 : 1);
+
+    // Glow
+    if (isSelected || isHovered) {
+      const grad = ctx.createRadialGradient(n.x, n.y, r, n.x, n.y, r*3);
+      grad.addColorStop(0, color + '40');
+      grad.addColorStop(1, 'transparent');
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r*3, 0, Math.PI*2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, r, 0, Math.PI*2);
+    ctx.fillStyle = isSelected ? color : color + 'cc';
+    ctx.fill();
+    ctx.strokeStyle = isSelected ? '#fff' : color;
+    ctx.lineWidth = isSelected ? 2 : 1;
+    ctx.stroke();
+
+    // Label
+    ctx.fillStyle = isSelected ? '#fff' : 'rgba(212,220,232,0.8)';
+    ctx.font = `${isSelected ? 600 : 400} ${11/transform.scale + 1}px "IBM Plex Mono"`;
+    ctx.textAlign = 'center';
+    ctx.fillText(n.label.substring(0,18), n.x, n.y + r + 13/transform.scale);
+  });
+
+  ctx.restore();
+}
+
+function highlightNode(eid) {
+  selectedEntityId = eid;
+  renderGraph();
+}
+
+// Canvas interaction
+function getMousePos(e) {
+  const canvas = document.getElementById('graphCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const W = canvas.width, H = canvas.height;
+  return {
+    wx: (e.clientX - rect.left - W/2 - transform.x) / transform.scale,
+    wy: (e.clientY - rect.top  - H/2 - transform.y) / transform.scale,
+    cx: e.clientX - rect.left,
+    cy: e.clientY - rect.top,
+  };
+}
+
+function nodeAt(wx, wy) {
+  return nodes.find(n => {
+    const dx = n.x - wx, dy = n.y - wy;
+    return Math.sqrt(dx*dx+dy*dy) < n.r + 4;
+  });
+}
+
+function setupCanvasEvents() {
+  const canvas = document.getElementById('graphCanvas');
+  canvas.addEventListener('mousedown', e => {
+    const pos = getMousePos(e);
+    const hit = nodeAt(pos.wx, pos.wy);
+    if (hit) { selectEntity(hit.id); renderEntityList(document.getElementById('entitySearch').value); }
+    else { dragging = { x: e.clientX - transform.x, y: e.clientY - transform.y }; }
+  });
+  canvas.addEventListener('mousemove', e => {
+    if (dragging) {
+      transform.x = e.clientX - dragging.x;
+      transform.y = e.clientY - dragging.y;
+      renderGraph(); return;
+    }
+    const pos = getMousePos(e);
+    const hit = nodeAt(pos.wx, pos.wy);
+    const hid = hit ? hit.id : null;
+    if (hid !== hoveredNode) { hoveredNode = hid; renderGraph(); }
+    canvas.style.cursor = hit ? 'pointer' : 'grab';
+  });
+  canvas.addEventListener('mouseup', () => { dragging = null; });
+  canvas.addEventListener('wheel', e => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    transform.scale = Math.max(0.2, Math.min(4, transform.scale * delta));
+    renderGraph();
+  }, {passive: false});
+  window.addEventListener('resize', () => { renderGraph(); });
+}
+
+// ══════════════════════════════════════════════════════
+// RETRIEVAL VIEW
+// ══════════════════════════════════════════════════════
+function buildPresetQueries() {
+  const div = document.getElementById('presetQueries');
+  div.innerHTML = context_packs.map((cp, i) =>
+    `<button class="preset-btn" onclick="showContextPack(${i})">${cp.query}</button>`
+  ).join('');
+}
+
+function showContextPack(idx) {
+  const pack = context_packs[idx].context_pack;
+  document.getElementById('queryInput').value = context_packs[idx].query;
+  renderQueryResults(pack);
+}
+
+function runQuery() {
+  const q = document.getElementById('queryInput').value.trim();
+  if (!q) return;
+  // Find closest preset
+  const lower = q.toLowerCase();
+  const match = context_packs.find(cp => {
+    const words = cp.query.toLowerCase().split(' ');
+    return words.some(w => w.length > 3 && lower.includes(w));
+  });
+  if (match) { renderQueryResults(match.context_pack); return; }
+  // Simple local search fallback
+  const tokens = lower.split(/\s+/).filter(t => t.length > 2);
+  const matchedClaims = claims.filter(c =>
+    tokens.some(t => (c.predicate||'').toLowerCase().includes(t) || (c.value||'').toLowerCase().includes(t))
+  ).slice(0,6);
+  const matchedEv = evidence.filter(ev =>
+    tokens.some(t => (ev.excerpt||'').toLowerCase().includes(t))
+  ).slice(0,6);
+  renderQueryResults({
+    answer_hint: matchedClaims.length ? matchedClaims[0].predicate : 'No results found.',
+    claims: matchedClaims.map(c => ({...c, claim_type: c.claim_type})),
+    evidence_snippets: matchedEv.map(ev => ({
+      source_id: ev.source_id, source_type: ev.source_type,
+      timestamp: ev.timestamp, excerpt: ev.excerpt, citation: `[${ev.source_type?.toUpperCase()} ${ev.source_id}]`
+    })),
+    entities: [],
+    conflicts_detected: [],
+  });
+}
+
+function renderQueryResults(pack) {
+  let html = '';
+
+  if (pack.answer_hint) {
+    html += `<div class="answer-hint"><div class="answer-label">Summary</div>${escHtml(pack.answer_hint)}</div>`;
+  }
+
+  if (pack.conflicts_detected && pack.conflicts_detected.length) {
+    html += `<div class="section-label">⚠ Conflicts / Reversals (${pack.conflicts_detected.length})</div>`;
+    html += pack.conflicts_detected.map(cf => `
+      <div class="conflict-card">
+        <div class="conflict-label">${cf.is_current ? 'CURRENT (reversal)' : 'HISTORICAL (superseded)'}</div>
+        <div class="conflict-text">${escHtml((cf.predicate||'').substring(0,150))}</div>
+        <div class="conflict-note">${escHtml(cf.conflict_note||'')} ${cf.valid_from ? '· from '+cf.valid_from.substring(0,10) : ''} ${cf.valid_until ? '→ '+cf.valid_until.substring(0,10) : ''}</div>
+      </div>`).join('');
+  }
+
+  if (pack.claims && pack.claims.length) {
+    html += `<div class="section-label">Claims (${pack.claims.length})</div>`;
+    html += pack.claims.slice(0,8).map(c => {
+      const tagClass = 'tag-' + (c.claim_type||'').replace(/[^A-Z_]/g,'');
+      return `<div class="claim-card">
+        <div><span class="claim-type-tag ${tagClass}">${c.claim_type||''}</span>
+          ${c.is_current ? '<span class="current-badge">CURRENT</span>' : '<span class="historical-badge">HISTORICAL</span>'}
+        </div>
+        <div class="claim-predicate">${escHtml((c.predicate||'').substring(0,180))}</div>
+        <div class="claim-meta"><span>${(c.valid_from||'').substring(0,10)}</span><span>conf: ${parseFloat(c.confidence||1).toFixed(2)}</span></div>
+        <div class="confidence-bar"><div class="confidence-fill" style="width:${Math.round(parseFloat(c.confidence||1)*100)}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+
+  if (pack.evidence_snippets && pack.evidence_snippets.length) {
+    html += `<div class="section-label">Grounded Evidence (${pack.evidence_snippets.length})</div>`;
+    html += pack.evidence_snippets.slice(0,6).map(ev => `
+      <div class="evidence-card">
+        <div class="evidence-source">
+          <span>${ev.source_type?.toUpperCase()||''}: ${ev.source_id||''}</span>
+          <span>${ev.citation||''}</span>
+        </div>
+        <div class="evidence-excerpt">${escHtml((ev.excerpt||'').substring(0,280))}</div>
+        <div class="evidence-ts">${(ev.timestamp||'').substring(0,19)}</div>
+      </div>`).join('');
+  }
+
+  document.getElementById('queryResults').innerHTML = html || '<div class="empty-state">No results found</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// DEDUP VIEW
+// ══════════════════════════════════════════════════════
+function buildDedupView() {
+  // Artifact dups
+  const artDups = artifacts.filter(a => a.dedup_id && a.dedup_id !== '');
+  const artEl = document.getElementById('artifactDedupSection');
+  if (artDups.length === 0) {
+    artEl.innerHTML = '<div class="empty-state">No duplicate artifacts detected in this corpus</div>';
+  } else {
+    artEl.innerHTML = artDups.map(a => `
+      <div class="merge-card">
+        <div class="merge-type">ARTIFACT DUPLICATE</div>
+        <div class="merge-arrow">
+          <span class="merge-from">${a.artifact_id}</span>
+          <span style="color:var(--text-dim)">→</span>
+          <span class="merge-to">${a.dedup_id}</span>
+        </div>
+        <div class="merge-reason">Subject: ${escHtml(a.subject||'')}</div>
+      </div>`).join('');
+  }
+
+  // Entity merges from dedup_audit
+  const entMerges = dedup_audit.filter(e => e.event_type && e.event_type.includes('merge'));
+  const entEl = document.getElementById('entityDedupSection');
+  if (entMerges.length === 0) {
+    // Show entity aliases as canonicalization evidence
+    const withAliases = entities.filter(e => e.aliases && e.aliases.length > 2);
+    entEl.innerHTML = `<div class="empty-state" style="margin-bottom:8px">No runtime merges needed — aliases pre-resolved during extraction</div>` +
+      withAliases.slice(0,5).map(e => `
+        <div class="merge-card">
+          <div class="merge-type">ENTITY CANONICALIZATION</div>
+          <div class="merge-arrow"><span class="merge-to">${e.canonical_name}</span></div>
+          <div class="alias-list" style="margin-top:6px">${(e.aliases||[]).slice(0,6).map(a=>`<span class="alias-pill">${a}</span>`).join('')}</div>
+        </div>`).join('');
+  } else {
+    entEl.innerHTML = entMerges.map(m => `
+      <div class="merge-card">
+        <div class="merge-type">${m.event_type}</div>
+        <div class="merge-arrow">
+          <span class="merge-from">${m.merged_id||''}</span>
+          <span style="color:var(--text-dim)">→</span>
+          <span class="merge-to">${m.canonical_id||''}</span>
+        </div>
+        <div class="merge-reason">${escHtml(m.reason||'')}</div>
+      </div>`).join('');
+  }
+
+  // Claim reversals
+  const reversals = claims.filter(c => c.supersedes_id || c.superseded_by_id);
+  const claimEl = document.getElementById('claimDedupSection');
+  if (reversals.length === 0) {
+    claimEl.innerHTML = '<div class="empty-state">No claim merges or reversals recorded</div>';
+  } else {
+    claimEl.innerHTML = reversals.map(c => `
+      <div class="merge-card">
+        <div class="merge-type">${c.is_current ? 'REVERSAL (NEW DECISION)' : 'SUPERSEDED (OLD DECISION)'}</div>
+        <div class="claim-predicate" style="font-size:11px;margin:4px 0">${escHtml((c.predicate||'').substring(0,180))}</div>
+        ${c.supersedes_id ? `<div class="merge-reason">Supersedes: <span style="color:var(--reversal)">${c.supersedes_id.substring(0,12)}…</span></div>` : ''}
+        ${c.superseded_by_id ? `<div class="merge-reason">Superseded by: <span style="color:var(--accent)">${c.superseded_by_id.substring(0,12)}…</span></div>` : ''}
+        <div class="merge-reason">${(c.valid_from||'').substring(0,10)} → ${(c.valid_until||'still current').substring(0,10)}</div>
+      </div>`).join('');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// STATS VIEW
+// ══════════════════════════════════════════════════════
+function buildStatsView() {
+  const statItems = [
+    { label: 'Entities', value: stats.entities },
+    { label: 'Claims Total', value: stats.claims_total },
+    { label: 'Claims Current', value: stats.claims_current },
+    { label: 'Evidence Items', value: stats.evidence },
+    { label: 'Artifacts', value: stats.artifacts },
+    { label: 'Redacted', value: stats.artifacts_redacted },
+    { label: 'Deduplicated', value: stats.artifacts_deduplicated },
+    { label: 'Decision Reversals', value: stats.decision_reversals },
+    { label: 'Graph Nodes', value: stats.graph_nodes },
+    { label: 'Graph Edges', value: stats.graph_edges },
+  ];
+  document.getElementById('statsGrid').innerHTML = statItems.map(s => `
+    <div class="stat-card">
+      <div class="stat-value">${s.value ?? '–'}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>`).join('');
+
+  // Decision timeline
+  const decClaims = claims
+    .filter(c => c.claim_type === 'DECISION_MADE' || c.claim_type === 'DECISION_REVERSED')
+    .sort((a,b) => (a.valid_from||'') < (b.valid_from||'') ? -1 : 1);
+
+  const tlEl = document.getElementById('decisionTimeline');
+  tlEl.innerHTML = decClaims.map(c => {
+    const isRev = c.claim_type === 'DECISION_REVERSED';
+    const isCurr = c.is_current;
+    return `<div class="claim-card ${isCurr?'':'historical'}">
+      <div>
+        <span class="claim-type-tag tag-${c.claim_type}">${c.claim_type}</span>
+        ${isCurr ? '<span class="current-badge">CURRENT</span>' : '<span class="historical-badge">HISTORICAL</span>'}
+      </div>
+      <div class="claim-predicate">${escHtml((c.predicate||'').substring(0,200))}</div>
+      <div class="claim-meta">
+        <span>${(c.valid_from||'').substring(0,10)}</span>
+        <span>${c.valid_until ? 'until '+c.valid_until.substring(0,10) : 'still current'}</span>
+      </div>
+    </div>`;
+  }).join('') || '<div class="empty-state">No decisions found</div>';
+}
+
+// ══════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+buildFilterRow();
+renderEntityList();
+initGraph();
+setupCanvasEvents();
+buildPresetQueries();
+buildDedupView();
+buildStatsView();
+renderGraph();
+
+// Select first entity to show demo state
+if (allEntities.length > 0) {
+  setTimeout(() => selectEntity(allEntities[0].entity_id), 200);
+}
+</script>
+</body>
+</html>

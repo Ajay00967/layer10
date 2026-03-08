@@ -1,0 +1,267 @@
+{
+  "query": "Who is responsible for the auth token security incident?",
+  "context_pack": {
+    "query": "Who is responsible for the auth token security incident?",
+    "retrieved_at": "2026-03-08T18:12:34.052297Z",
+    "claims": [
+      {
+        "claim_id": "c024bda2-6f0c-4d28-8143-27b4ed4c468d",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I003 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-18T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "39b6aa55-a929-4e2f-b2b3-717b2ac83717"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "0e45c947-b492-46b1-b5e3-4fbc1ef51928",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I006 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-24T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "208bf6c5-6d52-42e6-8445-49723243eec4"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "7bb92b88-a22a-4fda-ad28-50f9041521fb",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I003 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-18T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "6fcd9a24-910f-4e0a-8bcf-5c34e9a7e4ec"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "1c05ccc5-cfd9-43f0-9743-974a63035b6a",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I006 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-24T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "15733a7f-b6c5-4f07-8684-b8ec7eef7f41"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "205d49c7-8b72-4364-8478-753db3917efc",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I003 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-18T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "a21176a0-66cd-4673-8011-879b19da9c53"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "8a0c5cf5-3ff3-40b0-9f28-478e918ff412",
+        "claim_type": "AUTHORED_BY",
+        "predicate": "Issue I006 authored by PERS-P009",
+        "value": "PERS-P009",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-02-24T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "da11f059-5031-4ff0-a4ca-9faa19deff4a"
+        ],
+        "tags": [
+          "issue",
+          "authorship"
+        ]
+      },
+      {
+        "claim_id": "d16c0c01-8913-4bf0-9635-c80e6700798f",
+        "claim_type": "HAS_STATUS",
+        "predicate": "Issue I001 status: closed",
+        "value": "closed",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-20T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "6441438d-edfe-4740-91c0-fbc0928fb92c"
+        ],
+        "tags": [
+          "issue",
+          "status"
+        ]
+      },
+      {
+        "claim_id": "fb829628-a352-443c-a4a6-54d1e5dc4e52",
+        "claim_type": "ASSIGNED_TO",
+        "predicate": "Issue I001 assigned to PERS-P006",
+        "value": "PERS-P006",
+        "confidence": 1.0,
+        "is_current": true,
+        "valid_from": "2024-01-15T09:00:00Z",
+        "valid_until": "",
+        "evidence_ids": [
+          "6441438d-edfe-4740-91c0-fbc0928fb92c"
+        ],
+        "tags": [
+          "issue",
+          "assignment"
+        ]
+      }
+    ],
+    "evidence_snippets": [
+      {
+        "evidence_id": "137c3a22-b17b-4575-b9d7-bf598b9e9c49",
+        "source_id": "I008-CMT-46d0dac1464edc05",
+        "source_type": "issue_comment",
+        "timestamp": "2024-01-22T09:00:00Z",
+        "excerpt": "Implementing. Using Redis for refresh token storage.",
+        "relevance_score": 0.7102,
+        "citation": "[ISSUE_COMMENT I008-CMT-46d0dac1464edc05 @ 2024-01-22]"
+      },
+      {
+        "evidence_id": "61d1034b-77db-4145-9727-864e51bcb9d0",
+        "source_id": "I008-CMT-46d0dac1464edc05",
+        "source_type": "issue_comment",
+        "timestamp": "2024-01-22T09:00:00Z",
+        "excerpt": "Implementing. Using Redis for refresh token storage.",
+        "relevance_score": 0.7102,
+        "citation": "[ISSUE_COMMENT I008-CMT-46d0dac1464edc05 @ 2024-01-22]"
+      },
+      {
+        "evidence_id": "6c34949b-2bba-4abc-80bf-8ab8bd007347",
+        "source_id": "I008-CMT-46d0dac1464edc05",
+        "source_type": "issue_comment",
+        "timestamp": "2024-01-22T09:00:00Z",
+        "excerpt": "Implementing. Using Redis for refresh token storage.",
+        "relevance_score": 0.7102,
+        "citation": "[ISSUE_COMMENT I008-CMT-46d0dac1464edc05 @ 2024-01-22]"
+      },
+      {
+        "evidence_id": "bc41d521-6cc5-4354-902e-65d64507564b",
+        "source_id": "EMAIL-T002-00",
+        "source_type": "email",
+        "timestamp": "2024-01-18T09:00:00Z",
+        "excerpt": "Found a bug: auth tokens never expire in AuthService. This is a security vulnerability. Assigning to Frank.",
+        "relevance_score": 0.5976,
+        "citation": "[EMAIL EMAIL-T002-00 @ 2024-01-18]"
+      },
+      {
+        "evidence_id": "33ae01ff-d3a6-4718-9c2d-af426d674ca7",
+        "source_id": "EMAIL-T002-00",
+        "source_type": "email",
+        "timestamp": "2024-01-18T09:00:00Z",
+        "excerpt": "Found a bug: auth tokens never expire in AuthService. This is a security vulnerability. Assigning to Frank.",
+        "relevance_score": 0.5976,
+        "citation": "[EMAIL EMAIL-T002-00 @ 2024-01-18]"
+      },
+      {
+        "evidence_id": "4a0db40c-6b99-4cb7-90e1-57066fd9b3ff",
+        "source_id": "EMAIL-T002-00",
+        "source_type": "email",
+        "timestamp": "2024-01-18T09:00:00Z",
+        "excerpt": "Found a bug: auth tokens never expire in AuthService. This is a security vulnerability. Assigning to Frank.",
+        "relevance_score": 0.5976,
+        "citation": "[EMAIL EMAIL-T002-00 @ 2024-01-18]"
+      },
+      {
+        "evidence_id": "6e136bc2-25f5-4486-a305-6efbc2b815cb",
+        "source_id": "EMAIL-T002-04",
+        "source_type": "email",
+        "timestamp": "2024-01-18T23:24:00Z",
+        "excerpt": "Token rotation complete. 2,847 sessions invalidated. Monitoring for issues.",
+        "relevance_score": 0.5524,
+        "citation": "[EMAIL EMAIL-T002-04 @ 2024-01-18]"
+      },
+      {
+        "evidence_id": "68276aa2-ff41-4e5d-af7e-e42e89cc3752",
+        "source_id": "EMAIL-T002-04",
+        "source_type": "email",
+        "timestamp": "2024-01-18T23:24:00Z",
+        "excerpt": "Token rotation complete. 2,847 sessions invalidated. Monitoring for issues.",
+        "relevance_score": 0.5524,
+        "citation": "[EMAIL EMAIL-T002-04 @ 2024-01-18]"
+      },
+      {
+        "evidence_id": "39b6aa55-a929-4e2f-b2b3-717b2ac83717",
+        "source_id": "I003",
+        "source_type": "issue",
+        "timestamp": "2024-01-18T09:00:00Z",
+        "excerpt": "CRITICAL: Auth tokens missing exp claim. All tokens issued before 2024-01-10 are permanent. Immediate fix required.",
+        "relevance_score": 0.0,
+        "citation": "[ISSUE I003 @ 2024-01-18]"
+      },
+      {
+        "evidence_id": "208bf6c5-6d52-42e6-8445-49723243eec4",
+        "source_id": "I006",
+        "source_type": "issue",
+        "timestamp": "2024-02-24T09:00:00Z",
+        "excerpt": "P99 latency spiked from 200ms to 650ms after deploy on day 40.",
+        "relevance_score": 0.0,
+        "citation": "[ISSUE I006 @ 2024-02-24]"
+      }
+    ],
+    "entities": [
+      {
+        "entity_id": "PERS-P009",
+        "entity_type": "person",
+        "canonical_name": "Iris Johansson",
+        "aliases": [
+          "iris.johansson@novex.com",
+          "ijohansson@novex.com",
+          "Iris J."
+        ]
+      },
+      {
+        "entity_id": "PROJ-AUTHSERVICE",
+        "entity_type": "project",
+        "canonical_name": "AuthService",
+        "aliases": [
+          "AuthService"
+        ]
+      },
+      {
+        "entity_id": "TECH-REDIS",
+        "entity_type": "technology",
+        "canonical_name": "Redis",
+        "aliases": [
+          "Redis"
+        ]
+      }
+    ],
+    "conflicts_detected": [],
+    "answer_hint": "Issue I003 authored by PERS-P009 | Issue I006 authored by PERS-P009 | Issue I003 authored by PERS-P009"
+  }
+}
